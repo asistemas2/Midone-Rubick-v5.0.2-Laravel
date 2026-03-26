@@ -13,7 +13,7 @@ class TopMenu
             'dashboard' => [
                 'icon' => 'home',
                 'title' => 'Dashboard',
-                'sub_menu' => [
+                /*  'sub_menu' => [
                     'dashboard-overview-1' => [
                         'icon' => 'activity',
                         'route_name' => 'dashboard-overview-1',
@@ -46,41 +46,41 @@ class TopMenu
                         ],
                         'title' => 'Overview 4'
                     ]
-                ]
+                ] */
             ],
             'menu-layout' => [
-                'icon' => 'box',
-                'title' => 'Menu Layout',
+                'icon' => 'building',
+                'title' => 'Gestión de Inventario',
                 'sub_menu' => [
                     'side-menu' => [
-                        'icon' => 'activity',
+                        'icon' => 'list',
                         'route_name' => 'dashboard-overview-1',
                         'params' => [
                             'layout' => 'side-menu'
                         ],
-                        'title' => 'Side Menu'
+                        'title' => 'Listado de Inmuebles'
                     ],
                     'simple-menu' => [
-                        'icon' => 'activity',
+                        'icon' => 'file-input',
                         'route_name' => 'dashboard-overview-1',
                         'params' => [
                             'layout' => 'simple-menu'
                         ],
-                        'title' => 'Simple Menu'
+                        'title' => 'Registrar Inmueble'
                     ],
                     'top-menu' => [
-                        'icon' => 'activity',
+                        'icon' => 'link',
                         'route_name' => 'dashboard-overview-1',
                         'params' => [
                             'layout' => 'top-menu'
                         ],
-                        'title' => 'Top Menu'
+                        'title' => 'Asignación de Equipos'
                     ]
                 ]
             ],
             'apps' => [
-                'icon' => 'activity',
-                'title' => 'Apps',
+                'icon' => 'toy-brick',
+                'title' => 'Inventario de Equipos',
                 'sub_menu' => [
                     'users' => [
                         'icon' => 'users',
@@ -293,8 +293,8 @@ class TopMenu
                 ]
             ],
             'pages' => [
-                'icon' => 'layout',
-                'title' => 'Pages',
+                'icon' => 'calendar-check',
+                'title' => 'Mantenimientos',
                 'sub_menu' => [
                     'wizards' => [
                         'icon' => 'activity',
@@ -474,7 +474,7 @@ class TopMenu
             ],
             'components' => [
                 'icon' => 'inbox',
-                'title' => 'Components',
+                'title' => 'Garantías',
                 'sub_menu' => [
                     'grid' => [
                         'icon' => 'activity',
@@ -611,8 +611,8 @@ class TopMenu
                 ]
             ],
             'forms' => [
-                'icon' => 'sidebar',
-                'title' => 'Forms',
+                'icon' => 'package-open',
+                'title' => 'Parametrizacion',
                 'sub_menu' => [
                     'regular-form' => [
                         'icon' => 'activity',
@@ -702,7 +702,7 @@ class TopMenu
                     ]
                 ]
             ],
-            'widgets' => [
+            /*  'widgets' => [
                 'icon' => 'hard-drive',
                 'title' => 'Widgets',
                 'sub_menu' => [
@@ -731,7 +731,7 @@ class TopMenu
                         'title' => 'Image Zoom'
                     ]
                 ]
-            ]
+            ] */
         ];
     }
 }

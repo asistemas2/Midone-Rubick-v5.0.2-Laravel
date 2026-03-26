@@ -1,5 +1,5 @@
 <!-- BEGIN: Main Color Switcher -->
-<div
+{{-- <div
     class="fixed bottom-0 right-0 z-50 flex items-center justify-center h-12 px-5 mb-10 border rounded-full shadow-md box mr-52">
     <div class="hidden mr-4 text-slate-600 dark:text-slate-200 sm:block">
         Color Scheme
@@ -24,5 +24,5 @@
         class="{{ $colorScheme == 'theme-4' ? 'border-slate-300 dark:border-darkmode-800/80' : 'border-white dark:border-darkmode-600' }} block h-8 w-8 cursor-pointer rounded-full border-4 bg-indigo-900 hover:border-slate-200"
         href="{{ route('color-scheme-switcher', ['color_scheme' => 'theme-4']) }}"
     ></a>
-</div>
+</div> --}}
 <!-- END: Main Color Switcher -->

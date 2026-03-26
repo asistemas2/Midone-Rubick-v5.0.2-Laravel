@@ -19,10 +19,10 @@
                 >
                     <img
                         class="w-6"
-                        src="{{ Vite::asset('resources/images/logo.svg') }}"
+                        src="{{ Vite::asset('resources/images/logo1.jpg') }}"
                         alt="Midone Tailwind HTML Admin Template"
                     />
-                    <span class="ml-3 text-lg text-white"> Rubick </span>
+                    {{-- <span class="ml-3 text-lg text-white"> ZFP </span> --}}
                 </a>
                 <!-- END: Logo -->
                 <!-- BEGIN: Breadcrumb -->

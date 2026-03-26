@@ -1,7 +1,7 @@
 <i class="fa fa-file-archive-o" aria-hidden="true"></i>@extends('../layouts/' . $layout)
 
 @section('head')
-    <title>Login - Rubick - Tailwind HTML Admin Template</title>
+    <title>Login - ZFP</title>
 @endsection
 
 @section('content')
@@ -18,26 +18,26 @@
                         class="-intro-x flex items-center pt-5"
                         href=""
                     >
-                        <img
+                      {{--   <img
                             class="w-6"
-                            src="{{ Vite::asset('resources/images/logo.svg') }}"
+                            src="{{ Vite::asset('resources/images/logo1.jpg') }}"
                             alt="Midone Tailwind HTML Admin Template"
                         />
-                        <span class="ml-3 text-lg text-white"> Rubick </span>
+                        <span class="ml-3 text-lg text-white"> ZFP </span> --}}
                     </a>
                     <div class="my-auto">
                         <img
                             class="-intro-x -mt-16 w-1/2"
-                            src="{{ Vite::asset('resources/images/illustration.svg') }}"
+                            src="{{ Vite::asset('resources/images/logo.jpg') }}"
                             alt="Midone Tailwind HTML Admin Template"
                         />
-                        <div class="-intro-x mt-10 text-4xl font-medium leading-tight text-white">
+                      {{--   <div class="-intro-x mt-10 text-4xl font-medium leading-tight text-white">
                             A few more clicks to <br />
                             sign in to your account.
                         </div>
                         <div class="-intro-x mt-5 text-lg text-white text-opacity-70 dark:text-slate-400">
                             Manage all your e-commerce accounts in one place
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <!-- END: Login Info -->
@@ -46,12 +46,12 @@
                     <div
                         class="mx-auto my-auto w-full rounded-md bg-white px-5 py-8 shadow-md dark:bg-darkmode-600 sm:w-3/4 sm:px-8 lg:w-2/4 xl:ml-20 xl:w-auto xl:bg-transparent xl:p-0 xl:shadow-none">
                         <h2 class="intro-x text-center text-2xl font-bold xl:text-left xl:text-3xl">
-                            Sign In
+                           Iniciar Sesión
                         </h2>
-                        <div class="intro-x mt-2 text-center text-slate-400 xl:hidden">
+                       {{--  <div class="intro-x mt-2 text-center text-slate-400 xl:hidden">
                             A few more clicks to sign in to your account. Manage all your
                             e-commerce accounts in one place
-                        </div>
+                        </div> --}}
                         <div class="intro-x mt-8">
                             <form id="login-form">
                                 <x-base.form-input
@@ -89,10 +89,10 @@
                                     class="cursor-pointer select-none"
                                     for="remember-me"
                                 >
-                                    Remember me
+                                    Recordarme
                                 </label>
                             </div>
-                            <a href="">Forgot Password?</a>
+                           {{--  <a href="">Forgot Password?</a> --}}
                         </div>
                         <div class="intro-x mt-5 text-center xl:mt-8 xl:text-left">
                             <x-base.button
@@ -102,28 +102,15 @@
                             >
                                 Login
                             </x-base.button>
-                            <x-base.button
+                            {{-- <x-base.button
                                 class="mt-3 w-full px-4 py-3 align-top xl:mt-0 xl:w-32"
                                 variant="outline-secondary"
                             >
                                 Register
-                            </x-base.button>
+                            </x-base.button> --}}
                         </div>
                         <div class="intro-x mt-10 text-center text-slate-600 dark:text-slate-500 xl:mt-24 xl:text-left">
-                            By signin up, you agree to our
-                            <a
-                                class="text-primary dark:text-slate-200"
-                                href=""
-                            >
-                                Terms and Conditions
-                            </a>
-                            &
-                            <a
-                                class="text-primary dark:text-slate-200"
-                                href=""
-                            >
-                                Privacy Policy
-                            </a>
+                           2026 Zona Franca Palmaseca — Sistema de Gestión de Inventario de Infraestructura Física
                         </div>
                     </div>
                 </div>

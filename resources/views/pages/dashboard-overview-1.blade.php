@@ -1,7 +1,7 @@
 @extends('../layouts/' . $layout)
 
 @section('subhead')
-    <title>Dashboard - Midone - Tailwind HTML Admin Template</title>
+    <title>Dashboard</title>
 @endsection
 
 @section('subcontent')
@@ -32,9 +32,9 @@
                                     <div class="flex">
                                         <x-base.lucide
                                             class="h-[28px] w-[28px] text-primary"
-                                            icon="ShoppingCart"
+                                            icon="building-2"
                                         />
-                                        <div class="ml-auto">
+                                        {{-- <div class="ml-auto">
                                             <x-base.tippy
                                                 class="flex cursor-pointer items-center rounded-full bg-success py-[3px] pl-2 pr-1 text-xs font-medium text-white"
                                                 as="div"
@@ -46,10 +46,10 @@
                                                     icon="ChevronUp"
                                                 />
                                             </x-base.tippy>
-                                        </div>
+                                        </div> --}}
                                     </div>
-                                    <div class="mt-6 text-3xl font-medium leading-8">4.710</div>
-                                    <div class="mt-1 text-base text-slate-500">Item Sales</div>
+                                    <div class="mt-6 text-3xl font-medium leading-8">105</div>
+                                    <div class="mt-1 text-base text-slate-500">Inmuebles </div>
                                 </div>
                             </div>
                         </div>
@@ -62,9 +62,9 @@
                                     <div class="flex">
                                         <x-base.lucide
                                             class="h-[28px] w-[28px] text-pending"
-                                            icon="CreditCard"
+                                            icon="settings"
                                         />
-                                        <div class="ml-auto">
+                                       {{--  <div class="ml-auto">
                                             <x-base.tippy
                                                 class="flex cursor-pointer items-center rounded-full bg-danger py-[3px] pl-2 pr-1 text-xs font-medium text-white"
                                                 as="div"
@@ -76,10 +76,10 @@
                                                     icon="ChevronDown"
                                                 />
                                             </x-base.tippy>
-                                        </div>
+                                        </div> --}}
                                     </div>
-                                    <div class="mt-6 text-3xl font-medium leading-8">3.721</div>
-                                    <div class="mt-1 text-base text-slate-500">New Orders</div>
+                                    <div class="mt-6 text-3xl font-medium leading-8">326</div>
+                                    <div class="mt-1 text-base text-slate-500">Equipos</div>
                                 </div>
                             </div>
                         </div>
@@ -92,9 +92,9 @@
                                     <div class="flex">
                                         <x-base.lucide
                                             class="h-[28px] w-[28px] text-warning"
-                                            icon="Monitor"
+                                            icon="wrench"
                                         />
-                                        <div class="ml-auto">
+                                        {{-- <div class="ml-auto">
                                             <x-base.tippy
                                                 class="flex cursor-pointer items-center rounded-full bg-success py-[3px] pl-2 pr-1 text-xs font-medium text-white"
                                                 as="div"
@@ -106,11 +106,11 @@
                                                     icon="ChevronUp"
                                                 />
                                             </x-base.tippy>
-                                        </div>
+                                        </div> --}}
                                     </div>
-                                    <div class="mt-6 text-3xl font-medium leading-8">2.149</div>
+                                    <div class="mt-6 text-3xl font-medium leading-8">0</div>
                                     <div class="mt-1 text-base text-slate-500">
-                                        Total Products
+                                        Mant. Pendientes
                                     </div>
                                 </div>
                             </div>
@@ -124,9 +124,9 @@
                                     <div class="flex">
                                         <x-base.lucide
                                             class="h-[28px] w-[28px] text-success"
-                                            icon="User"
+                                            icon="shield-check"
                                         />
-                                        <div class="ml-auto">
+                                    {{--     <div class="ml-auto">
                                             <x-base.tippy
                                                 class="flex cursor-pointer items-center rounded-full bg-success py-[3px] pl-2 pr-1 text-xs font-medium text-white"
                                                 as="div"
@@ -138,11 +138,11 @@
                                                     icon="ChevronUp"
                                                 />
                                             </x-base.tippy>
-                                        </div>
+                                        </div> --}}
                                     </div>
-                                    <div class="mt-6 text-3xl font-medium leading-8">152.040</div>
+                                    <div class="mt-6 text-3xl font-medium leading-8">0</div>
                                     <div class="mt-1 text-base text-slate-500">
-                                        Unique Visitor
+                                        Garantías Activas
                                     </div>
                                 </div>
                             </div>
@@ -151,7 +151,7 @@
                 </div>
                 <!-- END: General Report -->
                 <!-- BEGIN: Sales Report -->
-                <div class="col-span-12 mt-8 lg:col-span-6">
+               {{--  <div class="col-span-12 mt-8 lg:col-span-6">
                     <div class="intro-y block h-10 items-center sm:flex">
                         <h2 class="mr-5 truncate text-lg font-medium">Sales Report</h2>
                         <div class="relative mt-3 text-slate-500 sm:ml-auto sm:mt-0">
@@ -216,10 +216,10 @@
                             />
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <!-- END: Sales Report -->
                 <!-- BEGIN: Weekly Top Seller -->
-                <div class="col-span-12 mt-8 sm:col-span-6 lg:col-span-3">
+               {{--  <div class="col-span-12 mt-8 sm:col-span-6 lg:col-span-3">
                     <div class="intro-y flex h-10 items-center">
                         <h2 class="mr-5 truncate text-lg font-medium">Weekly Top Seller</h2>
                         <a
@@ -249,10 +249,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <!-- END: Weekly Top Seller -->
                 <!-- BEGIN: Sales Report -->
-                <div class="col-span-12 mt-8 sm:col-span-6 lg:col-span-3">
+                {{-- <div class="col-span-12 mt-8 sm:col-span-6 lg:col-span-3">
                     <div class="intro-y flex h-10 items-center">
                         <h2 class="mr-5 truncate text-lg font-medium">Sales Report</h2>
                         <a
@@ -282,10 +282,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <!-- END: Sales Report -->
                 <!-- BEGIN: Official Store -->
-                <div class="col-span-12 mt-6 xl:col-span-8">
+                {{-- <div class="col-span-12 mt-6 xl:col-span-8">
                     <div class="intro-y block h-10 items-center sm:flex">
                         <h2 class="mr-5 truncate text-lg font-medium">Official Store</h2>
                         <div class="relative mt-3 text-slate-500 sm:ml-auto sm:mt-0">
@@ -307,10 +307,10 @@
                         </div>
                         <x-leaflet-map class="mt-5 h-[310px] rounded-md bg-slate-200" />
                     </div>
-                </div>
+                </div> --}}
                 <!-- END: Official Store -->
                 <!-- BEGIN: Weekly Best Sellers -->
-                <div class="col-span-12 mt-6 xl:col-span-4">
+               {{--  <div class="col-span-12 mt-6 xl:col-span-4">
                     <div class="intro-y flex h-10 items-center">
                         <h2 class="mr-5 truncate text-lg font-medium">
                             Weekly Best Sellers
@@ -346,10 +346,10 @@
                             View More
                         </a>
                     </div>
-                </div>
+                </div> --}}
                 <!-- END: Weekly Best Sellers -->
                 <!-- BEGIN: General Report -->
-                <div class="col-span-12 mt-8 grid grid-cols-12 gap-6">
+               {{--  <div class="col-span-12 mt-8 grid grid-cols-12 gap-6">
                     <div class="intro-y col-span-12 sm:col-span-6 2xl:col-span-3">
                         <div class="box zoom-in p-5">
                             <div class="flex items-center">
@@ -426,10 +426,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <!-- END: General Report -->
                 <!-- BEGIN: Weekly Top Products -->
-                <div class="col-span-12 mt-6">
+               {{--  <div class="col-span-12 mt-6">
                     <div class="intro-y block h-10 items-center sm:flex">
                         <h2 class="mr-5 truncate text-lg font-medium">
                             Weekly Top Products
@@ -611,11 +611,11 @@
                             <option>50</option>
                         </x-base.form-select>
                     </div>
-                </div>
+                </div> --}}
                 <!-- END: Weekly Top Products -->
             </div>
         </div>
-        <div class="col-span-12 2xl:col-span-3">
+       {{--  <div class="col-span-12 2xl:col-span-3">
             <div class="-mb-10 pb-10 2xl:border-l">
                 <div class="grid grid-cols-12 gap-x-6 gap-y-6 2xl:gap-x-0 2xl:pl-6">
                     <!-- BEGIN: Transactions -->
@@ -1040,6 +1040,6 @@
                     <!-- END: Schedules -->
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 @endsection

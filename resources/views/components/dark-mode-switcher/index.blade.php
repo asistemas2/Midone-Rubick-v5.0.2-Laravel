@@ -1,5 +1,5 @@
 <!-- BEGIN: Dark Mode Switcher -->
-<div
+{{-- <div
     class="dark-mode-switcher {{ $darkMode ? 'dark-mode-switcher--active' : '' }} box group fixed bottom-0 right-0 z-50 mb-10 mr-10 flex h-12 w-40 cursor-pointer items-center justify-center rounded-full border shadow-md"
     data-url="{{ route('dark-mode-switcher') }}"
 >
@@ -17,4 +17,4 @@
     @push('scripts')
         @vite('resources/js/components/dark-mode-switcher/index.js')
     @endpush
-@endonce
+@endonce --}}
