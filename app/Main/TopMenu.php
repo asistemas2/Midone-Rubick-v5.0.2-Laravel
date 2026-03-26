@@ -614,41 +614,41 @@ class TopMenu
                 'icon' => 'package-open',
                 'title' => 'Parametrizacion',
                 'sub_menu' => [
-                    'regular-form' => [
+                   /*  'regular-form' => [
                         'icon' => 'activity',
                         'route_name' => 'regular-form',
                         'params' => [
                             'layout' => 'top-menu'
                         ],
                         'title' => 'Regular Form'
-                    ],
-                    'datepicker' => [
+                    ], */
+                   /*  'datepicker' => [
                         'icon' => 'activity',
                         'route_name' => 'datepicker',
                         'params' => [
                             'layout' => 'top-menu'
                         ],
                         'title' => 'Datepicker'
-                    ],
-                    'tom-select' => [
+                    ], */
+                   /*  'tom-select' => [
                         'icon' => 'activity',
                         'route_name' => 'tom-select',
                         'params' => [
                             'layout' => 'top-menu'
                         ],
                         'title' => 'Tom Select'
-                    ],
-                    'file-upload' => [
+                    ], */
+                    /* 'file-upload' => [
                         'icon' => 'activity',
                         'route_name' => 'file-upload',
                         'params' => [
                             'layout' => 'top-menu'
                         ],
                         'title' => 'File Upload'
-                    ],
+                    ], */
                     'wysiwyg-editor' => [
-                        'icon' => 'activity',
-                        'title' => 'Wysiwyg Editor',
+                        'icon' => 'anchor',
+                        'title' => 'Parametros Generales',
                         'sub_menu' => [
                             'wysiwyg-editor-classic' => [
                                 'icon' => 'zap',
@@ -692,14 +692,14 @@ class TopMenu
                             ],
                         ]
                     ],
-                    'validation' => [
+                   /*  'validation' => [
                         'icon' => 'activity',
                         'route_name' => 'validation',
                         'params' => [
                             'layout' => 'top-menu'
                         ],
                         'title' => 'Validation'
-                    ]
+                    ] */
                 ]
             ],
             /*  'widgets' => [
