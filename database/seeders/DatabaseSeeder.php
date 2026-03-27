@@ -11,6 +11,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(UserSeeder::class);
+        $this->call([
+            
+            UserSeeder::class,
+         // ── Inmuebles (sin dependencias entre sí) ──────────
+            BloquesSeeder::class,
+            TiposInmuebleSeeder::class,
+            PeriodicidadesMantenimientoSeeder::class,
+            NivelesDeterioroSeeder::class,
+
+            // ── Equipos ────────────────────────────────────────
+            TiposEquipoSeeder::class,          // Primero: referenciado por categorías
+            EstadosEquipoSeeder::class,
+            CategoriasEquipoSeeder::class,      // Depende de tipos_equipo
+            MarcasSeeder::class,
+            CriticidadesSeeder::class,
+        ]);
+
+        
+
+        
     }
 }

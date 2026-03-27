@@ -13,7 +13,11 @@ class SideMenu
             'dashboard' => [
                 'icon' => 'home',
                 'title' => 'Dashboard',
-                'sub_menu' => [
+                'route_name' => 'dashboard-overview-1',
+                'params' => [
+                    'layout' => 'side-menu',
+                ],
+                /*  'sub_menu' => [
                     'dashboard-overview-1' => [
                         'icon' => 'activity',
                         'route_name' => 'dashboard-overview-1',
@@ -46,62 +50,122 @@ class SideMenu
                         ],
                         'title' => 'Overview 4'
                     ]
-                ]
+                ] */
             ],
             'menu-layout' => [
-                'icon' => 'box',
-                'title' => 'Menu Layout',
+                'icon' => 'building',
+                'title' => 'Gestión de Inventario',
                 'sub_menu' => [
                     'side-menu' => [
-                        'icon' => 'activity',
+                        'icon' => 'list',
                         'route_name' => 'dashboard-overview-1',
                         'params' => [
                             'layout' => 'side-menu'
                         ],
-                        'title' => 'Side Menu'
+                        'title' => 'Listado de Inmuebles'
                     ],
                     'simple-menu' => [
-                        'icon' => 'activity',
+                        'icon' => 'file-input',
                         'route_name' => 'dashboard-overview-1',
                         'params' => [
                             'layout' => 'simple-menu'
                         ],
-                        'title' => 'Simple Menu'
+                        'title' => 'Registrar Inmueble'
                     ],
                     'top-menu' => [
-                        'icon' => 'activity',
+                        'icon' => 'link',
                         'route_name' => 'dashboard-overview-1',
                         'params' => [
                             'layout' => 'top-menu'
                         ],
-                        'title' => 'Top Menu'
+                        'title' => 'Asignación de Equipos'
                     ]
                 ]
             ],
-            'e-commerce' => [
-                'icon' => 'shopping-bag',
-                'title' => 'E-Commerce',
+            'apps' => [
+                'icon' => 'toy-brick',
+                'title' => 'Inventario de Equipos',
                 'sub_menu' => [
-                    'categories' => [
-                        'icon' => 'activity',
-                        'route_name' => 'categories',
-                        'params' => [
-                            'layout' => 'side-menu'
-                        ],
-                        'title' => 'Categories'
-                    ],
-                    'add-product' => [
-                        'icon' => 'activity',
-                        'route_name' => 'add-product',
-                        'params' => [
-                            'layout' => 'side-menu'
-                        ],
-                        'title' => 'Add Product',
-                    ],
-                    'products' => [
-                        'icon' => 'activity',
-                        'title' => 'Products',
+                    'users' => [
+                        'icon' => 'users',
+                        'title' => 'Users',
                         'sub_menu' => [
+                            'users-layout-1' => [
+                                'icon' => 'zap',
+                                'route_name' => 'users-layout-1',
+                                'params' => [
+                                    'layout' => 'side-menu'
+                                ],
+                                'title' => 'Layout 1'
+                            ],
+                            'users-layout-2' => [
+                                'icon' => 'zap',
+                                'route_name' => 'users-layout-2',
+                                'params' => [
+                                    'layout' => 'side-menu'
+                                ],
+                                'title' => 'Layout 2'
+                            ],
+                            'users-layout-3' => [
+                                'icon' => 'zap',
+                                'route_name' => 'users-layout-3',
+                                'params' => [
+                                    'layout' => 'side-menu'
+                                ],
+                                'title' => 'Layout 3'
+                            ]
+                        ]
+                    ],
+                    'profile' => [
+                        'icon' => 'trello',
+                        'title' => 'Profile',
+                        'sub_menu' => [
+                            'profile-overview-1' => [
+                                'icon' => 'zap',
+                                'route_name' => 'profile-overview-1',
+                                'params' => [
+                                    'layout' => 'side-menu'
+                                ],
+                                'title' => 'Overview 1'
+                            ],
+                            'profile-overview-2' => [
+                                'icon' => 'zap',
+                                'route_name' => 'profile-overview-2',
+                                'params' => [
+                                    'layout' => 'side-menu'
+                                ],
+                                'title' => 'Overview 2'
+                            ],
+                            'profile-overview-3' => [
+                                'icon' => 'zap',
+                                'route_name' => 'profile-overview-3',
+                                'params' => [
+                                    'layout' => 'side-menu'
+                                ],
+                                'title' => 'Overview 3'
+                            ]
+                        ]
+                    ],
+                    'e-commerce' => [
+                        'icon' => 'shopping-bag',
+                        'title' => 'E-Commerce',
+                        'sub_menu' => [
+                            'categories' => [
+                                'icon' => 'zap',
+                                'route_name' => 'categories',
+                                'params' => [
+                                    'layout' => 'side-menu'
+                                ],
+                                'title' => 'Categories'
+                            ],
+                            'add-product' => [
+                                'icon' => 'zap',
+                                'route_name' => 'add-product',
+                                'params' => [
+                                    'layout' => 'side-menu'
+                                ],
+                                'title' => 'Add Product',
+                            ],
                             'product-list' => [
                                 'icon' => 'zap',
                                 'route_name' => 'product-list',
@@ -117,13 +181,7 @@ class SideMenu
                                     'layout' => 'side-menu'
                                 ],
                                 'title' => 'Product Grid'
-                            ]
-                        ]
-                    ],
-                    'transactions' => [
-                        'icon' => 'activity',
-                        'title' => 'Transactions',
-                        'sub_menu' => [
+                            ],
                             'transaction-list' => [
                                 'icon' => 'zap',
                                 'route_name' => 'transaction-list',
@@ -139,13 +197,7 @@ class SideMenu
                                     'layout' => 'side-menu'
                                 ],
                                 'title' => 'Transaction Detail'
-                            ]
-                        ]
-                    ],
-                    'sellers' => [
-                        'icon' => 'activity',
-                        'title' => 'Sellers',
-                        'sub_menu' => [
+                            ],
                             'seller-list' => [
                                 'icon' => 'zap',
                                 'route_name' => 'seller-list',
@@ -161,153 +213,92 @@ class SideMenu
                                     'layout' => 'side-menu'
                                 ],
                                 'title' => 'Seller Detail'
-                            ]
+                            ],
+                            'reviews' => [
+                                'icon' => 'zap',
+                                'route_name' => 'reviews',
+                                'params' => [
+                                    'layout' => 'side-menu'
+                                ],
+                                'title' => 'Reviews'
+                            ],
                         ]
                     ],
-                    'reviews' => [
-                        'icon' => 'activity',
-                        'route_name' => 'reviews',
+                    'inbox' => [
+                        'icon' => 'inbox',
+                        'route_name' => 'inbox',
                         'params' => [
                             'layout' => 'side-menu'
                         ],
-                        'title' => 'Reviews'
+                        'title' => 'Inbox'
                     ],
-                ]
-            ],
-            'inbox' => [
-                'icon' => 'inbox',
-                'route_name' => 'inbox',
-                'params' => [
-                    'layout' => 'side-menu'
-                ],
-                'title' => 'Inbox'
-            ],
-            'file-manager' => [
-                'icon' => 'hard-drive',
-                'route_name' => 'file-manager',
-                'params' => [
-                    'layout' => 'side-menu'
-                ],
-                'title' => 'File Manager'
-            ],
-            'point-of-sale' => [
-                'icon' => 'credit-card',
-                'route_name' => 'point-of-sale',
-                'params' => [
-                    'layout' => 'side-menu'
-                ],
-                'title' => 'Point of Sale'
-            ],
-            'chat' => [
-                'icon' => 'message-square',
-                'route_name' => 'chat',
-                'params' => [
-                    'layout' => 'side-menu'
-                ],
-                'title' => 'Chat'
-            ],
-            'post' => [
-                'icon' => 'file-text',
-                'route_name' => 'post',
-                'params' => [
-                    'layout' => 'side-menu'
-                ],
-                'title' => 'Post'
-            ],
-            'calendar' => [
-                'icon' => 'calendar',
-                'route_name' => 'calendar',
-                'params' => [
-                    'layout' => 'side-menu'
-                ],
-                'title' => 'Calendar'
-            ],
-            'divider',
-            'crud' => [
-                'icon' => 'edit',
-                'title' => 'Crud',
-                'sub_menu' => [
-                    'crud-data-list' => [
-                        'icon' => 'activity',
-                        'route_name' => 'crud-data-list',
+                    'file-manager' => [
+                        'icon' => 'folder',
+                        'route_name' => 'file-manager',
                         'params' => [
                             'layout' => 'side-menu'
                         ],
-                        'title' => 'Data List'
+                        'title' => 'File Manager'
                     ],
-                    'crud-form' => [
-                        'icon' => 'activity',
-                        'route_name' => 'crud-form',
+                    'point-of-sale' => [
+                        'icon' => 'credit-card',
+                        'route_name' => 'point-of-sale',
                         'params' => [
                             'layout' => 'side-menu'
                         ],
-                        'title' => 'Form'
-                    ]
-                ]
-            ],
-            'users' => [
-                'icon' => 'users',
-                'title' => 'Users',
-                'sub_menu' => [
-                    'users-layout-1' => [
-                        'icon' => 'activity',
-                        'route_name' => 'users-layout-1',
-                        'params' => [
-                            'layout' => 'side-menu'
-                        ],
-                        'title' => 'Layout 1'
+                        'title' => 'Point of Sale'
                     ],
-                    'users-layout-2' => [
-                        'icon' => 'activity',
-                        'route_name' => 'users-layout-2',
+                    'chat' => [
+                        'icon' => 'message-square',
+                        'route_name' => 'chat',
                         'params' => [
                             'layout' => 'side-menu'
                         ],
-                        'title' => 'Layout 2'
+                        'title' => 'Chat'
                     ],
-                    'users-layout-3' => [
-                        'icon' => 'activity',
-                        'route_name' => 'users-layout-3',
+                    'post' => [
+                        'icon' => 'file-text',
+                        'route_name' => 'post',
                         'params' => [
                             'layout' => 'side-menu'
                         ],
-                        'title' => 'Layout 3'
-                    ]
-                ]
-            ],
-            'profile' => [
-                'icon' => 'trello',
-                'title' => 'Profile',
-                'sub_menu' => [
-                    'profile-overview-1' => [
-                        'icon' => 'activity',
-                        'route_name' => 'profile-overview-1',
-                        'params' => [
-                            'layout' => 'side-menu'
-                        ],
-                        'title' => 'Overview 1'
+                        'title' => 'Post'
                     ],
-                    'profile-overview-2' => [
-                        'icon' => 'activity',
-                        'route_name' => 'profile-overview-2',
+                    'calendar' => [
+                        'icon' => 'calendar',
+                        'route_name' => 'calendar',
                         'params' => [
                             'layout' => 'side-menu'
                         ],
-                        'title' => 'Overview 2'
+                        'title' => 'Calendar'
                     ],
-                    'profile-overview-3' => [
-                        'icon' => 'activity',
-                        'route_name' => 'profile-overview-3',
-                        'params' => [
-                            'layout' => 'side-menu'
-                        ],
-                        'title' => 'Overview 3'
+                    'crud' => [
+                        'icon' => 'edit',
+                        'title' => 'Crud',
+                        'sub_menu' => [
+                            'crud-data-list' => [
+                                'icon' => 'zap',
+                                'route_name' => 'crud-data-list',
+                                'params' => [
+                                    'layout' => 'side-menu'
+                                ],
+                                'title' => 'Data List'
+                            ],
+                            'crud-form' => [
+                                'icon' => 'zap',
+                                'route_name' => 'crud-form',
+                                'params' => [
+                                    'layout' => 'side-menu'
+                                ],
+                                'title' => 'Form'
+                            ]
+                        ]
                     ]
                 ]
             ],
             'pages' => [
-                'icon' => 'layout',
-                'title' => 'Pages',
+                'icon' => 'calendar-check',
+                'title' => 'Mantenimientos',
                 'sub_menu' => [
                     'wizards' => [
                         'icon' => 'activity',
@@ -485,10 +476,9 @@ class SideMenu
                     ]
                 ]
             ],
-            'divider',
             'components' => [
                 'icon' => 'inbox',
-                'title' => 'Components',
+                'title' => 'Garantías',
                 'sub_menu' => [
                     'grid' => [
                         'icon' => 'activity',
@@ -625,98 +615,124 @@ class SideMenu
                 ]
             ],
             'forms' => [
-                'icon' => 'sidebar',
-                'title' => 'Forms',
+                'icon' => 'settings',
+                'title' => 'Parametrizacion',
                 'sub_menu' => [
-                    'regular-form' => [
+                    /*  'regular-form' => [
                         'icon' => 'activity',
                         'route_name' => 'regular-form',
                         'params' => [
                             'layout' => 'side-menu'
                         ],
                         'title' => 'Regular Form'
-                    ],
-                    'datepicker' => [
+                    ], */
+                    /*  'datepicker' => [
                         'icon' => 'activity',
                         'route_name' => 'datepicker',
                         'params' => [
                             'layout' => 'side-menu'
                         ],
                         'title' => 'Datepicker'
-                    ],
-                    'tom-select' => [
+                    ], */
+                    /*  'tom-select' => [
                         'icon' => 'activity',
                         'route_name' => 'tom-select',
                         'params' => [
                             'layout' => 'side-menu'
                         ],
                         'title' => 'Tom Select'
-                    ],
-                    'file-upload' => [
+                    ], */
+                    /* 'file-upload' => [
                         'icon' => 'activity',
                         'route_name' => 'file-upload',
                         'params' => [
                             'layout' => 'side-menu'
                         ],
                         'title' => 'File Upload'
-                    ],
-                    'wysiwyg-editor' => [
-                        'icon' => 'activity',
-                        'title' => 'Wysiwyg Editor',
-                        'sub_menu' => [
-                            'wysiwyg-editor-classic' => [
-                                'icon' => 'zap',
-                                'route_name' => 'wysiwyg-editor-classic',
-                                'params' => [
-                                    'layout' => 'side-menu'
+                    ], */
+                   
+                            // ─── Sección: Gestión de Inmuebles ──────────────────────────
+                            'gestion-inmuebles' => [
+                                'icon'     => 'building-2',
+                                'title'    => 'Gestión de Inmuebles',
+                                'sub_menu' => [
+                                    'bloques' => [
+                                        'icon'       => 'layout-grid',
+                                        'route_name' => 'parametrizacion.bloques.index',
+                                        'params'     => ['layout' => 'side-menu'],
+                                        'title'      => 'Bloques',
+                                    ],
+                                    'tipos-inmueble' => [
+                                        'icon'       => 'home',
+                                        'route_name' => 'parametrizacion.tipos_inmueble.index',
+                                        'params'     => ['layout' => 'side-menu'],
+                                        'title'      => 'Tipos de Inmueble',
+                                    ],
+                                    'periodicidades-mantenimiento' => [
+                                        'icon'       => 'calendar-clock',
+                                        'route_name' => 'parametrizacion.periodicidades_mantenimiento.index',
+                                        'params'     => ['layout' => 'side-menu'],
+                                        'title'      => 'Periodicidades de Mantenimiento',
+                                    ],
+                                    'niveles-deterioro' => [
+                                        'icon'       => 'alert-triangle',
+                                        'route_name' => 'parametrizacion.niveles_deterioro.index',
+                                        'params'     => ['layout' => 'side-menu'],
+                                        'title'      => 'Niveles de Deterioro',
+                                    ],
                                 ],
-                                'title' => 'Classic'
                             ],
-                            'wysiwyg-editor-inline' => [
-                                'icon' => 'zap',
-                                'route_name' => 'wysiwyg-editor-inline',
-                                'params' => [
-                                    'layout' => 'side-menu'
+
+                            // ─── Sección: Gestión de Equipos ────────────────────────────
+                            'gestion-equipos' => [
+                                'icon'     => 'wrench',
+                                'title'    => 'Gestión de Equipos',
+                                'sub_menu' => [
+                                    'tipos-equipo' => [
+                                        'icon'       => 'package',
+                                        'route_name' => 'parametrizacion.tipos_equipo.index',
+                                        'params'     => ['layout' => 'side-menu'],
+                                        'title'      => 'Tipos de Equipo',
+                                    ],
+                                    'estados-equipo' => [
+                                        'icon'       => 'activity',
+                                        'route_name' => 'parametrizacion.estados_equipo.index',
+                                        'params'     => ['layout' => 'side-menu'],
+                                        'title'      => 'Estados de Equipo',
+                                    ],
+                                    'categorias-equipo' => [
+                                        'icon'       => 'layers',
+                                        'route_name' => 'parametrizacion.categorias_equipo.index',
+                                        'params'     => ['layout' => 'side-menu'],
+                                        'title'      => 'Categorías de Equipo',
+                                    ],
+                                    'marcas' => [
+                                        'icon'       => 'tag',
+                                        'route_name' => 'parametrizacion.marcas.index',
+                                        'params'     => ['layout' => 'side-menu'],
+                                        'title'      => 'Marcas',
+                                    ],
+                                    'criticidades' => [
+                                        'icon'       => 'target',
+                                        'route_name' => 'parametrizacion.criticidades.index',
+                                        'params'     => ['layout' => 'side-menu'],
+                                        'title'      => 'Criticidades',
+                                    ],
+                                    ],
                                 ],
-                                'title' => 'Inline'
+                            
+                       
+                        /*  'validation' => [
+                            'icon' => 'activity',
+                            'route_name' => 'validation',
+                            'params' => [
+                                'layout' => 'side-menu'
                             ],
-                            'wysiwyg-editor-balloon' => [
-                                'icon' => 'zap',
-                                'route_name' => 'wysiwyg-editor-balloon',
-                                'params' => [
-                                    'layout' => 'side-menu'
-                                ],
-                                'title' => 'Balloon'
-                            ],
-                            'wysiwyg-editor-balloon-block' => [
-                                'icon' => 'zap',
-                                'route_name' => 'wysiwyg-editor-balloon-block',
-                                'params' => [
-                                    'layout' => 'side-menu'
-                                ],
-                                'title' => 'Balloon Block'
-                            ],
-                            'wysiwyg-editor-document' => [
-                                'icon' => 'zap',
-                                'route_name' => 'wysiwyg-editor-document',
-                                'params' => [
-                                    'layout' => 'side-menu'
-                                ],
-                                'title' => 'Document'
-                            ],
-                        ]
-                    ],
-                    'validation' => [
-                        'icon' => 'activity',
-                        'route_name' => 'validation',
-                        'params' => [
-                            'layout' => 'side-menu'
-                        ],
-                        'title' => 'Validation'
+                            'title' => 'Validation'
+                        ] */
                     ]
-                ]
-            ],
-            'widgets' => [
+                ],
+            /*  'widgets' => [
                 'icon' => 'hard-drive',
                 'title' => 'Widgets',
                 'sub_menu' => [
@@ -745,7 +761,7 @@ class SideMenu
                         'title' => 'Image Zoom'
                     ]
                 ]
-            ]
+            ] */
         ];
     }
 }

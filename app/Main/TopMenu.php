@@ -10,9 +10,13 @@ class TopMenu
     public static function menu(): array
     {
         return [
-            'dashboard' => [
+           'dashboard' => [
                 'icon' => 'home',
                 'title' => 'Dashboard',
+                'route_name' => 'dashboard-overview-1',
+                'params' => [
+                    'layout' => 'side-menu',
+                ],
                 /*  'sub_menu' => [
                     'dashboard-overview-1' => [
                         'icon' => 'activity',
@@ -611,10 +615,10 @@ class TopMenu
                 ]
             ],
             'forms' => [
-                'icon' => 'package-open',
+                'icon' => 'settings',
                 'title' => 'Parametrizacion',
                 'sub_menu' => [
-                   /*  'regular-form' => [
+                    /*  'regular-form' => [
                         'icon' => 'activity',
                         'route_name' => 'regular-form',
                         'params' => [
@@ -622,7 +626,7 @@ class TopMenu
                         ],
                         'title' => 'Regular Form'
                     ], */
-                   /*  'datepicker' => [
+                    /*  'datepicker' => [
                         'icon' => 'activity',
                         'route_name' => 'datepicker',
                         'params' => [
@@ -630,7 +634,7 @@ class TopMenu
                         ],
                         'title' => 'Datepicker'
                     ], */
-                   /*  'tom-select' => [
+                    /*  'tom-select' => [
                         'icon' => 'activity',
                         'route_name' => 'tom-select',
                         'params' => [
@@ -646,62 +650,88 @@ class TopMenu
                         ],
                         'title' => 'File Upload'
                     ], */
-                    'wysiwyg-editor' => [
-                        'icon' => 'anchor',
-                        'title' => 'Parametros Generales',
-                        'sub_menu' => [
-                            'wysiwyg-editor-classic' => [
-                                'icon' => 'zap',
-                                'route_name' => 'wysiwyg-editor-classic',
-                                'params' => [
-                                    'layout' => 'top-menu'
+                   
+                            // ─── Sección: Gestión de Inmuebles ──────────────────────────
+                            'gestion-inmuebles' => [
+                                'icon'     => 'building-2',
+                                'title'    => 'Gestión de Inmuebles',
+                                'sub_menu' => [
+                                    'bloques' => [
+                                        'icon'       => 'layout-grid',
+                                        'route_name' => 'parametrizacion.bloques.index',
+                                        'params'     => ['layout' => 'top-menu'],
+                                        'title'      => 'Bloques',
+                                    ],
+                                    'tipos-inmueble' => [
+                                        'icon'       => 'home',
+                                        'route_name' => 'parametrizacion.tipos_inmueble.index',
+                                        'params'     => ['layout' => 'top-menu'],
+                                        'title'      => 'Tipos de Inmueble',
+                                    ],
+                                    'periodicidades-mantenimiento' => [
+                                        'icon'       => 'calendar-clock',
+                                        'route_name' => 'parametrizacion.periodicidades_mantenimiento.index',
+                                        'params'     => ['layout' => 'top-menu'],
+                                        'title'      => 'Periodicidades de Mantenimiento',
+                                    ],
+                                    'niveles-deterioro' => [
+                                        'icon'       => 'alert-triangle',
+                                        'route_name' => 'parametrizacion.niveles_deterioro.index',
+                                        'params'     => ['layout' => 'top-menu'],
+                                        'title'      => 'Niveles de Deterioro',
+                                    ],
                                 ],
-                                'title' => 'Classic'
                             ],
-                            'wysiwyg-editor-inline' => [
-                                'icon' => 'zap',
-                                'route_name' => 'wysiwyg-editor-inline',
-                                'params' => [
-                                    'layout' => 'top-menu'
+
+                            // ─── Sección: Gestión de Equipos ────────────────────────────
+                            'gestion-equipos' => [
+                                'icon'     => 'wrench',
+                                'title'    => 'Gestión de Equipos',
+                                'sub_menu' => [
+                                    'tipos-equipo' => [
+                                        'icon'       => 'package',
+                                        'route_name' => 'parametrizacion.tipos_equipo.index',
+                                        'params'     => ['layout' => 'top-menu'],
+                                        'title'      => 'Tipos de Equipo',
+                                    ],
+                                    'estados-equipo' => [
+                                        'icon'       => 'activity',
+                                        'route_name' => 'parametrizacion.estados_equipo.index',
+                                        'params'     => ['layout' => 'top-menu'],
+                                        'title'      => 'Estados de Equipo',
+                                    ],
+                                    'categorias-equipo' => [
+                                        'icon'       => 'layers',
+                                        'route_name' => 'parametrizacion.categorias_equipo.index',
+                                        'params'     => ['layout' => 'top-menu'],
+                                        'title'      => 'Categorías de Equipo',
+                                    ],
+                                    'marcas' => [
+                                        'icon'       => 'tag',
+                                        'route_name' => 'parametrizacion.marcas.index',
+                                        'params'     => ['layout' => 'top-menu'],
+                                        'title'      => 'Marcas',
+                                    ],
+                                    'criticidades' => [
+                                        'icon'       => 'target',
+                                        'route_name' => 'parametrizacion.criticidades.index',
+                                        'params'     => ['layout' => 'top-menu'],
+                                        'title'      => 'Criticidades',
+                                    ],
+                                    ],
                                 ],
-                                'title' => 'Inline'
+                            
+                       
+                        /*  'validation' => [
+                            'icon' => 'activity',
+                            'route_name' => 'validation',
+                            'params' => [
+                                'layout' => 'top-menu'
                             ],
-                            'wysiwyg-editor-balloon' => [
-                                'icon' => 'zap',
-                                'route_name' => 'wysiwyg-editor-balloon',
-                                'params' => [
-                                    'layout' => 'top-menu'
-                                ],
-                                'title' => 'Balloon'
-                            ],
-                            'wysiwyg-editor-balloon-block' => [
-                                'icon' => 'zap',
-                                'route_name' => 'wysiwyg-editor-balloon-block',
-                                'params' => [
-                                    'layout' => 'top-menu'
-                                ],
-                                'title' => 'Balloon Block'
-                            ],
-                            'wysiwyg-editor-document' => [
-                                'icon' => 'zap',
-                                'route_name' => 'wysiwyg-editor-document',
-                                'params' => [
-                                    'layout' => 'top-menu'
-                                ],
-                                'title' => 'Document'
-                            ],
-                        ]
-                    ],
-                   /*  'validation' => [
-                        'icon' => 'activity',
-                        'route_name' => 'validation',
-                        'params' => [
-                            'layout' => 'top-menu'
-                        ],
-                        'title' => 'Validation'
-                    ] */
-                ]
-            ],
+                            'title' => 'Validation'
+                        ] */
+                    ]
+                ],
             /*  'widgets' => [
                 'icon' => 'hard-drive',
                 'title' => 'Widgets',

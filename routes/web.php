@@ -5,6 +5,15 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\DarkModeController;
 use App\Http\Controllers\ColorSchemeController;
+use App\Http\Controllers\Parametrizacion\BloqueController;
+use App\Http\Controllers\Parametrizacion\TipoInmuebleController;
+use App\Http\Controllers\Parametrizacion\PeriodicidadMantenimientoController;
+use App\Http\Controllers\Parametrizacion\NivelDeterioroController;
+use App\Http\Controllers\Parametrizacion\TipoEquipoController;
+use App\Http\Controllers\Parametrizacion\CategoriaEquipoController;
+use App\Http\Controllers\Parametrizacion\MarcaController;
+use App\Http\Controllers\Parametrizacion\EstadoEquipoController;
+use App\Http\Controllers\Parametrizacion\CriticidadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -103,4 +112,23 @@ Route::middleware('auth')->group(function () {
         Route::get('slider-page', 'slider')->name('slider');
         Route::get('image-zoom-page', 'imageZoom')->name('image-zoom');
     });
+
+    Route::middleware(['auth'])
+        ->prefix('parametrizacion')
+        ->name('parametrizacion.')
+        ->group(function () {
+
+            // ─── Gestión de Inmuebles ────────────────────────────────────
+            Route::resource('bloques', BloqueController::class);
+            Route::resource('tipos_inmueble', TipoInmuebleController::class);
+            Route::resource('periodicidades_mantenimiento', PeriodicidadMantenimientoController::class);
+            Route::resource('niveles_deterioro', NivelDeterioroController::class);
+
+            // ─── Gestión de Equipos ──────────────────────────────────────
+            Route::resource('tipos_equipo', TipoEquipoController::class);
+            Route::resource('estados_equipo', EstadoEquipoController::class);
+            Route::resource('categorias_equipo', CategoriaEquipoController::class);
+            Route::resource('marcas', MarcaController::class);
+            Route::resource('criticidades', CriticidadController::class);
+        });
 });
