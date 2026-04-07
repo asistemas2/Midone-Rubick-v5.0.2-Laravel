@@ -16,7 +16,7 @@ class LoggedIn
     public function handle(Request $request, Closure $next): Response|JsonResponse|RedirectResponse
     {
         if (!is_null(request()->user())) {
-            return redirect('dashboardOverview1');
+            return redirect('dashboard');
         } else {
             return $next($request);
         }

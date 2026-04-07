@@ -1,44 +1,50 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\DarkModeController;
 use App\Http\Controllers\ColorSchemeController;
+use App\Http\Controllers\DarkModeController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Gestion\EquipoController;
+use App\Http\Controllers\Gestion\GarantiaController;
+use App\Http\Controllers\Gestion\InmuebleController;
+use App\Http\Controllers\Gestion\MantenimientoController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\Parametrizacion\BloqueController;
-use App\Http\Controllers\Parametrizacion\TipoInmuebleController;
-use App\Http\Controllers\Parametrizacion\PeriodicidadMantenimientoController;
-use App\Http\Controllers\Parametrizacion\NivelDeterioroController;
-use App\Http\Controllers\Parametrizacion\TipoEquipoController;
 use App\Http\Controllers\Parametrizacion\CategoriaEquipoController;
-use App\Http\Controllers\Parametrizacion\MarcaController;
-use App\Http\Controllers\Parametrizacion\EstadoEquipoController;
 use App\Http\Controllers\Parametrizacion\CriticidadController;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+use App\Http\Controllers\Parametrizacion\EstadoEquipoController;
+use App\Http\Controllers\Parametrizacion\MarcaController;
+use App\Http\Controllers\Parametrizacion\NivelDeterioroController;
+use App\Http\Controllers\Parametrizacion\PeriodicidadMantenimientoController;
+use App\Http\Controllers\Parametrizacion\TipoEquipoController;
+use App\Http\Controllers\Parametrizacion\TipoInmuebleController;
+use Illuminate\Support\Facades\Route; 
 
 Route::get('dark-mode-switcher', [DarkModeController::class, 'switch'])->name('dark-mode-switcher');
 Route::get('color-scheme-switcher/{color_scheme}', [ColorSchemeController::class, 'switch'])->name('color-scheme-switcher');
 
 Route::get('/', [AuthController::class, 'loginView'])->name('login.index');
 
-Route::get('login', [AuthController::class, 'loginView']);
+Route::post('login', [AuthController::class, 'login'])->name('login.post');
 Route::post('login', [AuthController::class, 'login'])->name('login.check');
 Route::post('/login', [AuthController::class, 'login']);
+
+Route::middleware(['auth'])->group(function () {
+
+    // Dashboard principal
+    Route::get('/home', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+
+    // API: Mantenimientos por día (para el calendario)
+    Route::get('/dashboard/mantenimientos-dia', [DashboardController::class, 'mantenimientosDia'])
+        ->name('dashboard.mantenimientos-dia');
+});
+
 
 Route::middleware('auth')->group(function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
     Route::controller(PageController::class)->group(function () {
-        Route::get('dashboardOverview1', 'dashboardOverview1')->name('dashboard-overview-1');
+       
         Route::get('dashboard-overview-2-page', 'dashboardOverview2')->name('dashboard-overview-2');
         Route::get('dashboard-overview-3-page', 'dashboardOverview3')->name('dashboard-overview-3');
         Route::get('dashboard-overview-4-page', 'dashboardOverview4')->name('dashboard-overview-4');
@@ -131,4 +137,25 @@ Route::middleware('auth')->group(function () {
             Route::resource('marcas', MarcaController::class);
             Route::resource('criticidades', CriticidadController::class);
         });
+
+    Route::middleware(['auth'])->prefix('gestion')->name('gestion.')->group(function () {
+
+        // ── Inmuebles ──────────────────────────────────────────
+        Route::resource('inmuebles', InmuebleController::class);
+        Route::get('inmuebles-coordenadas', [InmuebleController::class, 'coordenadas'])
+            ->name('inmuebles.coordenadas');
+
+        // ── Equipos ────────────────────────────────────────────
+        Route::resource('equipos', EquipoController::class);
+        Route::get('equipos-categorias-por-tipo', [EquipoController::class, 'categoriasPorTipo'])
+            ->name('equipos.categorias-por-tipo');
+
+        // ── Mantenimientos ─────────────────────────────────────
+        Route::resource('mantenimientos', MantenimientoController::class);
+        Route::get('mantenimientos-activos-por-tipo', [MantenimientoController::class, 'activosPorTipo'])
+            ->name('mantenimientos.activos-por-tipo');
+
+        // ── Garantías ──────────────────────────────────────────
+        Route::resource('garantias', GarantiaController::class);
+    });
 });
