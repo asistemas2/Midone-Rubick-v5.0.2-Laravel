@@ -23,7 +23,7 @@
                 password: password,
             })
             .then((res) => {
-                location.href = "dashboardOverview1";
+                location.href = "dashboard";
             })
             .catch((err) => {
                 $("#btn-login").html("Login");

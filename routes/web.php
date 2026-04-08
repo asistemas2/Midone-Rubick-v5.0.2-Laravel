@@ -18,33 +18,46 @@ use App\Http\Controllers\Parametrizacion\NivelDeterioroController;
 use App\Http\Controllers\Parametrizacion\PeriodicidadMantenimientoController;
 use App\Http\Controllers\Parametrizacion\TipoEquipoController;
 use App\Http\Controllers\Parametrizacion\TipoInmuebleController;
-use Illuminate\Support\Facades\Route; 
+use Illuminate\Support\Facades\Route;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
+
+// Rutas públicas (no requieren autenticación)
 Route::get('dark-mode-switcher', [DarkModeController::class, 'switch'])->name('dark-mode-switcher');
 Route::get('color-scheme-switcher/{color_scheme}', [ColorSchemeController::class, 'switch'])->name('color-scheme-switcher');
 
+// Página de login (GET) – dos URL posibles: '/' y '/login'
 Route::get('/', [AuthController::class, 'loginView'])->name('login.index');
+Route::get('/login', [AuthController::class, 'loginView'])->name('login'); // nombre alternativo si se necesita
 
-Route::post('login', [AuthController::class, 'login'])->name('login.post');
-Route::post('login', [AuthController::class, 'login'])->name('login.check');
-Route::post('/login', [AuthController::class, 'login']);
+// Procesamiento del login (POST)
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
-Route::middleware(['auth'])->group(function () {
+// Páginas públicas adicionales (si las usas)
+Route::get('/login-page', [PageController::class, 'login'])->name('login.page');
+Route::get('/register-page', [PageController::class, 'register'])->name('register.page');
+
+// ===========================================================================
+// Rutas protegidas (requieren autenticación)
+// ===========================================================================
+Route::middleware('auth')->group(function () {
 
     // Dashboard principal
     Route::get('/home', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
-
-    // API: Mantenimientos por día (para el calendario)
     Route::get('/dashboard/mantenimientos-dia', [DashboardController::class, 'mantenimientosDia'])
         ->name('dashboard.mantenimientos-dia');
-});
 
+    // Logout
+    /* Route::get('logout', [AuthController::class, 'logout'])->name('logout'); */
+    Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::middleware('auth')->group(function () {
-    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+    // Páginas del PageController (todas requieren auth, excepto login/register que ya están fuera)
     Route::controller(PageController::class)->group(function () {
-       
         Route::get('dashboard-overview-2-page', 'dashboardOverview2')->name('dashboard-overview-2');
         Route::get('dashboard-overview-3-page', 'dashboardOverview3')->name('dashboard-overview-3');
         Route::get('dashboard-overview-4-page', 'dashboardOverview4')->name('dashboard-overview-4');
@@ -84,8 +97,6 @@ Route::middleware('auth')->group(function () {
         Route::get('faq-layout-1-page', 'faqLayout1')->name('faq-layout-1');
         Route::get('faq-layout-2-page', 'faqLayout2')->name('faq-layout-2');
         Route::get('faq-layout-3-page', 'faqLayout3')->name('faq-layout-3');
-        Route::get('login-page', 'login')->name('login');
-        Route::get('register-page', 'register')->name('register');
         Route::get('error-page-page', 'errorPage')->name('error-page');
         Route::get('update-profile-page', 'updateProfile')->name('update-profile');
         Route::get('change-password-page', 'changePassword')->name('change-password');
@@ -119,43 +130,30 @@ Route::middleware('auth')->group(function () {
         Route::get('image-zoom-page', 'imageZoom')->name('image-zoom');
     });
 
-    Route::middleware(['auth'])
-        ->prefix('parametrizacion')
-        ->name('parametrizacion.')
-        ->group(function () {
+    // Parametrización
+    Route::prefix('parametrizacion')->name('parametrizacion.')->group(function () {
+        Route::resource('bloques', BloqueController::class);
+        Route::resource('tipos_inmueble', TipoInmuebleController::class);
+        Route::resource('periodicidades_mantenimiento', PeriodicidadMantenimientoController::class);
+        Route::resource('niveles_deterioro', NivelDeterioroController::class);
+        Route::resource('tipos_equipo', TipoEquipoController::class);
+        Route::resource('estados_equipo', EstadoEquipoController::class);
+        Route::resource('categorias_equipo', CategoriaEquipoController::class);
+        Route::resource('marcas', MarcaController::class);
+        Route::resource('criticidades', CriticidadController::class);
+    });
 
-            // ─── Gestión de Inmuebles ────────────────────────────────────
-            Route::resource('bloques', BloqueController::class);
-            Route::resource('tipos_inmueble', TipoInmuebleController::class);
-            Route::resource('periodicidades_mantenimiento', PeriodicidadMantenimientoController::class);
-            Route::resource('niveles_deterioro', NivelDeterioroController::class);
-
-            // ─── Gestión de Equipos ──────────────────────────────────────
-            Route::resource('tipos_equipo', TipoEquipoController::class);
-            Route::resource('estados_equipo', EstadoEquipoController::class);
-            Route::resource('categorias_equipo', CategoriaEquipoController::class);
-            Route::resource('marcas', MarcaController::class);
-            Route::resource('criticidades', CriticidadController::class);
-        });
-
-    Route::middleware(['auth'])->prefix('gestion')->name('gestion.')->group(function () {
-
-        // ── Inmuebles ──────────────────────────────────────────
+    // Gestión
+    Route::prefix('gestion')->name('gestion.')->group(function () {
         Route::resource('inmuebles', InmuebleController::class);
         Route::get('inmuebles-coordenadas', [InmuebleController::class, 'coordenadas'])
             ->name('inmuebles.coordenadas');
-
-        // ── Equipos ────────────────────────────────────────────
         Route::resource('equipos', EquipoController::class);
         Route::get('equipos-categorias-por-tipo', [EquipoController::class, 'categoriasPorTipo'])
             ->name('equipos.categorias-por-tipo');
-
-        // ── Mantenimientos ─────────────────────────────────────
         Route::resource('mantenimientos', MantenimientoController::class);
         Route::get('mantenimientos-activos-por-tipo', [MantenimientoController::class, 'activosPorTipo'])
             ->name('mantenimientos.activos-por-tipo');
-
-        // ── Garantías ──────────────────────────────────────────
         Route::resource('garantias', GarantiaController::class);
     });
 });
