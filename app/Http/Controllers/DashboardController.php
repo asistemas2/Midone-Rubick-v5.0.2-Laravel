@@ -150,19 +150,24 @@ class DashboardController extends Controller
             ->toArray();
 
         // ── Calendario de Mantenimientos (mes actual) ───────────
-        $inicioMes = $today->copy()->startOfMonth();
-        $finMes = $today->copy()->endOfMonth();
+        // Reemplazar el bloque de "Calendario de Mantenimientos (mes actual)"
+        $inicioAnio = $today->copy()->startOfYear();   // 2026-01-01
+        $finAnio   = $today->copy()->endOfYear();      // 2026-12-31
 
-        $mantEsteMes = Mantenimiento::activos()
+        $mantenimientosAnio = Mantenimiento::activos()
             ->whereNotNull('fecha_programada')
-            ->whereBetween('fecha_programada', [$inicioMes, $finMes])
+            ->whereBetween('fecha_programada', [$inicioAnio, $finAnio])
             ->with('activoRelacionado')
             ->orderBy('fecha_programada')
-            ->get()
-            ->groupBy(fn($m) => $m->fecha_programada->format('Y-m-d'));
+            ->get();
 
-        // Fechas con eventos para el calendario
-        $fechasConEventos = $mantEsteMes->keys()->toArray();
+        // Agrupar por fecha para el calendario
+        $eventosPorFecha = $mantenimientosAnio->groupBy(fn($m) => $m->fecha_programada->format('Y-m-d'));
+
+        // Fechas con eventos (para marcar días en el calendario)
+        $fechasConEventos = $eventosPorFecha->keys()->toArray();
+
+        // Si necesitas conservar la variable $mantEsteMes para alguna otra parte (p. ej. listado rápido), puedes mantenerla o unificarla.
 
         // ── Datos para la vista ─────────────────────────────────
         return view('pages.dashboard-overview-1', compact(
@@ -176,10 +181,10 @@ class DashboardController extends Controller
             'equiposPorCriticidad',
             'mantPorTipo',
             'fechasConEventos',
-            'mantEsteMes',
+           /*  'mantEsteMes', */
             'today'
-        ) ,[
-             'layout' => 'top-menu'
+        ), [
+            'layout' => 'top-menu'
             // Specify the base layout.
             // Eg: 'side-menu', 'simple-menu', 'top-menu', 'login'
             // The default value is 'side-menu'

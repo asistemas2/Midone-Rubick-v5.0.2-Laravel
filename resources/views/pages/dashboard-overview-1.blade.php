@@ -273,7 +273,7 @@
                                 <a href="{{ route('gestion.garantias.create') }}"
                                    class="flex items-center gap-3 rounded-lg border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition-all hover:border-primary hover:bg-slate-50 hover:translate-x-1 dark:border-darkmode-400 dark:text-slate-300 dark:hover:bg-darkmode-400">
                                     <div class="flex h-10 w-10 items-center justify-center rounded-lg" style="background: #e8f5e9;">
-                                        <x-base.lucide class="h-5 w-5" icon="ShieldPlus" style="color: #2e7d32;" />
+                                        <x-base.lucide class="h-5 w-5" icon="shield-check" style="color: #2e7d32;" />
                                     </div>
                                     Solicitar Garantía
                                 </a>
