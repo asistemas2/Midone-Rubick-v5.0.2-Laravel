@@ -75,12 +75,20 @@ class SimpleMenu
                                 'params'     => ['layout' => 'simple-menu'],
                                 'title'      => 'Hoja de Vida',
                             ],
+                            [
+                                'icon' => 'arrow-up-down',
+                                'title' => 'Asignación de Equipos',
+                                'route_name' => 'gestion.asignaciones.index',
+                                'params' => [
+                                    'layout' => 'side-menu',
+                                ],
+                            ],
                         ],
                     ],
 
                     // ── Mantenimientos ──
                     'mantenimientos' => [
-                        'icon' => 'tool',
+                        'icon' => 'flashlight',
                         'title' => 'Mantenimientos',
                         'sub_menu' => [
                             'mantenimientos-listado' => [
@@ -123,6 +131,7 @@ class SimpleMenu
                             ],
                         ],
                     ],
+
 
                 ],
             ],

@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ColorSchemeController;
 use App\Http\Controllers\DarkModeController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Gestion\AsignacionEquipoController;
 use App\Http\Controllers\Gestion\EquipoController;
 use App\Http\Controllers\Gestion\GarantiaController;
 use App\Http\Controllers\Gestion\InmuebleController;
@@ -51,6 +52,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/dashboard/mantenimientos-dia', [DashboardController::class, 'mantenimientosDia'])
         ->name('dashboard.mantenimientos-dia');
+
+
 
     // Logout
     /* Route::get('logout', [AuthController::class, 'logout'])->name('logout'); */
@@ -155,5 +158,8 @@ Route::middleware('auth')->group(function () {
         Route::get('mantenimientos-activos-por-tipo', [MantenimientoController::class, 'activosPorTipo'])
             ->name('mantenimientos.activos-por-tipo');
         Route::resource('garantias', GarantiaController::class);
+
+        // ── Asignación de Equipos a Inmuebles ────────────────
+        Route::resource('asignaciones', AsignacionEquipoController::class);
     });
 });

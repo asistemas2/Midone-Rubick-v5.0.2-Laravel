@@ -80,7 +80,7 @@ class SideMenu
 
                     // ── Mantenimientos ──
                     'mantenimientos' => [
-                        'icon' => 'tool',
+                        'icon' => 'flashlight',
                         'title' => 'Mantenimientos',
                         'sub_menu' => [
                             'mantenimientos-listado' => [
@@ -100,6 +100,14 @@ class SideMenu
                                 'route_name' => 'gestion.mantenimientos.index',
                                 'params'     => ['layout' => 'side-menu'],
                                 'title'      => 'Calendario',
+                            ],
+                            [
+                                'icon' => 'arrow-up-down',
+                                'title' => 'Asignación de Equipos',
+                                'route_name' => 'gestion.asignaciones.index',
+                                'params' => [
+                                    'layout' => 'side-menu',
+                                ],
                             ],
                         ],
                     ],
@@ -123,6 +131,7 @@ class SideMenu
                             ],
                         ],
                     ],
+
 
                 ],
             ],

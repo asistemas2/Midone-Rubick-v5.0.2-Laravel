@@ -43,12 +43,12 @@ class TopMenu
                                 'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Crear Inmueble',
                             ],
-                            'inmuebles-mapa' => [
+                            /* 'inmuebles-mapa' => [
                                 'icon'       => 'map',
                                 'route_name' => 'gestion.inmuebles.index',
                                 'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Mapa de Ubicaciones',
-                            ],
+                            ], */
                         ],
                     ],
 
@@ -69,18 +69,26 @@ class TopMenu
                                 'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Registrar Equipo',
                             ],
-                            'equipos-hoja-vida' => [
+                           /*  'equipos-hoja-vida' => [
                                 'icon'       => 'file-text',
                                 'route_name' => 'gestion.equipos.index',
                                 'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Hoja de Vida',
+                            ], */
+                            [
+                                'icon' => 'arrow-up-down',
+                                'title' => 'Asignación de Equipos',
+                                'route_name' => 'gestion.asignaciones.index',
+                                'params' => [
+                                    'layout' => 'side-menu',
+                                ],
                             ],
                         ],
                     ],
 
                     // ── Mantenimientos ──
                     'mantenimientos' => [
-                        'icon' => 'tool',
+                        'icon' => 'flashlight',
                         'title' => 'Mantenimientos',
                         'sub_menu' => [
                             'mantenimientos-listado' => [
@@ -121,6 +129,7 @@ class TopMenu
                                 'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Registrar',
                             ],
+                            
                         ],
                     ],
 
