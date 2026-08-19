@@ -24,6 +24,16 @@
                         @error('nombre') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-3">
+                        <x-base.form-label for="categoria_equipo_id">Categoría</x-base.form-label>
+                        <x-base.form-select class="w-full @error('categoria_equipo_id') border-danger @enderror" id="categoria_equipo_id" name="categoria_equipo_id">
+                            <option value="">-- Seleccione una categoría --</option>
+                            @foreach($categoriasEquipo as $cat)
+                                <option value="{{ $cat->id }}" {{ old('categoria_equipo_id', $tipoEquipo->categoria_equipo_id) == $cat->id ? 'selected' : '' }}>{{ $cat->nombre }}</option>
+                            @endforeach
+                        </x-base.form-select>
+                        @error('categoria_equipo_id') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
+                    </div>
+                    <div class="mt-3">
                         <x-base.form-label for="descripcion">Descripción</x-base.form-label>
                         <x-base.form-textarea class="w-full @error('descripcion') border-danger @enderror" id="descripcion" name="descripcion">{{ old('descripcion', $tipoEquipo->descripcion) }}</x-base.form-textarea>
                         @error('descripcion') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror

@@ -28,11 +28,11 @@ class EquipoController extends Controller
                 $query->where('nombre', 'like', '%' . $request->buscar . '%')
                       ->orWhere('codigo', 'like', '%' . $request->buscar . '%');
             })
-            ->when($request->filled('tipo_equipo_id'), function ($query) use ($request) {
-                $query->where('tipo_equipo_id', $request->tipo_equipo_id);
-            })
             ->when($request->filled('categoria_equipo_id'), function ($query) use ($request) {
                 $query->where('categoria_equipo_id', $request->categoria_equipo_id);
+            })
+            ->when($request->filled('tipo_equipo_id'), function ($query) use ($request) {
+                $query->where('tipo_equipo_id', $request->tipo_equipo_id);
             })
             ->when($request->filled('estado_equipo_id'), function ($query) use ($request) {
                 $query->where('estado_equipo_id', $request->estado_equipo_id);
@@ -45,10 +45,13 @@ class EquipoController extends Controller
             ->withQueryString();
 
         $tiposEquipo = TipoEquipo::activos()->orderBy('nombre')->get();
+        $categoriasEquipo = CategoriaEquipo::activos()->orderBy('nombre')->get();
         $estadosEquipo = EstadoEquipo::activos()->get();
         $criticidades = Criticidad::activos()->ordenadas()->get();
 
-        return view('gestion.equipos.index', compact('equipos', 'tiposEquipo', 'estadosEquipo', 'criticidades'));
+        return view('gestion.equipos.index', compact(
+            'equipos', 'tiposEquipo', 'categoriasEquipo', 'estadosEquipo', 'criticidades'
+        ));
     }
 
     public function create(): View
@@ -141,15 +144,15 @@ class EquipoController extends Controller
     }
 
     /**
-     * API: Categorías por tipo de equipo.
+     * API: Tipos por categoría (para combos dependientes)
      */
-    public function categoriasPorTipo(Request $request): JsonResponse
+    public function tiposPorCategoria(Request $request): JsonResponse
     {
-        $categorias = CategoriaEquipo::activos()
-            ->where('tipo_equipo_id', $request->tipo_equipo_id)
+        $tipos = TipoEquipo::activos()
+            ->where('categoria_equipo_id', $request->categoria_equipo_id)
             ->orderBy('nombre')
             ->get(['id', 'nombre']);
 
-        return response()->json($categorias);
+        return response()->json($tipos);
     }
 }

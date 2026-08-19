@@ -25,17 +25,15 @@
                     </div>
                 </div>
                 <div class="mt-5 space-y-4">
+                    <div class="flex items-start">
+                        <span class="w-32 text-slate-500">Categoría:</span>
+                        @if($tipoEquipo->categoriaEquipo)
+                            <span class="rounded bg-primary/10 px-2 py-1 text-sm font-medium text-primary">{{ $tipoEquipo->categoriaEquipo->nombre }}</span>
+                        @else
+                            <span class="font-medium">—</span>
+                        @endif
+                    </div>
                     <div class="flex items-start"><span class="w-32 text-slate-500">Descripción:</span><span class="font-medium">{{ $tipoEquipo->descripcion ?? '—' }}</span></div>
-                    @if($tipoEquipo->categorias && $tipoEquipo->categorias->count() > 0)
-                        <div class="flex items-start">
-                            <span class="w-32 text-slate-500">Categorías:</span>
-                            <div class="flex flex-wrap gap-1">
-                                @foreach($tipoEquipo->categorias as $cat)
-                                    <span class="rounded bg-primary/10 px-2 py-1 text-xs text-primary">{{ $cat->nombre }}</span>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
                     <div class="flex items-center"><span class="w-32 text-slate-500">Creado:</span><span class="font-medium">{{ $tipoEquipo->created_at->format('d/m/Y H:i') }}</span></div>
                     <div class="flex items-center"><span class="w-32 text-slate-500">Actualizado:</span><span class="font-medium">{{ $tipoEquipo->updated_at->format('d/m/Y H:i') }}</span></div>
                 </div>

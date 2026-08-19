@@ -20,18 +20,8 @@
                     @csrf
                     <div>
                         <x-base.form-label for="nombre">Nombre <span class="text-danger">*</span></x-base.form-label>
-                        <x-base.form-input class="w-full @error('nombre') border-danger @enderror" id="nombre" name="nombre" type="text" value="{{ old('nombre') }}" placeholder="Nombre de la categoría" required />
+                        <x-base.form-input class="w-full @error('nombre') border-danger @enderror" id="nombre" name="nombre" type="text" value="{{ old('nombre') }}" placeholder="Ej: Eléctrico, Hidráulico" required />
                         @error('nombre') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
-                    </div>
-                    <div class="mt-3">
-                        <x-base.form-label for="tipo_equipo_id">Tipo de Equipo</x-base.form-label>
-                        <x-base.form-select class="w-full @error('tipo_equipo_id') border-danger @enderror" id="tipo_equipo_id" name="tipo_equipo_id">
-                            <option value="">-- Seleccione un tipo --</option>
-                            @foreach ($tiposEquipo as $tipo)
-                                <option value="{{ $tipo->id }}" {{ old('tipo_equipo_id') == $tipo->id ? 'selected' : '' }}>{{ $tipo->nombre }}</option>
-                            @endforeach
-                        </x-base.form-select>
-                        @error('tipo_equipo_id') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-3">
                         <x-base.form-label for="descripcion">Descripción</x-base.form-label>

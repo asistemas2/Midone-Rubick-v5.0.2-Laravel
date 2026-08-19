@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +13,6 @@ class CategoriaEquipo extends Model
 
     protected $fillable = [
         'nombre',
-        'tipo_equipo_id',
         'descripcion',
         'activo',
     ];
@@ -23,17 +21,14 @@ class CategoriaEquipo extends Model
         'activo' => 'boolean',
     ];
 
-    /* ── Scopes ─────────────────────────────────── */
-
     public function scopeActivos($query)
     {
         return $query->where('activo', true);
     }
 
-    /* ── Relaciones ─────────────────────────────── */
-
-    public function tipoEquipo()
+    // Relación: una categoría tiene muchos tipos (nivel inferior)
+    public function tiposEquipo()
     {
-        return $this->belongsTo(TipoEquipo::class);
+        return $this->hasMany(TipoEquipo::class);
     }
 }

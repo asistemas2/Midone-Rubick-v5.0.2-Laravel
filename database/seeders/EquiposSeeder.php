@@ -1,5 +1,4 @@
 <?php
-
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -12,22 +11,14 @@ class EquiposSeeder extends Seeder
         $json = file_get_contents(database_path('seeders/data/equipos_seed.json'));
         $items = json_decode($json, true);
 
-        // Obtener IDs de tablas maestras
-        $tiposEquipo = DB::table('tipos_equipo')->pluck('id', 'nombre')->toArray();
+        // Obtener IDs de tablas maestras (ahora invertidas)
         $categoriasEquipo = DB::table('categorias_equipo')->pluck('id', 'nombre')->toArray();
+        $tiposEquipo = DB::table('tipos_equipo')->pluck('id', 'nombre')->toArray();
         $marcas = DB::table('marcas')->pluck('id', 'nombre')->toArray();
         $estadosEquipo = DB::table('estados_equipo')->pluck('id', 'nombre')->toArray();
         $criticidades = DB::table('criticidades')->pluck('id', 'nombre')->toArray();
         $periodicidades = DB::table('periodicidades_mantenimiento')->pluck('id', 'nombre')->toArray();
         $inmuebles = DB::table('inmuebles')->pluck('id', 'codigo')->toArray();
-
-        // Mapeo de categorías del JS a tipos_equipo de la BD
-        $catToTipo = [
-            'Eléctrico' => 'Eléctrico',
-            'General' => 'General',
-            'Hidráulico' => 'Hidráulico',
-            'HVAC' => 'HVAC',
-        ];
 
         // Mapeo plan de mantenimiento a periodicidad
         $planToPeriodicidad = [
@@ -42,15 +33,14 @@ class EquiposSeeder extends Seeder
         ];
 
         foreach ($items as $item) {
-            // Buscar tipo_equipo_id
-            $catTipo = $catToTipo[$item['categoria']] ?? 'General';
-            $tipoEquipoId = $tiposEquipo[$catTipo] ?? null;
+            // Buscar categoria_equipo_id (ahora nivel superior) por el campo 'categoria' del JSON
+            $categoriaId = $categoriasEquipo[$item['categoria']] ?? null;
 
-            // Buscar categoria_equipo_id por nombre de tipo del equipo
-            $categoriaId = null;
-            foreach ($categoriasEquipo as $nombre => $id) {
+            // Buscar tipo_equipo_id (nivel inferior) por coincidencia parcial en 'tipo' del JSON
+            $tipoId = null;
+            foreach ($tiposEquipo as $nombre => $id) {
                 if (stripos($nombre, $item['tipo']) !== false) {
-                    $categoriaId = $id;
+                    $tipoId = $id;
                     break;
                 }
             }
@@ -72,8 +62,8 @@ class EquiposSeeder extends Seeder
                 ['codigo' => $item['codigo']],
                 [
                     'nombre' => $item['nombre'],
-                    'tipo_equipo_id' => $tipoEquipoId,
-                    'categoria_equipo_id' => $categoriaId,
+                    'tipo_equipo_id' => $tipoId,               // ahora tipo (específico)
+                    'categoria_equipo_id' => $categoriaId,     // ahora categoría (general)
                     'marca_id' => $marcaId,
                     'modelo' => $item['modelo'],
                     'no_serie' => $item['no_serie'],

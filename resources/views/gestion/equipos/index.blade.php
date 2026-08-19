@@ -17,7 +17,15 @@
                 Mostrando {{ $equipos->firstItem() ?? 0 }} a {{ $equipos->lastItem() ?? 0 }} de {{ $equipos->total() }} registros
             </div>
             <div class="mt-3 w-full sm:mt-0 sm:ml-auto sm:w-auto md:ml-0">
-                <form action="{{ route('gestion.equipos.index') }}" method="GET" class="flex gap-2">
+                <form action="{{ route('gestion.equipos.index') }}" method="GET" class="flex gap-2 flex-wrap">
+                    {{-- Filtro por categoría --}}
+                    <x-base.form-select class="!box w-32" name="categoria_equipo_id">
+                        <option value="">Categoría</option>
+                        @foreach($categoriasEquipo as $cat)
+                            <option value="{{ $cat->id }}" {{ request('categoria_equipo_id') == $cat->id ? 'selected' : '' }}>{{ $cat->nombre }}</option>
+                        @endforeach
+                    </x-base.form-select>
+                    {{-- Filtro por tipo --}}
                     <x-base.form-select class="!box w-32" name="tipo_equipo_id">
                         <option value="">Tipo</option>
                         @foreach($tiposEquipo as $tipo)
@@ -65,6 +73,7 @@
                     <x-base.table.tr>
                         <x-base.table.th class="whitespace-nowrap border-b-0">CÓDIGO</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap border-b-0">NOMBRE</x-base.table.th>
+                        <x-base.table.th class="whitespace-nowrap border-b-0">CATEGORÍA</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap border-b-0">TIPO</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap border-b-0">MARCA</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap border-b-0 text-center">ESTADO</x-base.table.th>
@@ -80,6 +89,9 @@
                             </x-base.table.td>
                             <x-base.table.td class="border-b-0 bg-white shadow-[20px_3px_20px_#0000000b] first:rounded-l-md last:rounded-r-md dark:bg-darkmode-600">
                                 <a class="whitespace-nowrap font-medium" href="{{ route('gestion.equipos.show', $equipo) }}">{{ Str::limit($equipo->nombre, 40) }}</a>
+                            </x-base.table.td>
+                            <x-base.table.td class="border-b-0 bg-white shadow-[20px_3px_20px_#0000000b] first:rounded-l-md last:rounded-r-md dark:bg-darkmode-600">
+                                {{ $equipo->categoriaEquipo?->nombre ?? '—' }}
                             </x-base.table.td>
                             <x-base.table.td class="border-b-0 bg-white shadow-[20px_3px_20px_#0000000b] first:rounded-l-md last:rounded-r-md dark:bg-darkmode-600">
                                 {{ $equipo->tipoEquipo?->nombre ?? '—' }}
@@ -114,7 +126,7 @@
                         </x-base.table.tr>
                     @empty
                         <x-base.table.tr>
-                            <x-base.table.td colspan="7" class="border-b-0 bg-white text-center py-8 text-slate-500 dark:bg-darkmode-600">
+                            <x-base.table.td colspan="8" class="border-b-0 bg-white text-center py-8 text-slate-500 dark:bg-darkmode-600">
                                 <x-base.lucide class="mx-auto h-8 w-8 text-slate-300" icon="Wrench" />
                                 <div class="mt-2">No se encontraron equipos.</div>
                             </x-base.table.td>

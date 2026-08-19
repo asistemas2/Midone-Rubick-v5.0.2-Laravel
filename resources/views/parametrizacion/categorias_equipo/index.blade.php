@@ -16,14 +16,8 @@
             <div class="mx-auto hidden text-slate-500 md:block">
                 Mostrando {{ $categorias->firstItem() ?? 0 }} a {{ $categorias->lastItem() ?? 0 }} de {{ $categorias->total() }} registros
             </div>
-            <div class="mt-3 flex w-full gap-2 sm:mt-0 sm:ml-auto sm:w-auto md:ml-0">
-                <form action="{{ route('parametrizacion.categorias_equipo.index') }}" method="GET" class="flex gap-2">
-                    <x-base.form-select class="!box w-44" name="tipo_equipo_id" onchange="this.form.submit()">
-                        <option value="">Todos los tipos</option>
-                        @foreach ($tiposEquipo as $tipo)
-                            <option value="{{ $tipo->id }}" {{ request('tipo_equipo_id') == $tipo->id ? 'selected' : '' }}>{{ $tipo->nombre }}</option>
-                        @endforeach
-                    </x-base.form-select>
+            <div class="mt-3 w-full sm:mt-0 sm:ml-auto sm:w-auto md:ml-0">
+                <form action="{{ route('parametrizacion.categorias_equipo.index') }}" method="GET">
                     <div class="relative w-56 text-slate-500">
                         <x-base.form-input class="!box w-56 pr-10" name="buscar" type="text" value="{{ request('buscar') }}" placeholder="Buscar..." />
                         <x-base.lucide class="absolute inset-y-0 right-0 my-auto mr-3 h-4 w-4" icon="Search" />
@@ -44,7 +38,6 @@
                 <x-base.table.thead>
                     <x-base.table.tr>
                         <x-base.table.th class="whitespace-nowrap border-b-0">NOMBRE</x-base.table.th>
-                        <x-base.table.th class="whitespace-nowrap border-b-0">TIPO DE EQUIPO</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap border-b-0">DESCRIPCIÓN</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap border-b-0 text-center">ESTADO</x-base.table.th>
                         <x-base.table.th class="whitespace-nowrap border-b-0 text-center">ACCIONES</x-base.table.th>
@@ -55,12 +48,8 @@
                         <x-base.table.tr class="intro-x">
                             <x-base.table.td class="border-b-0 bg-white shadow-[20px_3px_20px_#0000b] first:rounded-l-md last:rounded-r-md dark:bg-darkmode-600">
                                 <a class="whitespace-nowrap font-medium" href="{{ route('parametrizacion.categorias_equipo.show', $categoria) }}">{{ $categoria->nombre }}</a>
-                            </x-base.table.td>
-                            <x-base.table.td class="border-b-0 bg-white shadow-[20px_3px_20px_#0000b] first:rounded-l-md last:rounded-r-md dark:bg-darkmode-600">
-                                @if($categoria->tipoEquipo)
-                                    <span class="rounded bg-primary/10 px-2 py-1 text-xs font-medium text-primary">{{ $categoria->tipoEquipo->nombre }}</span>
-                                @else
-                                    <span class="text-slate-400">—</span>
+                                @if($categoria->tiposEquipo->count())
+                                    <span class="ml-2 rounded bg-primary/10 px-1.5 py-0.5 text-xs text-primary">{{ $categoria->tiposEquipo->count() }} tipos</span>
                                 @endif
                             </x-base.table.td>
                             <x-base.table.td class="border-b-0 bg-white shadow-[20px_3px_20px_#0000b] first:rounded-l-md last:rounded-r-md dark:bg-darkmode-600">
@@ -80,7 +69,7 @@
                         </x-base.table.tr>
                     @empty
                         <x-base.table.tr>
-                            <x-base.table.td colspan="5" class="border-b-0 bg-white text-center py-8 text-slate-500 dark:bg-darkmode-600">
+                            <x-base.table.td colspan="4" class="border-b-0 bg-white text-center py-8 text-slate-500 dark:bg-darkmode-600">
                                 <x-base.lucide class="mx-auto h-8 w-8 text-slate-300" icon="Database" />
                                 <div class="mt-2">No se encontraron categorías de equipo.</div>
                             </x-base.table.td>

@@ -152,8 +152,7 @@ Route::middleware('auth')->group(function () {
         Route::get('inmuebles-coordenadas', [InmuebleController::class, 'coordenadas'])
             ->name('inmuebles.coordenadas');
         Route::resource('equipos', EquipoController::class);
-        Route::get('equipos-categorias-por-tipo', [EquipoController::class, 'categoriasPorTipo'])
-            ->name('equipos.categorias-por-tipo');
+        Route::get('equipos-tipos-por-categoria', [EquipoController::class, 'tiposPorCategoria'])->name('equipos.tipos-por-categoria');
         Route::resource('mantenimientos', MantenimientoController::class);
         Route::get('mantenimientos-activos-por-tipo', [MantenimientoController::class, 'activosPorTipo'])
             ->name('mantenimientos.activos-por-tipo');
