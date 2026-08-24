@@ -51,7 +51,9 @@ class EquipoController extends Controller
 
         return view('gestion.equipos.index', compact(
             'equipos', 'tiposEquipo', 'categoriasEquipo', 'estadosEquipo', 'criticidades'
-        ));
+        ),[
+            'layout' => 'top-menu'
+        ]);
     }
 
     public function create(): View

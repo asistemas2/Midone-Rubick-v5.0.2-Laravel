@@ -70,6 +70,11 @@ class Inmueble extends Model
         return $this->morphMany(Mantenimiento::class, 'activo', 'activo_type', 'activo_id');
     }
 
+    public function fichaTecnica()
+    {
+        return $this->hasOne(FichaTecnicaInmueble::class);
+    }
+
     // ── Scopes ──────────────────────────────────────────────
 
     public function scopeActivos($query)

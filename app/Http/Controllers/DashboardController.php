@@ -33,42 +33,44 @@ class DashboardController extends Controller
         // ── Alertas ─────────────────────────────────────────────
         $alertas = collect();
 
-        // Mantenimientos vencidos
+        // Mantenimientos vencidos (fecha_programada < hoy)
         $mantVencidos = Mantenimiento::activos()
             ->whereIn('estado', ['programado', 'en_proceso'])
             ->whereNotNull('fecha_programada')
             ->where('fecha_programada', '<', $today)
-            ->with('activoRelacionado')
             ->orderBy('fecha_programada')
             ->limit(5)
             ->get();
 
         foreach ($mantVencidos as $m) {
             $dias = $today->diffInDays($m->fecha_programada);
+            $nombreActivo = $this->getNombreActivo($m);
+            $tipoBadge = $this->getTipoBadge($m->tipo_mantenimiento);
             $alertas->push([
                 'tipo' => 'danger',
                 'icono' => 'AlertTriangle',
-                'texto' => "<strong>{$m->codigo}</strong> — {$m->nombre_activo}: mantenimiento <strong>vencido</strong> hace {$dias} día(s)",
+                'texto' => "<strong>{$m->codigo}</strong> — {$nombreActivo} {$tipoBadge}: mantenimiento <strong>vencido</strong> hace {$dias} día(s)",
                 'link' => route('gestion.mantenimientos.show', $m),
             ]);
         }
 
-        // Mantenimientos próximos (7 días)
+        // Mantenimientos próximos (0 a 7 días)
         $mantProximos = Mantenimiento::activos()
             ->whereIn('estado', ['programado', 'en_proceso'])
             ->whereNotNull('fecha_programada')
             ->whereBetween('fecha_programada', [$today, $today->copy()->addDays(7)])
-            ->with('activoRelacionado')
             ->orderBy('fecha_programada')
             ->limit(5)
             ->get();
 
         foreach ($mantProximos as $m) {
             $dias = $today->diffInDays($m->fecha_programada);
+            $nombreActivo = $this->getNombreActivo($m);
+            $tipoBadge = $this->getTipoBadge($m->tipo_mantenimiento);
             $alertas->push([
                 'tipo' => 'warning',
                 'icono' => 'Clock',
-                'texto' => "<strong>{$m->codigo}</strong> — {$m->nombre_activo}: mantenimiento en <strong>{$dias} día(s)</strong>",
+                'texto' => "<strong>{$m->codigo}</strong> — {$nombreActivo} {$tipoBadge}: mantenimiento en <strong>{$dias} día(s)</strong>",
                 'link' => route('gestion.mantenimientos.show', $m),
             ]);
         }
@@ -149,10 +151,9 @@ class DashboardController extends Controller
             ->pluck('total', 'tipo_mantenimiento')
             ->toArray();
 
-        // ── Calendario de Mantenimientos (mes actual) ───────────
-        // Reemplazar el bloque de "Calendario de Mantenimientos (mes actual)"
-        $inicioAnio = $today->copy()->startOfYear();   // 2026-01-01
-        $finAnio   = $today->copy()->endOfYear();      // 2026-12-31
+        // ── Calendario de Mantenimientos (año completo) ────────
+        $inicioAnio = $today->copy()->startOfYear();
+        $finAnio   = $today->copy()->endOfYear();
 
         $mantenimientosAnio = Mantenimiento::activos()
             ->whereNotNull('fecha_programada')
@@ -161,13 +162,10 @@ class DashboardController extends Controller
             ->orderBy('fecha_programada')
             ->get();
 
-        // Agrupar por fecha para el calendario
-        $eventosPorFecha = $mantenimientosAnio->groupBy(fn($m) => $m->fecha_programada->format('Y-m-d'));
-
-        // Fechas con eventos (para marcar días en el calendario)
-        $fechasConEventos = $eventosPorFecha->keys()->toArray();
-
-        // Si necesitas conservar la variable $mantEsteMes para alguna otra parte (p. ej. listado rápido), puedes mantenerla o unificarla.
+        $fechasConEventos = $mantenimientosAnio
+            ->groupBy(fn($m) => $m->fecha_programada->format('Y-m-d'))
+            ->keys()
+            ->toArray();
 
         // ── Datos para la vista ─────────────────────────────────
         return view('pages.dashboard-overview-1', compact(
@@ -181,15 +179,9 @@ class DashboardController extends Controller
             'equiposPorCriticidad',
             'mantPorTipo',
             'fechasConEventos',
-           /*  'mantEsteMes', */
             'today'
         ), [
             'layout' => 'top-menu'
-            // Specify the base layout.
-            // Eg: 'side-menu', 'simple-menu', 'top-menu', 'login'
-            // The default value is 'side-menu'
-
-            // 'layout' => 'side-menu'
         ]);
     }
 
@@ -210,12 +202,44 @@ class DashboardController extends Controller
             ->map(fn($m) => [
                 'id' => $m->id,
                 'codigo' => $m->codigo,
-                'activo' => $m->nombre_activo,
+                'activo' => $this->getNombreActivo($m),
                 'tipo' => $m->tipo_mantenimiento,
                 'estado' => $m->estado,
                 'link' => route('gestion.mantenimientos.show', $m),
             ]);
 
         return response()->json($mantenimientos);
+    }
+
+    /**
+     * Obtener el nombre del activo (inmueble o equipo) a partir del mantenimiento
+     */
+    private function getNombreActivo(Mantenimiento $mantenimiento): string
+    {
+        if ($mantenimiento->tipo_activo === 'inmueble') {
+            $inmueble = Inmueble::withTrashed()->find($mantenimiento->activo_id);
+            return $inmueble ? $inmueble->nombre : 'Inmueble eliminado';
+        }
+
+        if ($mantenimiento->tipo_activo === 'equipo') {
+            $equipo = Equipo::withTrashed()->find($mantenimiento->activo_id);
+            return $equipo ? $equipo->nombre : 'Equipo eliminado';
+        }
+
+        return 'N/A';
+    }
+
+    /**
+     * Helper para obtener el badge HTML del tipo de mantenimiento
+     */
+    private function getTipoBadge(string $tipo): string
+    {
+        $colors = [
+            'preventivo' => 'bg-success/10 text-success',
+            'correctivo' => 'bg-danger/10 text-danger',
+            'predictivo' => 'bg-primary/10 text-primary',
+        ];
+        $color = $colors[$tipo] ?? 'bg-secondary/10 text-secondary';
+        return "<span class='badge badge-sm {$color} px-2 py-0.5 rounded-md text-xs font-medium'>{$tipo}</span>";
     }
 }

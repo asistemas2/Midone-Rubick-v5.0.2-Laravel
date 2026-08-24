@@ -56,10 +56,6 @@
                         <div class="text-xs text-slate-500">Área Construida (m²)</div>
                         <div class="mt-1 font-medium">{{ $inmueble->area_construida_m2 ? number_format($inmueble->area_construida_m2, 2) : '—' }}</div>
                     </div>
-                   {{--  <div class="col-span-6 sm:col-span-4">
-                        <div class="text-xs text-slate-500">Valor Catastral</div>
-                        <div class="mt-1 font-medium">{{ $inmueble->valor_catastral ? '$ ' . number_format($inmueble->valor_catastral, 2) : '—' }}</div>
-                    </div> --}}
                     <div class="col-span-12">
                         <div class="text-xs text-slate-500">Dirección</div>
                         <div class="mt-1 font-medium">{{ $inmueble->direccion ?? '—' }}</div>
@@ -71,6 +67,119 @@
                     </div>
                     @endif
                 </div>
+
+                {{-- FICHA TÉCNICA --}}
+                @if($inmueble->fichaTecnica)
+                    <div class="mt-5 border-t border-slate-200/60 pt-5 dark:border-darkmode-400">
+                        <h4 class="text-sm font-semibold text-slate-700 mb-3">Ficha Técnica de Bodega</h4>
+                        <div class="grid grid-cols-12 gap-4">
+                            {{-- Áreas --}}
+                            <div class="col-span-12">
+                                <h5 class="text-xs font-medium text-slate-500">Áreas</h5>
+                            </div>
+                            <div class="col-span-12 sm:col-span-4">
+                                <div class="text-xs text-slate-500">Área Calificada</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->area_calificada ? number_format($inmueble->fichaTecnica->area_calificada, 2) : '—' }} m²</div>
+                            </div>
+                            <div class="col-span-12 sm:col-span-4">
+                                <div class="text-xs text-slate-500">Área Útil</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->area_util ? number_format($inmueble->fichaTecnica->area_util, 2) : '—' }} m²</div>
+                            </div>
+                            <div class="col-span-12 sm:col-span-4">
+                                <div class="text-xs text-slate-500">Área Bruta</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->area_bruta ? number_format($inmueble->fichaTecnica->area_bruta, 2) : '—' }} m²</div>
+                            </div>
+
+                            {{-- Servicios --}}
+                            <div class="col-span-12 mt-2">
+                                <h5 class="text-xs font-medium text-slate-500">Servicios</h5>
+                            </div>
+                            <div class="col-span-12 sm:col-span-4">
+                                <div class="text-xs text-slate-500">Capacidad Eléctrica</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->capacidad_electrica ?? '—' }}</div>
+                            </div>
+                            <div class="col-span-12 sm:col-span-4">
+                                <div class="text-xs text-slate-500">Agua - Diámetro Acometida</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->agua_diametro ?? '—' }}</div>
+                            </div>
+                            <div class="col-span-12 sm:col-span-4">
+                                <div class="text-xs text-slate-500">Tubería Aguas Lluvias</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->tuberia_aguas_lluvias ?? '—' }}</div>
+                            </div>
+
+                            {{-- Contra Incendios --}}
+                            <div class="col-span-12 mt-2">
+                                <h5 class="text-xs font-medium text-slate-500">Sistema Contra Incendios</h5>
+                            </div>
+                            <div class="col-span-12 sm:col-span-4">
+                                <div class="text-xs text-slate-500">Cajas Inspección Pluvial</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->cajas_inspeccion_pluvial ?? '—' }}</div>
+                            </div>
+                            <div class="col-span-12 sm:col-span-6">
+                                <div class="text-xs text-slate-500">Red Contra Incendios</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->red_contra_incendios ?? '—' }}</div>
+                            </div>
+                            <div class="col-span-12 sm:col-span-2">
+                                <div class="text-xs text-slate-500">Gabinetes C.I.</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->gabinetes_ci ?? '—' }}</div>
+                            </div>
+
+                            {{-- Estructura y Acabados --}}
+                            <div class="col-span-12 mt-2">
+                                <h5 class="text-xs font-medium text-slate-500">Estructura y Acabados</h5>
+                            </div>
+                            <div class="col-span-12">
+                                <div class="text-xs text-slate-500">Cubierta</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->cubierta ?? '—' }}</div>
+                            </div>
+                            <div class="col-span-12 sm:col-span-6">
+                                <div class="text-xs text-slate-500">Muros</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->muros ?? '—' }}</div>
+                            </div>
+                            <div class="col-span-12 sm:col-span-6">
+                                <div class="text-xs text-slate-500">Acabados</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->acabados ?? '—' }}</div>
+                            </div>
+                            <div class="col-span-12 sm:col-span-4">
+                                <div class="text-xs text-slate-500">Pisos</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->pisos ?? '—' }}</div>
+                            </div>
+                            <div class="col-span-12 sm:col-span-4">
+                                <div class="text-xs text-slate-500">Blindaje / Juntas</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->blindaje_juntas ?? '—' }}</div>
+                            </div>
+                            <div class="col-span-12 sm:col-span-4">
+                                <div class="text-xs text-slate-500">Estructura</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->estructura ?? '—' }}</div>
+                            </div>
+                            <div class="col-span-12">
+                                <div class="text-xs text-slate-500">Puertas y Ventanas</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->puertas_ventanas ?? '—' }}</div>
+                            </div>
+
+                            {{-- Complementos --}}
+                            <div class="col-span-12 mt-2">
+                                <h5 class="text-xs font-medium text-slate-500">Complementos</h5>
+                            </div>
+                            <div class="col-span-12 sm:col-span-3">
+                                <div class="text-xs text-slate-500">Muelle</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->muelle ? 'Sí' : 'No' }}</div>
+                            </div>
+                            <div class="col-span-12 sm:col-span-3">
+                                <div class="text-xs text-slate-500">Mezzanine</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->mezzanine ? 'Sí' : 'No' }}</div>
+                            </div>
+                            <div class="col-span-12 sm:col-span-3">
+                                <div class="text-xs text-slate-500">Cocineta</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->cocineta ? 'Sí' : 'No' }}</div>
+                            </div>
+                            <div class="col-span-12 sm:col-span-3">
+                                <div class="text-xs text-slate-500">Bloques de Baños</div>
+                                <div class="font-medium">{{ $inmueble->fichaTecnica->bloques_banos ?? '—' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
 
             {{-- Mapa --}}

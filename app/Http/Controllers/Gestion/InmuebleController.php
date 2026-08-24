@@ -22,7 +22,7 @@ class InmuebleController extends Controller
             ->with(['bloque', 'tipoInmueble', 'nivelDeterioro'])
             ->when($request->filled('buscar'), function ($query) use ($request) {
                 $query->where('nombre', 'like', '%' . $request->buscar . '%')
-                      ->orWhere('codigo', 'like', '%' . $request->buscar . '%');
+                    ->orWhere('codigo', 'like', '%' . $request->buscar . '%');
             })
             ->when($request->filled('estado'), function ($query) use ($request) {
                 $query->where('estado', $request->estado);
@@ -55,7 +55,11 @@ class InmuebleController extends Controller
     public function store(StoreInmuebleRequest $request): RedirectResponse
     {
         try {
-            Inmueble::create($request->validated());
+            $inmueble = Inmueble::create($request->validated());
+
+            if ($request->filled('ficha_tecnica')) {
+                $inmueble->fichaTecnica()->create($request->input('ficha_tecnica'));
+            }
 
             return redirect()
                 ->route('gestion.inmuebles.index')
@@ -70,10 +74,10 @@ class InmuebleController extends Controller
 
     public function show(Inmueble $inmueble): View
     {
-        $inmueble->load(['bloque', 'tipoInmueble', 'nivelDeterioro', 'equipos', 'mantenimientos']);
-
+        $inmueble->load(['bloque', 'tipoInmueble', 'nivelDeterioro', 'equipos', 'mantenimientos', 'fichaTecnica']);
         return view('gestion.inmuebles.show', compact('inmueble'));
     }
+
 
     public function edit(Inmueble $inmueble): View
     {
@@ -88,6 +92,13 @@ class InmuebleController extends Controller
     {
         try {
             $inmueble->update($request->validated());
+
+            if ($request->filled('ficha_tecnica')) {
+                $inmueble->fichaTecnica()->updateOrCreate(
+                    ['inmueble_id' => $inmueble->id],
+                    $request->input('ficha_tecnica')
+                );
+            }
 
             return redirect()
                 ->route('gestion.inmuebles.index')

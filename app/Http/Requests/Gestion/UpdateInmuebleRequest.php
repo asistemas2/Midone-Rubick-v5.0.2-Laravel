@@ -30,6 +30,28 @@ class UpdateInmuebleRequest extends FormRequest
             'valor_catastral' => 'nullable|numeric|min:0',
             'observaciones' => 'nullable|string',
             'activo' => 'sometimes|boolean',
+            // Ficha técnica
+            'ficha_tecnica' => 'nullable|array',
+            'ficha_tecnica.area_calificada' => 'nullable|numeric|min:0',
+            'ficha_tecnica.area_util' => 'nullable|numeric|min:0',
+            'ficha_tecnica.area_bruta' => 'nullable|numeric|min:0',
+            'ficha_tecnica.capacidad_electrica' => 'nullable|string|max:50',
+            'ficha_tecnica.agua_diametro' => 'nullable|string|max:20',
+            'ficha_tecnica.tuberia_aguas_lluvias' => 'nullable|string',
+            'ficha_tecnica.cajas_inspeccion_pluvial' => 'nullable|string|max:255',
+            'ficha_tecnica.red_contra_incendios' => 'nullable|string',
+            'ficha_tecnica.gabinetes_ci' => 'nullable|integer|min:0',
+            'ficha_tecnica.cubierta' => 'nullable|string',
+            'ficha_tecnica.muros' => 'nullable|string',
+            'ficha_tecnica.acabados' => 'nullable|string',
+            'ficha_tecnica.pisos' => 'nullable|string',
+            'ficha_tecnica.blindaje_juntas' => 'nullable|string',
+            'ficha_tecnica.estructura' => 'nullable|string',
+            'ficha_tecnica.puertas_ventanas' => 'nullable|string',
+            'ficha_tecnica.muelle' => 'nullable|boolean',
+            'ficha_tecnica.mezzanine' => 'nullable|boolean',
+            'ficha_tecnica.bloques_banos' => 'nullable|integer|min:0',
+            'ficha_tecnica.cocineta' => 'nullable|boolean',
         ];
     }
 
