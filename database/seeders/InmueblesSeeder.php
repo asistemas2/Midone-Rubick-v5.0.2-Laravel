@@ -147,7 +147,7 @@ class InmueblesSeeder extends Seeder
                     'nombre' => $item['nombre'],
                     'bloque_id' => $bloqueId,
                     'tipo_inmueble_id' => $tipoId,
-                    'direccion' => 'Zona Franca del Pacífico, Palmira, Valle del Cauca',
+                    'direccion' => 'Zona Franca Palmaseca,Contiguo Aeropuerto Internacional Alfonso Bonilla Aragón, Palmira, Valle del Cauca',
                     'area_m2' => $ft['areaBruta'] ?? null,
                     'area_construida_m2' => $ft['areaUtil'] ?? null,
                     'latitud' => round($lat, 8),
