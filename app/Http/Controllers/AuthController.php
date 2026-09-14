@@ -6,11 +6,12 @@ use Illuminate\View\View;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class AuthController extends Controller
 {
     /**
-     * Show specified view.
+     * Show login view.
      */
     public function loginView(): View
     {
@@ -21,11 +22,20 @@ class AuthController extends Controller
 
     /**
      * Authenticate login user.
-     *
-     * @param  \Illuminate\Http\Request  $request
      */
     public function login(LoginRequest $request)
     {
+        // Buscar usuario por email
+        $user = User::where('email', $request->email)->first();
+
+        // Verificar si existe y está activo
+        if (!$user || !$user->active) {
+            return response()->json([
+                'message' => 'Esta cuenta no está activa o no existe.'
+            ], 401);
+        }
+
+        // Intentar autenticar
         if (Auth::attempt([
             'email' => $request->email,
             'password' => $request->password
@@ -35,7 +45,7 @@ class AuthController extends Controller
         }
 
         return response()->json([
-            'message' => 'Wrong email or password.'
+            'message' => 'Correo o contraseña incorrectos.'
         ], 401);
     }
 
@@ -45,6 +55,8 @@ class AuthController extends Controller
     public function logout(): RedirectResponse
     {
         Auth::logout();
+        session()->invalidate();
+        session()->regenerateToken();
         return redirect()->route('login');
     }
 }

@@ -144,37 +144,60 @@
                 <x-base.menu>
                     <x-base.menu.button
                         class="image-fit zoom-in intro-x block h-8 w-8 scale-110 overflow-hidden rounded-full shadow-lg">
-                        <img src="{{ Vite::asset($faker['photos'][0]) }}" alt="Midone Tailwind HTML Admin Template" />
+                        <img src="{{ auth()->user()->avatar ?? Vite::asset('resources/images/default-avatar.png') }}"
+                            alt="{{ auth()->user()->full_name }}" />
                     </x-base.menu.button>
+
                     <x-base.menu.items
                         class="relative mt-px w-56 bg-primary/80 text-white before:absolute before:inset-0 before:z-[-1] before:block before:rounded-md before:bg-black">
+                        {{-- Header con datos del usuario --}}
                         <x-base.menu.header class="font-normal">
-                            <div class="font-medium">{{ $fakers[0]['users'][0]['name'] }}</div>
+                            <div class="font-medium">{{ auth()->user()->full_name }}</div>
                             <div class="mt-0.5 text-xs text-white/70 dark:text-slate-500">
-                                {{ $fakers[0]['jobs'][0] }}
+                                {{ auth()->user()->position ?? 'Sin cargo' }}
                             </div>
+                            @if (auth()->user()->roles->isNotEmpty())
+                                <div class="mt-1">
+                                    <span
+                                        class="inline-block rounded bg-white/20 px-2 py-0.5 text-xs font-medium text-white">
+                                        {{ auth()->user()->roles->first()->name }}
+                                    </span>
+                                </div>
+                            @endif
                         </x-base.menu.header>
+
                         <x-base.menu.divider class="bg-white/[0.08]" />
+
+                        {{-- Editar Perfil --}}
                         <x-base.menu.item class="hover:bg-white/5">
-                            <x-base.lucide class="mr-2 h-4 w-4" icon="User" /> Profile
+                            <a href="{{ route('profile.edit') }}" class="flex w-full items-center">
+                                <x-base.lucide class="mr-2 h-4 w-4" icon="User" />
+                                Editar Perfil
+                            </a>
                         </x-base.menu.item>
+
+                        {{-- Cambiar Contraseña --}}
                         <x-base.menu.item class="hover:bg-white/5">
-                            <x-base.lucide class="mr-2 h-4 w-4" icon="Edit" /> Add Account
+                            <a href="{{ route('profile.password') }}" class="flex w-full items-center">
+                                <x-base.lucide class="mr-2 h-4 w-4" icon="Lock" />
+                                Cambiar Contraseña
+                            </a>
                         </x-base.menu.item>
-                        <x-base.menu.item class="hover:bg-white/5">
-                            <x-base.lucide class="mr-2 h-4 w-4" icon="Lock" /> Reset Password
-                        </x-base.menu.item>
-                        <x-base.menu.item class="hover:bg-white/5">
-                            <x-base.lucide class="mr-2 h-4 w-4" icon="HelpCircle" /> Help
-                        </x-base.menu.item>
+
+                        {{-- (Opcional) Puedes agregar más opciones aquí --}}
+                        {{-- <x-base.menu.item class="hover:bg-white/5">
+            <x-base.lucide class="mr-2 h-4 w-4" icon="HelpCircle" /> Ayuda
+        </x-base.menu.item> --}}
+
                         <x-base.menu.divider class="bg-white/[0.08]" />
+
+                        {{-- Logout --}}
                         <x-base.menu.item class="hover:bg-white/5">
-                            <form method="POST" action="{{ route('logout') }}" id="logout-form"
-                                style="display: inline;">
+                            <form method="POST" action="{{ route('logout') }}" class="w-full">
                                 @csrf
-                                <button type="submit"
-                                    style="background: none; border: none; width: 100%; text-align: left; padding: 0; display: flex; align-items: center;">
-                                    <x-base.lucide class="mr-2 h-4 w-4" icon="ToggleRight" /> Logout
+                                <button type="submit" class="flex w-full items-center">
+                                    <x-base.lucide class="mr-2 h-4 w-4" icon="ToggleRight" />
+                                    Cerrar Sesión
                                 </button>
                             </form>
                         </x-base.menu.item>

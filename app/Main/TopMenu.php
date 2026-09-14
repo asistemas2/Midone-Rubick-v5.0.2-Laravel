@@ -43,12 +43,6 @@ class TopMenu
                                 'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Crear Inmueble',
                             ],
-                            /* 'inmuebles-mapa' => [
-                                'icon'       => 'map',
-                                'route_name' => 'gestion.inmuebles.index',
-                                'params'     => ['layout' => 'top-menu'],
-                                'title'      => 'Mapa de Ubicaciones',
-                            ], */
                         ],
                     ],
 
@@ -69,18 +63,12 @@ class TopMenu
                                 'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Registrar Equipo',
                             ],
-                           /*  'equipos-hoja-vida' => [
-                                'icon'       => 'file-text',
-                                'route_name' => 'gestion.equipos.index',
-                                'params'     => ['layout' => 'top-menu'],
-                                'title'      => 'Hoja de Vida',
-                            ], */
                             [
                                 'icon' => 'arrow-up-down',
                                 'title' => 'Asignación de Equipos',
                                 'route_name' => 'gestion.asignaciones.index',
                                 'params' => [
-                                    'layout' => 'side-menu',
+                                    'layout' => 'top-menu',
                                 ],
                             ],
                         ],
@@ -129,7 +117,26 @@ class TopMenu
                                 'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Registrar',
                             ],
-                            
+                        ],
+                    ],
+
+                    // ── Usuarios (NUEVO) ──
+                    'usuarios' => [
+                        'icon' => 'users',
+                        'title' => 'Usuarios',
+                        'sub_menu' => [
+                            'usuarios-listado' => [
+                                'icon'       => 'list',
+                                'route_name' => 'gestion.usuarios.index',
+                                'params'     => ['layout' => 'top-menu'],
+                                'title'      => 'Listado',
+                            ],
+                            'usuarios-crear' => [
+                                'icon'       => 'plus-circle',
+                                'route_name' => 'gestion.usuarios.create',
+                                'params'     => ['layout' => 'top-menu'],
+                                'title'      => 'Crear Usuario',
+                            ],
                         ],
                     ],
 
@@ -141,8 +148,6 @@ class TopMenu
                 'icon' => 'settings',
                 'title' => 'Parametrización',
                 'sub_menu' => [
-
-                    // ─── Sección: Gestión de Inmuebles ────
                     'gestion-inmuebles' => [
                         'icon'     => 'building-2',
                         'title'    => 'Gestión de Inmuebles',
@@ -173,8 +178,6 @@ class TopMenu
                             ],
                         ],
                     ],
-
-                    // ─── Sección: Gestión de Equipos ────
                     'gestion-equipos' => [
                         'icon'     => 'wrench',
                         'title'    => 'Gestión de Equipos',
@@ -211,7 +214,6 @@ class TopMenu
                             ],
                         ],
                     ],
-
                 ],
             ],
         ];

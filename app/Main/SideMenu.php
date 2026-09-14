@@ -132,6 +132,25 @@ class SideMenu
                         ],
                     ],
 
+                    // ── Usuarios ── (NUEVO)
+                    'usuarios' => [
+                        'icon' => 'users',
+                        'title' => 'Usuarios',
+                        'sub_menu' => [
+                            'usuarios-listado' => [
+                                'icon'       => 'list',
+                                'route_name' => 'gestion.usuarios.index',
+                                'params'     => ['layout' => 'side-menu'],
+                                'title'      => 'Listado',
+                            ],
+                            'usuarios-crear' => [
+                                'icon'       => 'plus-circle',
+                                'route_name' => 'gestion.usuarios.create',
+                                'params'     => ['layout' => 'side-menu'],
+                                'title'      => 'Crear Usuario',
+                            ],
+                        ],
+                    ],
 
                 ],
             ],

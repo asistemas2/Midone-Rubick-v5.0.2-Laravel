@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\ColorSchemeController;
 use App\Http\Controllers\DarkModeController;
 use App\Http\Controllers\DashboardController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\Parametrizacion\NivelDeterioroController;
 use App\Http\Controllers\Parametrizacion\PeriodicidadMantenimientoController;
 use App\Http\Controllers\Parametrizacion\TipoEquipoController;
 use App\Http\Controllers\Parametrizacion\TipoInmuebleController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,39 +29,53 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Rutas públicas (no requieren autenticación)
+// ===========================================================================
+// RUTAS PÚBLICAS (no requieren autenticación)
+// ===========================================================================
+
+// Switchers de tema (públicos)
 Route::get('dark-mode-switcher', [DarkModeController::class, 'switch'])->name('dark-mode-switcher');
 Route::get('color-scheme-switcher/{color_scheme}', [ColorSchemeController::class, 'switch'])->name('color-scheme-switcher');
 
-// Página de login (GET) – dos URL posibles: '/' y '/login'
+// Login
 Route::get('/', [AuthController::class, 'loginView'])->name('login.index');
-Route::get('/login', [AuthController::class, 'loginView'])->name('login'); // nombre alternativo si se necesita
-
-// Procesamiento del login (POST)
+Route::get('/login', [AuthController::class, 'loginView'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
-// Páginas públicas adicionales (si las usas)
-Route::get('/login-page', [PageController::class, 'login'])->name('login.page');
+// Registro (si se habilita)
 Route::get('/register-page', [PageController::class, 'register'])->name('register.page');
 
+// Autenticación con Google (Socialite)
+Route::get('auth/google', [SocialiteController::class, 'redirectToGoogle'])->name('auth.google');
+Route::get('auth/google/callback', [SocialiteController::class, 'handleGoogleCallback']);
+
+
 // ===========================================================================
-// Rutas protegidas (requieren autenticación)
+// RUTAS PROTEGIDAS (requieren autenticación)
 // ===========================================================================
+
 Route::middleware('auth')->group(function () {
 
-    // Dashboard principal
+    // ─── Perfil de Usuario ──────────────────────────────────────────────
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'show'])->name('overview');
+        Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
+        Route::put('/', [ProfileController::class, 'update'])->name('update');
+        Route::get('/password', [ProfileController::class, 'password'])->name('password');
+        Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    });
+
+    // ─── Dashboard ────────────────────────────────────────────────────────
+    // Accesible para todos los usuarios autenticados
     Route::get('/home', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/dashboard/mantenimientos-dia', [DashboardController::class, 'mantenimientosDia'])
         ->name('dashboard.mantenimientos-dia');
 
-
-
-    // Logout
-    /* Route::get('logout', [AuthController::class, 'logout'])->name('logout'); */
+    // ─── Logout ──────────────────────────────────────────────────────────
     Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Páginas del PageController (todas requieren auth, excepto login/register que ya están fuera)
+    // ─── Páginas auxiliares (PageController) ────────────────────────────
     Route::controller(PageController::class)->group(function () {
         Route::get('dashboard-overview-2-page', 'dashboardOverview2')->name('dashboard-overview-2');
         Route::get('dashboard-overview-3-page', 'dashboardOverview3')->name('dashboard-overview-3');
@@ -133,32 +149,56 @@ Route::middleware('auth')->group(function () {
         Route::get('image-zoom-page', 'imageZoom')->name('image-zoom');
     });
 
-    // Parametrización
-    Route::prefix('parametrizacion')->name('parametrizacion.')->group(function () {
-        Route::resource('bloques', BloqueController::class);
-        Route::resource('tipos_inmueble', TipoInmuebleController::class);
-        Route::resource('periodicidades_mantenimiento', PeriodicidadMantenimientoController::class);
-        Route::resource('niveles_deterioro', NivelDeterioroController::class);
-        Route::resource('tipos_equipo', TipoEquipoController::class);
-        Route::resource('estados_equipo', EstadoEquipoController::class);
-        Route::resource('categorias_equipo', CategoriaEquipoController::class);
-        Route::resource('marcas', MarcaController::class);
-        Route::resource('criticidades', CriticidadController::class);
-    });
+    Route::middleware('role:Administrador|Operador')
+        ->prefix('gestion')
+        ->name('gestion.')
+        ->group(function () {
+            // ... (inmuebles, equipos, mantenimientos, garantias, asignaciones)
 
-    // Gestión
-    Route::prefix('gestion')->name('gestion.')->group(function () {
-        Route::resource('inmuebles', InmuebleController::class);
-        Route::get('inmuebles-coordenadas', [InmuebleController::class, 'coordenadas'])
-            ->name('inmuebles.coordenadas');
-        Route::resource('equipos', EquipoController::class);
-        Route::get('equipos-tipos-por-categoria', [EquipoController::class, 'tiposPorCategoria'])->name('equipos.tipos-por-categoria');
-        Route::resource('mantenimientos', MantenimientoController::class);
-        Route::get('mantenimientos-activos-por-tipo', [MantenimientoController::class, 'activosPorTipo'])
-            ->name('mantenimientos.activos-por-tipo');
-        Route::resource('garantias', GarantiaController::class);
+            // Gestión de Usuarios (solo Administradores)
+            Route::resource('usuarios', \App\Http\Controllers\UserController::class)
+                ->parameters(['usuarios' => 'user'])
+                ->middleware('role:Administrador');
+        });
 
-        // ── Asignación de Equipos a Inmuebles ────────────────
-        Route::resource('asignaciones', AsignacionEquipoController::class);
-    });
+    // ─── PARAMETRIZACIÓN ──────────────────────────────────────────────────
+    // Solo usuarios con rol Administrador
+    Route::middleware('role:Administrador')
+        ->prefix('parametrizacion')
+        ->name('parametrizacion.')
+        ->group(function () {
+            Route::resource('bloques', BloqueController::class);
+            Route::resource('tipos_inmueble', TipoInmuebleController::class);
+            Route::resource('periodicidades_mantenimiento', PeriodicidadMantenimientoController::class);
+            Route::resource('niveles_deterioro', NivelDeterioroController::class);
+            Route::resource('tipos_equipo', TipoEquipoController::class);
+            Route::resource('estados_equipo', EstadoEquipoController::class);
+            Route::resource('categorias_equipo', CategoriaEquipoController::class);
+            Route::resource('marcas', MarcaController::class);
+            Route::resource('criticidades', CriticidadController::class);
+        });
+
+    // ─── GESTIÓN ──────────────────────────────────────────────────────────
+    // Administradores y Operadores
+    Route::middleware('role:Administrador|Operador')
+        ->prefix('gestion')
+        ->name('gestion.')
+        ->group(function () {
+            Route::resource('inmuebles', InmuebleController::class);
+            Route::get('inmuebles-coordenadas', [InmuebleController::class, 'coordenadas'])
+                ->name('inmuebles.coordenadas');
+
+            Route::resource('equipos', EquipoController::class);
+            Route::get('equipos-tipos-por-categoria', [EquipoController::class, 'tiposPorCategoria'])
+                ->name('equipos.tipos-por-categoria');
+
+            Route::resource('mantenimientos', MantenimientoController::class);
+            Route::get('mantenimientos-activos-por-tipo', [MantenimientoController::class, 'activosPorTipo'])
+                ->name('mantenimientos.activos-por-tipo');
+
+            Route::resource('garantias', GarantiaController::class);
+
+            // Asignación de Equipos a Inmuebles
+            Route::resource('asignaciones', AsignacionEquipoController::class);
+        });
 });

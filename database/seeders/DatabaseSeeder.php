@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -9,6 +10,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
+            RolesAndPermissionsSeeder::class,  // ← IMPORTANTE: después de UserSeeder
             // Inmuebles
             BloquesSeeder::class,
             TiposInmuebleSeeder::class,
@@ -27,6 +29,8 @@ class DatabaseSeeder extends Seeder
             EquiposSeeder::class,            // depende de tipos y categorías
             MantenimientosSeeder::class,
             GarantiasSeeder::class,
+
+
         ]);
     }
 }
