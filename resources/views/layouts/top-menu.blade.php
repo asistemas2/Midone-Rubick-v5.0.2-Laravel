@@ -212,7 +212,7 @@
             <ul class="flex flex-wrap pb-3 xl:px-[50px] xl:pb-0">
                 @foreach ($topMenu as $menuKey => $menu)
                     <li>
-                        <a href="{{ isset($menu['route_name']) ? route($menu['route_name'], $menu['params']) : 'javascript:;' }}"
+                        <a href="{{ isset($menu['route_name']) ? route($menu['route_name'], $menu['params'] ?? []) : 'javascript:;' }}"
                             @class([
                                 $firstLevelActiveIndex == $menuKey
                                     ? 'top-menu top-menu--active'
@@ -237,7 +237,7 @@
                                 @foreach ($menu['sub_menu'] as $subMenuKey => $subMenu)
                                     <li>
                                         <a class="top-menu"
-                                            href="{{ isset($subMenu['route_name']) ? route($subMenu['route_name'], $subMenu['params']) : 'javascript:;' }}">
+                                            href="{{ isset($subMenu['route_name']) ? route($subMenu['route_name'], $subMenu['params'] ?? []) : 'javascript:;' }}">
                                             <div class="top-menu__icon">
                                                 <x-base.lucide icon="{{ $subMenu['icon'] }}" />
                                             </div>
@@ -254,7 +254,7 @@
                                                 @foreach ($subMenu['sub_menu'] as $lastSubMenuKey => $lastSubMenu)
                                                     <li>
                                                         <a class="top-menu"
-                                                            href="{{ isset($lastSubMenu['route_name']) ? route($lastSubMenu['route_name'], $lastSubMenu['params']) : 'javascript:;' }}">
+                                                            href="{{ isset($lastSubMenu['route_name']) ? route($lastSubMenu['route_name'], $lastSubMenu['params'] ?? []) : 'javascript:;' }}">
                                                             <div class="top-menu__icon">
                                                                 <x-base.lucide icon="{{ $lastSubMenu['icon'] }}" />
                                                             </div>

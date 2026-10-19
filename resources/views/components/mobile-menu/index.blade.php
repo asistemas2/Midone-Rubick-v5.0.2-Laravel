@@ -46,14 +46,14 @@
         </a>
         <ul class="py-2">
             <!-- BEGIN: First Child -->
-            @foreach ($sideMenu as $menuKey => $menu)
+            @foreach ($topMenu as $menuKey => $menu)
                 @if ($menu == 'divider')
                     <li class="menu__divider my-6"></li>
                 @else
                     <li>
                         <a
                             class="{{ $firstLevelActiveIndex == $menuKey ? 'menu menu--active' : 'menu' }}"
-                            href="{{ isset($menu['route_name']) ? route($menu['route_name'], $menu['params']) : 'javascript:;' }}"
+                            href="{{ isset($menu['route_name']) ? route($menu['route_name'], $menu['params'] ?? []) : 'javascript:;' }}"
                         >
                             <div class="menu__icon">
                                 <x-base.lucide icon="{{ $menu['icon'] }}" />
@@ -74,7 +74,7 @@
                                     <li>
                                         <a
                                             class="{{ $secondLevelActiveIndex == $subMenuKey ? 'menu menu--active' : 'menu' }}"
-                                            href="{{ isset($subMenu['route_name']) ? route($subMenu['route_name'], $subMenu['params']) : 'javascript:;' }}"
+                                            href="{{ isset($subMenu['route_name']) ? route($subMenu['route_name'], $subMenu['params'] ?? []) : 'javascript:;' }}"
                                         >
                                             <div class="menu__icon">
                                                 <x-base.lucide icon="{{ $subMenu['icon'] }}" />
@@ -96,7 +96,7 @@
                                                     <li>
                                                         <a
                                                             class="{{ $thirdLevelActiveIndex == $lastSubMenuKey ? 'menu menu--active' : 'menu' }}"
-                                                            href="{{ isset($lastSubMenu['route_name']) ? route($lastSubMenu['route_name'], $lastSubMenu['params']) : 'javascript:;' }}"
+                                                            href="{{ isset($lastSubMenu['route_name']) ? route($lastSubMenu['route_name'], $lastSubMenu['params'] ?? []) : 'javascript:;' }}"
                                                         >
                                                             <div class="menu__icon">
                                                                 <x-base.lucide icon="{{ $lastSubMenu['icon'] }}" />

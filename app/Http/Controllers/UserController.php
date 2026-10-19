@@ -16,9 +16,13 @@ class UserController extends Controller
     /**
      * Display a listing of users.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        $users = User::with('roles')->paginate(15);
+        $users = User::with('roles')
+            ->buscar(['first_name', 'last_name', 'email', 'position'], $request->buscar)
+            ->orderBy('first_name')
+            ->paginate(15)
+            ->withQueryString();
         return view('gestion.usuarios.index', compact('users'));
     }
 
@@ -54,7 +58,7 @@ class UserController extends Controller
             'password' => Hash::make($validated['password']),
             'position' => $validated['position'] ?? null,
             'gender' => $validated['gender'] ?? null,
-            'active' => $validated['active'] ?? true,
+            'active' => $request->boolean('active', true),
         ]);
 
         if (!empty($validated['roles'])) {
@@ -102,13 +106,19 @@ class UserController extends Controller
             'roles' => 'array|exists:roles,id',
         ]);
 
+        $active = $request->boolean('active', $user->active);
+
+        if (!$active && $user->is(auth()->user())) {
+            return back()->withInput()->with('error', 'No puedes desactivar tu propia cuenta.');
+        }
+
         $data = [
             'first_name' => $validated['first_name'],
             'last_name' => $validated['last_name'],
             'email' => $validated['email'],
             'position' => $validated['position'] ?? null,
             'gender' => $validated['gender'] ?? null,
-            'active' => $validated['active'] ?? true,
+            'active' => $active,
         ];
 
         if (!empty($validated['password'])) {

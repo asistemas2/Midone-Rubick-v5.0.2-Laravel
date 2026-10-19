@@ -97,7 +97,7 @@ class SideMenu
                             ],
                             'mantenimientos-calendario' => [
                                 'icon'       => 'calendar',
-                                'route_name' => 'gestion.mantenimientos.index',
+                                'route_name' => 'gestion.mantenimientos.calendario',
                                 'params'     => ['layout' => 'side-menu'],
                                 'title'      => 'Calendario',
                             ],

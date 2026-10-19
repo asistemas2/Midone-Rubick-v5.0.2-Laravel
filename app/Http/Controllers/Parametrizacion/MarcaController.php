@@ -18,10 +18,7 @@ class MarcaController extends Controller
     public function index(Request $request): View
     {
         $marcas = Marca::activos()
-            ->when($request->filled('buscar'), function ($query) use ($request) {
-                $query->where('nombre', 'like', '%' . $request->buscar . '%')
-                      ->orWhere('pais_origen', 'like', '%' . $request->buscar . '%');
-            })
+            ->buscar(['nombre', 'pais_origen'], $request->buscar)
             ->ordenadas()
             ->paginate(15)
             ->withQueryString();

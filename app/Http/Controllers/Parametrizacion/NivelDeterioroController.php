@@ -18,10 +18,7 @@ class NivelDeterioroController extends Controller
     public function index(Request $request): View
     {
         $niveles = NivelDeterioro::activos()
-            ->when($request->filled('buscar'), function ($query) use ($request) {
-                $query->where('nombre', 'like', '%' . $request->buscar . '%')
-                      ->orWhere('codigo', 'like', '%' . $request->buscar . '%');
-            })
+            ->buscar(['nombre', 'codigo'], $request->buscar)
             ->ordenados()
             ->paginate(15)
             ->withQueryString();

@@ -17,20 +17,20 @@
                 Mostrando {{ $mantenimientos->firstItem() ?? 0 }} a {{ $mantenimientos->lastItem() ?? 0 }} de {{ $mantenimientos->total() }} registros
             </div>
             <div class="mt-3 w-full sm:mt-0 sm:ml-auto sm:w-auto md:ml-0">
-                <form action="{{ route('gestion.mantenimientos.index') }}" method="GET" class="flex gap-2">
-                    <x-base.form-select class="!box w-28" name="estado">
+                <form action="{{ route('gestion.mantenimientos.index') }}" method="GET" class="flex gap-2 flex-wrap">
+                    <x-base.form-select class="!box w-28" name="estado" onchange="this.form.submit()">
                         <option value="">Estado</option>
                         <option value="programado" {{ request('estado') == 'programado' ? 'selected' : '' }}>Programado</option>
                         <option value="en_proceso" {{ request('estado') == 'en_proceso' ? 'selected' : '' }}>En Proceso</option>
                         <option value="completado" {{ request('estado') == 'completado' ? 'selected' : '' }}>Completado</option>
                         <option value="cancelado" {{ request('estado') == 'cancelado' ? 'selected' : '' }}>Cancelado</option>
                     </x-base.form-select>
-                    <x-base.form-select class="!box w-28" name="tipo_activo">
+                    <x-base.form-select class="!box w-28" name="tipo_activo" onchange="this.form.submit()">
                         <option value="">Activo</option>
                         <option value="inmueble" {{ request('tipo_activo') == 'inmueble' ? 'selected' : '' }}>Inmueble</option>
                         <option value="equipo" {{ request('tipo_activo') == 'equipo' ? 'selected' : '' }}>Equipo</option>
                     </x-base.form-select>
-                    <x-base.form-select class="!box w-28" name="tipo_mantenimiento">
+                    <x-base.form-select class="!box w-28" name="tipo_mantenimiento" onchange="this.form.submit()">
                         <option value="">Tipo</option>
                         <option value="preventivo" {{ request('tipo_mantenimiento') == 'preventivo' ? 'selected' : '' }}>Preventivo</option>
                         <option value="correctivo" {{ request('tipo_mantenimiento') == 'correctivo' ? 'selected' : '' }}>Correctivo</option>
@@ -40,6 +40,7 @@
                         <x-base.form-input class="!box w-48 pr-10" name="buscar" type="text" value="{{ request('buscar') }}" placeholder="Buscar..." />
                         <x-base.lucide class="absolute inset-y-0 right-0 my-auto mr-3 h-4 w-4" icon="Search" />
                     </div>
+                    <x-filtros-limpiar route="gestion.mantenimientos.index" />
                 </form>
             </div>
         </div>

@@ -17,10 +17,7 @@ class GarantiaController extends Controller
     {
         $garantias = Garantia::activos()
             ->with(['mantenimiento'])
-            ->when($request->filled('buscar'), function ($query) use ($request) {
-                $query->where('codigo', 'like', '%' . $request->buscar . '%')
-                      ->orWhere('proveedor', 'like', '%' . $request->buscar . '%');
-            })
+            ->buscar(['codigo', 'proveedor'], $request->buscar)
             ->when($request->filled('estado'), function ($query) use ($request) {
                 $query->where('estado', $request->estado);
             })

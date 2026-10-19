@@ -18,23 +18,30 @@
                 Mostrando {{ $inmuebles->firstItem() ?? 0 }} a {{ $inmuebles->lastItem() ?? 0 }} de {{ $inmuebles->total() }} registros
             </div>
             <div class="mt-3 w-full sm:mt-0 sm:ml-auto sm:w-auto md:ml-0">
-                <form action="{{ route('gestion.inmuebles.index') }}" method="GET" class="flex gap-2">
-                    <x-base.form-select class="!box w-32" name="estado">
+                <form action="{{ route('gestion.inmuebles.index') }}" method="GET" class="flex gap-2 flex-wrap">
+                    <x-base.form-select class="!box w-32" name="estado" onchange="this.form.submit()">
                         <option value="">Estado</option>
                         <option value="operativo" {{ request('estado') == 'operativo' ? 'selected' : '' }}>Operativo</option>
                         <option value="mantenimiento" {{ request('estado') == 'mantenimiento' ? 'selected' : '' }}>Mantenimiento</option>
                         <option value="fuera_servicio" {{ request('estado') == 'fuera_servicio' ? 'selected' : '' }}>Fuera Servicio</option>
                     </x-base.form-select>
-                    <x-base.form-select class="!box w-36" name="bloque_id">
+                    <x-base.form-select class="!box w-36" name="bloque_id" onchange="this.form.submit()">
                         <option value="">Bloque</option>
                         @foreach($bloques as $bloque)
                             <option value="{{ $bloque->id }}" {{ request('bloque_id') == $bloque->id ? 'selected' : '' }}>{{ $bloque->nombre }}</option>
+                        @endforeach
+                    </x-base.form-select>
+                    <x-base.form-select class="!box w-40" name="tipo_inmueble_id" onchange="this.form.submit()">
+                        <option value="">Tipo</option>
+                        @foreach($tiposInmueble as $tipo)
+                            <option value="{{ $tipo->id }}" {{ request('tipo_inmueble_id') == $tipo->id ? 'selected' : '' }}>{{ $tipo->nombre }}</option>
                         @endforeach
                     </x-base.form-select>
                     <div class="relative w-56 text-slate-500">
                         <x-base.form-input class="!box w-56 pr-10" name="buscar" type="text" value="{{ request('buscar') }}" placeholder="Buscar..." />
                         <x-base.lucide class="absolute inset-y-0 right-0 my-auto mr-3 h-4 w-4" icon="Search" />
                     </div>
+                    <x-filtros-limpiar route="gestion.inmuebles.index" />
                 </form>
             </div>
         </div>

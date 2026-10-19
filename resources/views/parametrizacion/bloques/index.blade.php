@@ -18,7 +18,7 @@
                 Mostrando {{ $bloques->firstItem() ?? 0 }} a {{ $bloques->lastItem() ?? 0 }} de {{ $bloques->total() }} registros
             </div>
             <div class="mt-3 w-full sm:mt-0 sm:ml-auto sm:w-auto md:ml-0">
-                <form action="{{ route('parametrizacion.bloques.index') }}" method="GET">
+                <form action="{{ route('parametrizacion.bloques.index') }}" method="GET" class="flex gap-2 flex-wrap">
                     <div class="relative w-56 text-slate-500">
                         <x-base.form-input
                             class="!box w-56 pr-10"
@@ -29,6 +29,7 @@
                         />
                         <x-base.lucide class="absolute inset-y-0 right-0 my-auto mr-3 h-4 w-4" icon="Search" />
                     </div>
+                    <x-filtros-limpiar route="parametrizacion.bloques.index" />
                 </form>
             </div>
         </div>

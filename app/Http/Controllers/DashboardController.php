@@ -180,9 +180,7 @@ class DashboardController extends Controller
             'mantPorTipo',
             'fechasConEventos',
             'today'
-        ), [
-            'layout' => 'top-menu'
-        ]);
+        ));
     }
 
     /**

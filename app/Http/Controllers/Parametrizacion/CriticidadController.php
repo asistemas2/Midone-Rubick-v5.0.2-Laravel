@@ -18,9 +18,7 @@ class CriticidadController extends Controller
     public function index(Request $request): View
     {
         $criticidades = Criticidad::activos()
-            ->when($request->filled('buscar'), function ($query) use ($request) {
-                $query->where('nombre', 'like', '%' . $request->buscar . '%');
-            })
+            ->buscar(['nombre'], $request->buscar)
             ->ordenadas()
             ->paginate(15)
             ->withQueryString();

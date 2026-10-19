@@ -24,10 +24,7 @@ class EquipoController extends Controller
     {
         $equipos = Equipo::activos()
             ->with(['tipoEquipo', 'categoriaEquipo', 'marca', 'estadoEquipo', 'criticidad'])
-            ->when($request->filled('buscar'), function ($query) use ($request) {
-                $query->where('nombre', 'like', '%' . $request->buscar . '%')
-                      ->orWhere('codigo', 'like', '%' . $request->buscar . '%');
-            })
+            ->buscar(['nombre', 'codigo'], $request->buscar)
             ->when($request->filled('categoria_equipo_id'), function ($query) use ($request) {
                 $query->where('categoria_equipo_id', $request->categoria_equipo_id);
             })
@@ -51,9 +48,7 @@ class EquipoController extends Controller
 
         return view('gestion.equipos.index', compact(
             'equipos', 'tiposEquipo', 'categoriasEquipo', 'estadosEquipo', 'criticidades'
-        ),[
-            'layout' => 'top-menu'
-        ]);
+        ));
     }
 
     public function create(): View

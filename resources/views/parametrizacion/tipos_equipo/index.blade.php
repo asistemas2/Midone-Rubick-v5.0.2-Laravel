@@ -17,7 +17,7 @@
                 Mostrando {{ $tiposEquipo->firstItem() ?? 0 }} a {{ $tiposEquipo->lastItem() ?? 0 }} de {{ $tiposEquipo->total() }} registros
             </div>
             <div class="mt-3 w-full sm:mt-0 sm:ml-auto sm:w-auto md:ml-0">
-                <form action="{{ route('parametrizacion.tipos_equipo.index') }}" method="GET" class="flex gap-2">
+                <form action="{{ route('parametrizacion.tipos_equipo.index') }}" method="GET" class="flex gap-2 flex-wrap">
                     <x-base.form-select class="!box w-44" name="categoria_equipo_id" onchange="this.form.submit()">
                         <option value="">Todas las categorías</option>
                         @foreach($categoriasEquipo as $cat)
@@ -28,6 +28,7 @@
                         <x-base.form-input class="!box w-56 pr-10" name="buscar" type="text" value="{{ request('buscar') }}" placeholder="Buscar..." />
                         <x-base.lucide class="absolute inset-y-0 right-0 my-auto mr-3 h-4 w-4" icon="Search" />
                     </div>
+                    <x-filtros-limpiar route="parametrizacion.tipos_equipo.index" />
                 </form>
             </div>
         </div>

@@ -18,12 +18,7 @@ class AsignacionEquipoController extends Controller
     {
         $equipos = Equipo::activos()
             ->with(['tipoEquipo', 'categoriaEquipo', 'marca', 'estadoEquipo', 'inmueble.bloque'])
-            ->when($request->filled('buscar'), function ($query) use ($request) {
-                $query->where(function ($q) use ($request) {
-                    $q->where('nombre', 'like', '%' . $request->buscar . '%')
-                      ->orWhere('codigo', 'like', '%' . $request->buscar . '%');
-                });
-            })
+            ->buscar(['nombre', 'codigo'], $request->buscar)
             ->when($request->filled('inmueble_id'), function ($query) use ($request) {
                 $query->where('inmueble_id', $request->inmueble_id);
             })
@@ -54,14 +49,7 @@ class AsignacionEquipoController extends Controller
         return view('gestion.asignaciones.index', compact(
             'equipos', 'inmuebles', 'tiposEquipo',
             'totalEquipos', 'asignados', 'sinAsignar', 'porcentajeAsignacion'
-        ), [
-             'layout' => 'top-menu'
-            // Specify the base layout.
-            // Eg: 'side-menu', 'simple-menu', 'top-menu', 'login'
-            // The default value is 'side-menu'
-
-            // 'layout' => 'side-menu'
-        ]);
+        ));
     }
 
     public function create(Request $request): View

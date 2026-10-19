@@ -18,9 +18,7 @@ class TipoInmuebleController extends Controller
     public function index(Request $request): View
     {
         $tiposInmueble = TipoInmueble::activos()
-            ->when($request->filled('buscar'), function ($query) use ($request) {
-                $query->where('nombre', 'like', '%' . $request->buscar . '%');
-            })
+            ->buscar(['nombre'], $request->buscar)
             ->orderBy('nombre')
             ->paginate(15)
             ->withQueryString();

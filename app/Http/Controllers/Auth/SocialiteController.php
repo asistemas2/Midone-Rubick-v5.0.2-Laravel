@@ -29,6 +29,10 @@ class SocialiteController extends Controller
                     ->orWhere('email', $socialUser->email)
                     ->first();
 
+        if ($user && !$user->active) {
+            return redirect('/login')->with('error', 'Tu cuenta está inactiva. Contacta al administrador.');
+        }
+
         if ($user) {
             // Actualizar datos si es necesario
             $user->update([

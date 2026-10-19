@@ -1,66 +1,169 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Gestión de Activos y Mantenimiento — Zona Franca Palmaseca
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplicación web para administrar los **inmuebles** y **equipos** de la zona franca, programar y auditar sus **mantenimientos**, controlar **garantías** y hacer seguimiento del **presupuesto aprobado vs. costo real ejecutado**.
 
-## About Laravel
+Construida sobre **Laravel 10** con la plantilla de administración **Midone / Rubick v5.0.2** (Tailwind CSS + Vite).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Capa | Tecnología |
+|---|---|
+| Backend | PHP 8.1+, Laravel 10 |
+| Base de datos | PostgreSQL |
+| Frontend | Blade + componentes `x-base.*` de Rubick, Tailwind CSS, Vite |
+| Autenticación | Login con correo/contraseña y con Google (`laravel/socialite`) |
+| Roles y permisos | `spatie/laravel-permission` |
+| Calendario | FullCalendar 6 (incluido en la plantilla) |
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Instalación local (Laragon)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+composer install
+npm install
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+cp .env.example .env
+php artisan key:generate
+```
 
-## Laravel Sponsors
+Configura en `.env`:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```dotenv
+APP_NAME="Gestion ZFP"
+APP_URL=http://midone-rubick-v5.0.2-laravel.test   # o la URL de tu virtual host
 
-### Premium Partners
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=infraestructura
+DB_USERNAME=postgres
+DB_PASSWORD=
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+# Login con Google (opcional)
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_REDIRECT_URI="${APP_URL}/auth/google/callback"
+```
 
-## Contributing
+Crea la base de datos y carga los datos iniciales:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+php artisan migrate --seed
+php artisan storage:link      # documentos adjuntos de los mantenimientos (disco public)
+npm run build                 # o `npm run dev` mientras desarrollas
+```
 
-## Code of Conduct
+### Usuario inicial
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+El seeder crea un administrador:
 
-## Security Vulnerabilities
+- **Correo:** `admin@zfp.com`
+- **Contraseña:** `password`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+> Cambia esta contraseña en cualquier ambiente que no sea local.
 
-## License
+Además se crean 9 usuarios de prueba y los catálogos/datos de ejemplo a partir de `database/seeders/data/*.json` (inmuebles, equipos y mantenimientos).
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## Roles
+
+| Rol | Acceso |
+|---|---|
+| **Administrador** | Todo: Parametrización, Gestión y Usuarios |
+| **Operador** | Módulos de Gestión (sin Usuarios) |
+| **Usuario** | Rol por defecto de quien entra con Google por primera vez. Solo ve el Dashboard y su perfil hasta que un administrador le asigne otro rol |
+
+Un usuario **inactivo** no puede iniciar sesión (ni con contraseña ni con Google), y si se desactiva estando conectado, su sesión se cierra en la siguiente petición (middleware `activo`). Un administrador no puede desactivar su propia cuenta.
+
+---
+
+## Módulos
+
+### Parametrización (`/parametrizacion`, solo Administrador)
+Catálogos: Bloques, Tipos de inmueble, Periodicidades de mantenimiento, Niveles de deterioro, Categorías y Tipos de equipo, Estados de equipo, Marcas y Criticidades de equipo.
+
+### Gestión (`/gestion`)
+- **Inmuebles** — con ubicación en mapa, nivel de deterioro y **ficha técnica**. La ficha técnica solo se diligencia y se muestra para inmuebles de tipo **Bodega** (`TipoInmueble::esBodega()`); si un inmueble deja de ser bodega, su ficha se conserva oculta.
+- **Equipos** y **Asignación de equipos** a inmuebles.
+- **Mantenimientos**
+  - Asociados a un inmueble o a un equipo (relación polimórfica `activoRelacionado`).
+  - Tipo: preventivo, correctivo o predictivo. Estados: programado → en proceso → completado / cancelado.
+  - **Criterio** (riesgo de vida, operacional, sancionatorio o sobre el activo) y **criticidad** (Grave, Moderado, Leve), con select dependiente.
+  - **Presupuesto aprobado** al programar y **costo real** al completar.
+  - Historial de cambios de estado, documentos adjuntos y garantías asociadas.
+  - **Calendario** (`/gestion/mantenimientos/calendario`) y reporte de **Presupuesto** (aprobado vs. ejecutado, por mes, tipo, responsable y activo).
+- **Garantías**
+- **Usuarios** (solo Administrador)
+
+### Dashboard
+Indicadores, alertas de mantenimientos vencidos y próximos, y un calendario resumido.
+
+---
+
+## Estructura relevante
+
+```
+app/
+├── Http/Controllers/
+│   ├── Gestion/            # Inmuebles, Equipos, Asignaciones, Mantenimientos, Garantías
+│   ├── Parametrizacion/    # Catálogos
+│   └── Auth/SocialiteController.php
+├── Http/Middleware/EnsureUserIsActive.php
+├── Main/TopMenu.php        # Menú de navegación (el que se usa)
+├── Models/
+└── View/Composers/MenuComposer.php   # Fija el layout top-menu en toda la app
+resources/views/
+├── gestion/  parametrizacion/
+├── components/base/        # Componentes de la plantilla Rubick
+└── layouts/top-menu.blade.php
+```
+
+---
+
+## Convenciones del proyecto
+
+**Layout y menú.** Todas las vistas usan el layout `top-menu`; lo fija `MenuComposer` (solo el login usa `base`). Los ítems del menú se definen en `app/Main/TopMenu.php`. `SideMenu.php` y `SimpleMenu.php` son de la plantilla y no se usan.
+
+**Búsqueda en listados.** Usa el macro de consultas `buscar()` (definido en `AppServiceProvider`), que agrupa los `OR` y no distingue mayúsculas en PostgreSQL:
+
+```php
+Inmueble::activos()
+    ->buscar(['nombre', 'codigo'], $request->buscar)
+    ->when($request->filled('bloque_id'), fn ($q) => $q->where('bloque_id', $request->bloque_id))
+    ->paginate(15)
+    ->withQueryString();
+```
+
+En la vista, los `select` de filtro llevan `onchange="this.form.submit()"` y el formulario incluye `<x-filtros-limpiar route="..." />`.
+
+**Checkboxes y switches en Blade.** No escribas `{{ ... ? 'checked' : '' }}` dentro de una etiqueta `<x-...>`: Blade deja de reconocer el componente y el navegador recibe la etiqueta literal. Usa la prop y un hidden para el valor apagado:
+
+```blade
+<input type="hidden" name="activo" value="0" />
+<x-base.form-switch.input type="checkbox" id="activo" name="activo" value="1" :checked="old('activo', $modelo->activo)" />
+```
+
+Por la misma razón, evita `\"` dentro de atributos de componentes (para pulgadas usa `″`).
+
+**Caché.** En local las rutas pueden estar cacheadas (`bootstrap/cache/routes-v7.php`). Si agregas rutas y no aparecen:
+
+```bash
+php artisan route:clear     # o php artisan route:cache para regenerarla
+php artisan view:clear
+```
+
+---
+
+## Comandos útiles
+
+```bash
+npm run dev                         # Vite en modo desarrollo
+npm run build                       # Compilar assets para producción
+php artisan migrate                 # Aplicar migraciones pendientes
+php artisan db:seed --class=CriticidadesMantenimientoSeeder
+php artisan route:list --path=gestion
+```

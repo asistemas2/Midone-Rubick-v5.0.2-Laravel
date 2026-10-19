@@ -49,7 +49,7 @@
                             <x-base.form-select class="w-full" id="tipo_inmueble_id" name="tipo_inmueble_id" onchange="toggleFichaTecnica(this.value)">
                                 <option value="">Seleccionar...</option>
                                 @foreach($tiposInmueble as $tipo)
-                                    <option value="{{ $tipo->id }}" {{ old('tipo_inmueble_id', $inmueble->tipo_inmueble_id) == $tipo->id ? 'selected' : '' }}>{{ $tipo->nombre }}</option>
+                                    <option value="{{ $tipo->id }}" data-bodega="{{ $tipo->esBodega() ? 1 : 0 }}" {{ old('tipo_inmueble_id', $inmueble->tipo_inmueble_id) == $tipo->id ? 'selected' : '' }}>{{ $tipo->nombre }}</option>
                                 @endforeach
                             </x-base.form-select>
                         </div>
@@ -96,14 +96,15 @@
                         </div>
                         <div class="col-span-12">
                             <x-base.form-switch class="mt-2">
-                                <x-base.form-switch.input type="checkbox" name="activo" value="1" {{ old('activo', $inmueble->activo) ? 'checked' : '' }} />
+                                <input type="hidden" name="activo" value="0" />
+                                <x-base.form-switch.input type="checkbox" name="activo" value="1" :checked="old('activo', $inmueble->activo)" />
                                 <x-base.form-switch.label>Activo</x-base.form-switch.label>
                             </x-base.form-switch>
                         </div>
                     </div>
 
                     {{-- ====== FICHA TÉCNICA (BODEGA) ====== --}}
-                    <div id="fichaTecnicaContainer" class="mt-6" style="{{ $inmueble->tipoInmueble && $inmueble->tipoInmueble->nombre == 'Bodega' ? 'display: block;' : 'display: none;' }}">
+                    <div id="fichaTecnicaContainer" class="mt-6" style="{{ $tiposInmueble->firstWhere('id', old('tipo_inmueble_id', $inmueble->tipo_inmueble_id))?->esBodega() ? 'display: block;' : 'display: none;' }}">
                         <div class="border-b border-slate-200/60 pb-4 mb-4">
                             <h3 class="text-base font-medium">Ficha Técnica (Bodega)</h3>
                             <p class="text-xs text-slate-500 mt-1">Complete esta sección solo para inmuebles de tipo Bodega</p>
@@ -208,19 +209,19 @@
                             </div>
                             <div class="col-span-12 sm:col-span-3">
                                 <x-base.form-check>
-                                    <x-base.form-check.input type="checkbox" id="ficha_tecnica_muelle" name="ficha_tecnica[muelle]" value="1" {{ old('ficha_tecnica.muelle', $inmueble->fichaTecnica->muelle ?? false) ? 'checked' : '' }} />
+                                    <x-base.form-check.input type="checkbox" id="ficha_tecnica_muelle" name="ficha_tecnica[muelle]" value="1" :checked="old('ficha_tecnica.muelle', $inmueble->fichaTecnica->muelle ?? false)" />
                                     <x-base.form-check.label for="ficha_tecnica_muelle">Muelle</x-base.form-check.label>
                                 </x-base.form-check>
                             </div>
                             <div class="col-span-12 sm:col-span-3">
                                 <x-base.form-check>
-                                    <x-base.form-check.input type="checkbox" id="ficha_tecnica_mezzanine" name="ficha_tecnica[mezzanine]" value="1" {{ old('ficha_tecnica.mezzanine', $inmueble->fichaTecnica->mezzanine ?? false) ? 'checked' : '' }} />
+                                    <x-base.form-check.input type="checkbox" id="ficha_tecnica_mezzanine" name="ficha_tecnica[mezzanine]" value="1" :checked="old('ficha_tecnica.mezzanine', $inmueble->fichaTecnica->mezzanine ?? false)" />
                                     <x-base.form-check.label for="ficha_tecnica_mezzanine">Mezzanine</x-base.form-check.label>
                                 </x-base.form-check>
                             </div>
                             <div class="col-span-12 sm:col-span-3">
                                 <x-base.form-check>
-                                    <x-base.form-check.input type="checkbox" id="ficha_tecnica_cocineta" name="ficha_tecnica[cocineta]" value="1" {{ old('ficha_tecnica.cocineta', $inmueble->fichaTecnica->cocineta ?? false) ? 'checked' : '' }} />
+                                    <x-base.form-check.input type="checkbox" id="ficha_tecnica_cocineta" name="ficha_tecnica[cocineta]" value="1" :checked="old('ficha_tecnica.cocineta', $inmueble->fichaTecnica->cocineta ?? false)" />
                                     <x-base.form-check.label for="ficha_tecnica_cocineta">Cocineta</x-base.form-check.label>
                                 </x-base.form-check>
                             </div>
@@ -244,16 +245,14 @@
 
     @push('scripts')
     <script>
-        function toggleFichaTecnica(tipoId) {
+        // Muestra la ficha solo para Bodega; si no aplica, deshabilita sus campos para que no se envíen
+        function toggleFichaTecnica() {
             const container = document.getElementById('fichaTecnicaContainer');
             const select = document.getElementById('tipo_inmueble_id');
-            const selectedOption = select.options[select.selectedIndex];
-            const text = selectedOption.text.trim();
-            if (text === 'Bodega') {
-                container.style.display = 'block';
-            } else {
-                container.style.display = 'none';
-            }
+            const esBodega = select.options[select.selectedIndex]?.dataset.bodega === '1';
+
+            container.style.display = esBodega ? 'block' : 'none';
+            container.querySelectorAll('input, select, textarea').forEach(el => el.disabled = !esBodega);
         }
 
         document.addEventListener('DOMContentLoaded', function() {

@@ -61,7 +61,7 @@
                             <x-base.form-select class="w-full" id="tipo_inmueble_id" name="tipo_inmueble_id" onchange="toggleFichaTecnica(this.value)">
                                 <option value="">Seleccionar...</option>
                                 @foreach ($tiposInmueble as $tipo)
-                                    <option value="{{ $tipo->id }}"
+                                    <option value="{{ $tipo->id }}" data-bodega="{{ $tipo->esBodega() ? 1 : 0 }}"
                                         {{ old('tipo_inmueble_id') == $tipo->id ? 'selected' : '' }}>{{ $tipo->nombre }}
                                     </option>
                                 @endforeach
@@ -131,10 +131,10 @@
                         </div>
                         {{-- Activo --}}
                         <div class="col-span-12">
+                            <input type="hidden" name="activo" value="0" />
                             <x-base.form-switch class="mt-2">
-                                <x-base.form-switch.input type="checkbox" name="activo" value="1"
-                                    {{ old('activo', true) ? 'checked' : '' }} />
-                                <x-base.form-switch.label>Activo</x-base.form-switch.label>
+                                <x-base.form-switch.input type="checkbox" id="activo" name="activo" value="1" :checked="old('activo', true)" />
+                                <x-base.form-switch.label for="activo">Activo</x-base.form-switch.label>
                             </x-base.form-switch>
                         </div>
                     </div>
@@ -176,11 +176,11 @@
                             </div>
                             <div class="col-span-12 sm:col-span-4">
                                 <x-base.form-label for="ficha_tecnica[agua_diametro]">Agua - Diámetro Acometida</x-base.form-label>
-                                <x-base.form-input class="w-full" id="ficha_tecnica[agua_diametro]" name="ficha_tecnica[agua_diametro]" type="text" value="{{ old('ficha_tecnica.agua_diametro') }}" placeholder="Ej: 2\"" />
+                                <x-base.form-input class="w-full" id="ficha_tecnica[agua_diametro]" name="ficha_tecnica[agua_diametro]" type="text" value="{{ old('ficha_tecnica.agua_diametro') }}" placeholder="Ej: 2″" />
                             </div>
                             <div class="col-span-12 sm:col-span-4">
                                 <x-base.form-label for="ficha_tecnica[tuberia_aguas_lluvias]">Tubería Aguas Lluvias</x-base.form-label>
-                                <x-base.form-input class="w-full" id="ficha_tecnica[tuberia_aguas_lluvias]" name="ficha_tecnica[tuberia_aguas_lluvias]" type="text" value="{{ old('ficha_tecnica.tuberia_aguas_lluvias') }}" placeholder="Ej: Tubería en gres de 6\"" />
+                                <x-base.form-input class="w-full" id="ficha_tecnica[tuberia_aguas_lluvias]" name="ficha_tecnica[tuberia_aguas_lluvias]" type="text" value="{{ old('ficha_tecnica.tuberia_aguas_lluvias') }}" placeholder="Ej: Tubería en gres de 6″" />
                             </div>
                         </div>
 
@@ -195,7 +195,7 @@
                             </div>
                             <div class="col-span-12 sm:col-span-6">
                                 <x-base.form-label for="ficha_tecnica[red_contra_incendios]">Red Contra Incendios</x-base.form-label>
-                                <x-base.form-input class="w-full" id="ficha_tecnica[red_contra_incendios]" name="ficha_tecnica[red_contra_incendios]" type="text" value="{{ old('ficha_tecnica.red_contra_incendios') }}" placeholder="Ej: Tubería de 3\", salida 1-1/2\"" />
+                                <x-base.form-input class="w-full" id="ficha_tecnica[red_contra_incendios]" name="ficha_tecnica[red_contra_incendios]" type="text" value="{{ old('ficha_tecnica.red_contra_incendios') }}" placeholder="Ej: Tubería de 3″, salida 1-1/2″" />
                             </div>
                             <div class="col-span-12 sm:col-span-2">
                                 <x-base.form-label for="ficha_tecnica[gabinetes_ci]">Gabinetes C.I.</x-base.form-label>
@@ -245,19 +245,19 @@
                             </div>
                             <div class="col-span-12 sm:col-span-3">
                                 <x-base.form-check>
-                                    <x-base.form-check.input type="checkbox" id="ficha_tecnica_muelle" name="ficha_tecnica[muelle]" value="1" {{ old('ficha_tecnica.muelle') ? 'checked' : '' }} />
+                                    <x-base.form-check.input type="checkbox" id="ficha_tecnica_muelle" name="ficha_tecnica[muelle]" value="1" :checked="old('ficha_tecnica.muelle')" />
                                     <x-base.form-check.label for="ficha_tecnica_muelle">Muelle</x-base.form-check.label>
                                 </x-base.form-check>
                             </div>
                             <div class="col-span-12 sm:col-span-3">
                                 <x-base.form-check>
-                                    <x-base.form-check.input type="checkbox" id="ficha_tecnica_mezzanine" name="ficha_tecnica[mezzanine]" value="1" {{ old('ficha_tecnica.mezzanine') ? 'checked' : '' }} />
+                                    <x-base.form-check.input type="checkbox" id="ficha_tecnica_mezzanine" name="ficha_tecnica[mezzanine]" value="1" :checked="old('ficha_tecnica.mezzanine')" />
                                     <x-base.form-check.label for="ficha_tecnica_mezzanine">Mezzanine</x-base.form-check.label>
                                 </x-base.form-check>
                             </div>
                             <div class="col-span-12 sm:col-span-3">
                                 <x-base.form-check>
-                                    <x-base.form-check.input type="checkbox" id="ficha_tecnica_cocineta" name="ficha_tecnica[cocineta]" value="1" {{ old('ficha_tecnica.cocineta') ? 'checked' : '' }} />
+                                    <x-base.form-check.input type="checkbox" id="ficha_tecnica_cocineta" name="ficha_tecnica[cocineta]" value="1" :checked="old('ficha_tecnica.cocineta')" />
                                     <x-base.form-check.label for="ficha_tecnica_cocineta">Cocineta</x-base.form-check.label>
                                 </x-base.form-check>
                             </div>
@@ -283,18 +283,14 @@
 
     @push('scripts')
     <script>
-        function toggleFichaTecnica(tipoId) {
+        // Muestra la ficha solo para Bodega; si no aplica, deshabilita sus campos para que no se envíen
+        function toggleFichaTecnica() {
             const container = document.getElementById('fichaTecnicaContainer');
-            // Asumimos que el tipo con id que corresponde a "Bodega" es el que tiene nombre "Bodega"
-            // Pero usamos una opción: leer el texto seleccionado
             const select = document.getElementById('tipo_inmueble_id');
-            const selectedOption = select.options[select.selectedIndex];
-            const text = selectedOption.text.trim();
-            if (text === 'Bodega') {
-                container.style.display = 'block';
-            } else {
-                container.style.display = 'none';
-            }
+            const esBodega = select.options[select.selectedIndex]?.dataset.bodega === '1';
+
+            container.style.display = esBodega ? 'block' : 'none';
+            container.querySelectorAll('input, select, textarea').forEach(el => el.disabled = !esBodega);
         }
 
         // Ejecutar al cargar para mostrar si ya hay un valor seleccionado

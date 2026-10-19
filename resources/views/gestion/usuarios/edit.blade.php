@@ -62,10 +62,23 @@
                         </div>
                         <div class="col-span-12 sm:col-span-6">
                             <x-base.form-label for="active">Estado</x-base.form-label>
-                            <x-base.form-switch class="mt-2">
-                                <x-base.form-switch.input type="checkbox" name="active" value="1" {{ old('active', $user->active) ? 'checked' : '' }} />
-                                <x-base.form-switch.label>Activo</x-base.form-switch.label>
-                            </x-base.form-switch>
+                            @if ($user->is(auth()->user()))
+                                {{-- Un usuario no puede desactivar su propia cuenta --}}
+                                <input type="hidden" name="active" value="1" />
+                                <x-base.form-switch class="mt-2">
+                                    <x-base.form-switch.input type="checkbox" id="active" checked disabled />
+                                    <x-base.form-switch.label for="active">Activo</x-base.form-switch.label>
+                                </x-base.form-switch>
+                                <div class="mt-1 text-xs text-slate-500">No puedes desactivar tu propia cuenta.</div>
+                            @else
+                                {{-- El hidden envía 0 cuando el switch está apagado (un checkbox desmarcado no se envía) --}}
+                                <input type="hidden" name="active" value="0" />
+                                <x-base.form-switch class="mt-2">
+                                    <x-base.form-switch.input type="checkbox" id="active" name="active" value="1" :checked="old('active', $user->active)" />
+                                    <x-base.form-switch.label for="active">Activo</x-base.form-switch.label>
+                                </x-base.form-switch>
+                                <div class="mt-1 text-xs text-slate-500">Un usuario inactivo no puede iniciar sesión.</div>
+                            @endif
                         </div>
                         <div class="col-span-12">
                             <x-base.form-label for="roles">Roles</x-base.form-label>

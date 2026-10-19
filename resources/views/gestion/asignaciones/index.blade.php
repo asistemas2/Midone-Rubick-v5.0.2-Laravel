@@ -88,19 +88,19 @@
             </div>
             <div class="mt-3 w-full sm:mt-0 sm:ml-auto sm:w-auto md:ml-0">
                 <form action="{{ route('gestion.asignaciones.index') }}" method="GET" class="flex flex-wrap gap-2">
-                    <x-base.form-select class="!box w-40" name="inmueble_id">
+                    <x-base.form-select class="!box w-40" name="inmueble_id" onchange="this.form.submit()">
                         <option value="">Inmueble</option>
                         @foreach($inmuebles as $inm)
                             <option value="{{ $inm->id }}" {{ request('inmueble_id') == $inm->id ? 'selected' : '' }}>{{ Str::limit($inm->nombre, 25) }}</option>
                         @endforeach
                     </x-base.form-select>
-                    <x-base.form-select class="!box w-32" name="tipo_equipo_id">
+                    <x-base.form-select class="!box w-32" name="tipo_equipo_id" onchange="this.form.submit()">
                         <option value="">Tipo Equipo</option>
                         @foreach($tiposEquipo as $tipo)
                             <option value="{{ $tipo->id }}" {{ request('tipo_equipo_id') == $tipo->id ? 'selected' : '' }}>{{ $tipo->nombre }}</option>
                         @endforeach
                     </x-base.form-select>
-                    <x-base.form-select class="!box w-32" name="estado_asignacion">
+                    <x-base.form-select class="!box w-32" name="estado_asignacion" onchange="this.form.submit()">
                         <option value="">Asignación</option>
                         <option value="asignado" {{ request('estado_asignacion') === 'asignado' ? 'selected' : '' }}>Asignado</option>
                         <option value="sin_asignar" {{ request('estado_asignacion') === 'sin_asignar' ? 'selected' : '' }}>Sin Asignar</option>
@@ -109,6 +109,7 @@
                         <x-base.form-input class="!box w-56 pr-10" name="buscar" type="text" value="{{ request('buscar') }}" placeholder="Buscar equipo..." />
                         <x-base.lucide class="absolute inset-y-0 right-0 my-auto mr-3 h-4 w-4" icon="Search" />
                     </div>
+                    <x-filtros-limpiar route="gestion.asignaciones.index" />
                 </form>
             </div>
         </div>

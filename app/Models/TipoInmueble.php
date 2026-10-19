@@ -22,6 +22,14 @@ class TipoInmueble extends Model
         'activo' => 'boolean',
     ];
 
+    /** Nombre del tipo que lleva ficha técnica. */
+    public const NOMBRE_BODEGA = 'Bodega';
+
+    public function esBodega(): bool
+    {
+        return mb_strtolower(trim($this->nombre)) === mb_strtolower(self::NOMBRE_BODEGA);
+    }
+
     /* ── Scopes ─────────────────────────────────── */
 
     public function scopeActivos($query)

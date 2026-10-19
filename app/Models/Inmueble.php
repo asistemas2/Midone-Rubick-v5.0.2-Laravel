@@ -102,6 +102,20 @@ class Inmueble extends Model
         return null;
     }
 
+    /**
+     * Solo las bodegas llevan ficha técnica. Si el inmueble cambia a otro tipo
+     * su ficha se conserva en BD pero no se muestra ni se edita.
+     */
+    public function esBodega(): bool
+    {
+        return $this->tipoInmueble?->esBodega() ?? false;
+    }
+
+    public function getEsBodegaAttribute(): bool
+    {
+        return $this->esBodega();
+    }
+
     public function getTieneCoordenadasAttribute(): bool
     {
         return !is_null($this->latitud) && !is_null($this->longitud);

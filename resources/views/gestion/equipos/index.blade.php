@@ -19,26 +19,26 @@
             <div class="mt-3 w-full sm:mt-0 sm:ml-auto sm:w-auto md:ml-0">
                 <form action="{{ route('gestion.equipos.index') }}" method="GET" class="flex gap-2 flex-wrap">
                     {{-- Filtro por categoría --}}
-                    <x-base.form-select class="!box w-32" name="categoria_equipo_id">
+                    <x-base.form-select class="!box w-32" name="categoria_equipo_id" onchange="this.form.submit()">
                         <option value="">Categoría</option>
                         @foreach($categoriasEquipo as $cat)
                             <option value="{{ $cat->id }}" {{ request('categoria_equipo_id') == $cat->id ? 'selected' : '' }}>{{ $cat->nombre }}</option>
                         @endforeach
                     </x-base.form-select>
                     {{-- Filtro por tipo --}}
-                    <x-base.form-select class="!box w-32" name="tipo_equipo_id">
+                    <x-base.form-select class="!box w-32" name="tipo_equipo_id" onchange="this.form.submit()">
                         <option value="">Tipo</option>
                         @foreach($tiposEquipo as $tipo)
                             <option value="{{ $tipo->id }}" {{ request('tipo_equipo_id') == $tipo->id ? 'selected' : '' }}>{{ $tipo->nombre }}</option>
                         @endforeach
                     </x-base.form-select>
-                    <x-base.form-select class="!box w-32" name="estado_equipo_id">
+                    <x-base.form-select class="!box w-32" name="estado_equipo_id" onchange="this.form.submit()">
                         <option value="">Estado</option>
                         @foreach($estadosEquipo as $estado)
                             <option value="{{ $estado->id }}" {{ request('estado_equipo_id') == $estado->id ? 'selected' : '' }}>{{ $estado->nombre }}</option>
                         @endforeach
                     </x-base.form-select>
-                    <x-base.form-select class="!box w-32" name="criticidad_id">
+                    <x-base.form-select class="!box w-32" name="criticidad_id" onchange="this.form.submit()">
                         <option value="">Criticidad</option>
                         @foreach($criticidades as $crit)
                             <option value="{{ $crit->id }}" {{ request('criticidad_id') == $crit->id ? 'selected' : '' }}>{{ $crit->nombre }}</option>
@@ -48,6 +48,7 @@
                         <x-base.form-input class="!box w-56 pr-10" name="buscar" type="text" value="{{ request('buscar') }}" placeholder="Buscar..." />
                         <x-base.lucide class="absolute inset-y-0 right-0 my-auto mr-3 h-4 w-4" icon="Search" />
                     </div>
+                    <x-filtros-limpiar route="gestion.equipos.index" />
                 </form>
             </div>
         </div>

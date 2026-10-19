@@ -21,6 +21,7 @@ use App\Http\Controllers\Parametrizacion\PeriodicidadMantenimientoController;
 use App\Http\Controllers\Parametrizacion\TipoEquipoController;
 use App\Http\Controllers\Parametrizacion\TipoInmuebleController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,10 +31,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 // ===========================================================================
-// RUTAS PÚBLICAS (no requieren autenticación)
+// RUTAS PÚBLICAS
 // ===========================================================================
 
-// Switchers de tema (públicos)
 Route::get('dark-mode-switcher', [DarkModeController::class, 'switch'])->name('dark-mode-switcher');
 Route::get('color-scheme-switcher/{color_scheme}', [ColorSchemeController::class, 'switch'])->name('color-scheme-switcher');
 
@@ -42,19 +42,19 @@ Route::get('/', [AuthController::class, 'loginView'])->name('login.index');
 Route::get('/login', [AuthController::class, 'loginView'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
-// Registro (si se habilita)
+// Registro
 Route::get('/register-page', [PageController::class, 'register'])->name('register.page');
 
-// Autenticación con Google (Socialite)
+// Socialite (Google)
 Route::get('auth/google', [SocialiteController::class, 'redirectToGoogle'])->name('auth.google');
 Route::get('auth/google/callback', [SocialiteController::class, 'handleGoogleCallback']);
 
 
 // ===========================================================================
-// RUTAS PROTEGIDAS (requieren autenticación)
+// RUTAS PROTEGIDAS
 // ===========================================================================
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'activo'])->group(function () {
 
     // ─── Perfil de Usuario ──────────────────────────────────────────────
     Route::prefix('profile')->name('profile.')->group(function () {
@@ -65,14 +65,13 @@ Route::middleware('auth')->group(function () {
         Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
     });
 
-    // ─── Dashboard ────────────────────────────────────────────────────────
-    // Accesible para todos los usuarios autenticados
+    // ─── Dashboard ──────────────────────────────────────────────────────
     Route::get('/home', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/dashboard/mantenimientos-dia', [DashboardController::class, 'mantenimientosDia'])
         ->name('dashboard.mantenimientos-dia');
 
-    // ─── Logout ──────────────────────────────────────────────────────────
+    // ─── Logout ─────────────────────────────────────────────────────────
     Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout');
 
     // ─── Páginas auxiliares (PageController) ────────────────────────────
@@ -149,20 +148,8 @@ Route::middleware('auth')->group(function () {
         Route::get('image-zoom-page', 'imageZoom')->name('image-zoom');
     });
 
-    Route::middleware('role:Administrador|Operador')
-        ->prefix('gestion')
-        ->name('gestion.')
-        ->group(function () {
-            // ... (inmuebles, equipos, mantenimientos, garantias, asignaciones)
-
-            // Gestión de Usuarios (solo Administradores)
-            Route::resource('usuarios', \App\Http\Controllers\UserController::class)
-                ->parameters(['usuarios' => 'user'])
-                ->middleware('role:Administrador');
-        });
-
-    // ─── PARAMETRIZACIÓN ──────────────────────────────────────────────────
-    // Solo usuarios con rol Administrador
+    // ─── PARAMETRIZACIÓN ─────────────────────────────────────────────────
+    // Solo Administradores
     Route::middleware('role:Administrador')
         ->prefix('parametrizacion')
         ->name('parametrizacion.')
@@ -178,27 +165,66 @@ Route::middleware('auth')->group(function () {
             Route::resource('criticidades', CriticidadController::class);
         });
 
-    // ─── GESTIÓN ──────────────────────────────────────────────────────────
+    // ─── GESTIÓN ─────────────────────────────────────────────────────────
     // Administradores y Operadores
     Route::middleware('role:Administrador|Operador')
         ->prefix('gestion')
         ->name('gestion.')
         ->group(function () {
+
+            // ── Inmuebles ─────────────────────────────────────
             Route::resource('inmuebles', InmuebleController::class);
             Route::get('inmuebles-coordenadas', [InmuebleController::class, 'coordenadas'])
                 ->name('inmuebles.coordenadas');
 
+            // ── Equipos ───────────────────────────────────────
             Route::resource('equipos', EquipoController::class);
             Route::get('equipos-tipos-por-categoria', [EquipoController::class, 'tiposPorCategoria'])
                 ->name('equipos.tipos-por-categoria');
 
-            Route::resource('mantenimientos', MantenimientoController::class);
-            Route::get('mantenimientos-activos-por-tipo', [MantenimientoController::class, 'activosPorTipo'])
+            // ── Mantenimientos ────────────────────────────────
+
+            // ▼ Rutas específicas (DEBEN IR ANTES del resource) ▼
+            Route::get('mantenimientos/presupuesto',
+                [MantenimientoController::class, 'presupuesto'])
+                ->name('mantenimientos.presupuesto');
+
+            Route::get('mantenimientos/calendario',
+                [MantenimientoController::class, 'calendario'])
+                ->name('mantenimientos.calendario');
+
+            Route::get('mantenimientos-calendario-eventos',
+                [MantenimientoController::class, 'calendarioEventos'])
+                ->name('mantenimientos.calendario-eventos');
+
+            Route::get('mantenimientos-activos-por-tipo',
+                [MantenimientoController::class, 'activosPorTipo'])
                 ->name('mantenimientos.activos-por-tipo');
 
+            Route::get('mantenimientos-criticidades-por-criterio',
+                [MantenimientoController::class, 'criticidadesPorCriterio'])
+                ->name('mantenimientos.criticidades-por-criterio');
+
+            Route::get('mantenimientos/{mantenimiento}/completar',
+                [MantenimientoController::class, 'completarForm'])
+                ->name('mantenimientos.completar.form');
+
+            Route::post('mantenimientos/{mantenimiento}/completar',
+                [MantenimientoController::class, 'completar'])
+                ->name('mantenimientos.completar');
+            // ▲ Fin rutas específicas ▲
+
+            Route::resource('mantenimientos', MantenimientoController::class);
+
+            // ── Garantías ─────────────────────────────────────
             Route::resource('garantias', GarantiaController::class);
 
-            // Asignación de Equipos a Inmuebles
+            // ── Asignación de Equipos a Inmuebles ─────────────
             Route::resource('asignaciones', AsignacionEquipoController::class);
+
+            // ── Usuarios (solo Administradores) ───────────────
+            Route::resource('usuarios', UserController::class)
+                ->parameters(['usuarios' => 'user'])
+                ->middleware('role:Administrador');
         });
 });

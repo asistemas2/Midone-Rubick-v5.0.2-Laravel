@@ -1,4 +1,5 @@
 <?php
+// database/seeders/DatabaseSeeder.php
 
 namespace Database\Seeders;
 
@@ -9,28 +10,29 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            // ── Autenticación y permisos ───────────────────────
             UserSeeder::class,
-            RolesAndPermissionsSeeder::class,  // ← IMPORTANTE: después de UserSeeder
-            // Inmuebles
+            RolesAndPermissionsSeeder::class,
+
+            // ── Catálogos de inmuebles ─────────────────────────
             BloquesSeeder::class,
             TiposInmuebleSeeder::class,
             PeriodicidadesMantenimientoSeeder::class,
             NivelesDeterioroSeeder::class,
 
-            // Equipos (nuevo orden)
-            CategoriasEquipoSeeder::class,   // primero categorías (superior)
-            TiposEquipoSeeder::class,        // luego tipos (inferior, dependen de categorías)
+            // ── Catálogos de equipos ───────────────────────────
+            CategoriasEquipoSeeder::class,
+            TiposEquipoSeeder::class,
             EstadosEquipoSeeder::class,
             MarcasSeeder::class,
-            CriticidadesSeeder::class,
+            CriticidadesSeeder::class,              // equipos
+            CriticidadesMantenimientoSeeder::class, // ← NUEVO (mantenimientos)
 
-            // Módulos principales
+            // ── Módulos principales ────────────────────────────
             InmueblesSeeder::class,
-            EquiposSeeder::class,            // depende de tipos y categorías
+            EquiposSeeder::class,
             MantenimientosSeeder::class,
             GarantiasSeeder::class,
-
-
         ]);
     }
 }

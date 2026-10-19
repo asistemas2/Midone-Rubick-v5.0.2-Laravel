@@ -11,6 +11,7 @@ use App\Models\TipoInmueble;
 use App\Models\NivelDeterioro;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 
@@ -20,10 +21,7 @@ class InmuebleController extends Controller
     {
         $inmuebles = Inmueble::activos()
             ->with(['bloque', 'tipoInmueble', 'nivelDeterioro'])
-            ->when($request->filled('buscar'), function ($query) use ($request) {
-                $query->where('nombre', 'like', '%' . $request->buscar . '%')
-                    ->orWhere('codigo', 'like', '%' . $request->buscar . '%');
-            })
+            ->buscar(['nombre', 'codigo'], $request->buscar)
             ->when($request->filled('estado'), function ($query) use ($request) {
                 $query->where('estado', $request->estado);
             })
@@ -55,11 +53,10 @@ class InmuebleController extends Controller
     public function store(StoreInmuebleRequest $request): RedirectResponse
     {
         try {
-            $inmueble = Inmueble::create($request->validated());
-
-            if ($request->filled('ficha_tecnica')) {
-                $inmueble->fichaTecnica()->create($request->input('ficha_tecnica'));
-            }
+            DB::transaction(function () use ($request) {
+                $inmueble = Inmueble::create($request->validated());
+                $this->guardarFichaTecnica($request, $inmueble);
+            });
 
             return redirect()
                 ->route('gestion.inmuebles.index')
@@ -91,14 +88,10 @@ class InmuebleController extends Controller
     public function update(UpdateInmuebleRequest $request, Inmueble $inmueble): RedirectResponse
     {
         try {
-            $inmueble->update($request->validated());
-
-            if ($request->filled('ficha_tecnica')) {
-                $inmueble->fichaTecnica()->updateOrCreate(
-                    ['inmueble_id' => $inmueble->id],
-                    $request->input('ficha_tecnica')
-                );
-            }
+            DB::transaction(function () use ($request, $inmueble) {
+                $inmueble->update($request->validated());
+                $this->guardarFichaTecnica($request, $inmueble);
+            });
 
             return redirect()
                 ->route('gestion.inmuebles.index')
@@ -124,6 +117,31 @@ class InmuebleController extends Controller
                 ->back()
                 ->with('error', 'Error al eliminar el inmueble: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Guarda la ficha técnica solo si el inmueble es Bodega.
+     * Si no lo es, no se toca: una ficha previa se conserva oculta.
+     */
+    private function guardarFichaTecnica(Request $request, Inmueble $inmueble): void
+    {
+        if (! $inmueble->load('tipoInmueble')->esBodega()) {
+            return;
+        }
+
+        $datos = $request->validated('ficha_tecnica') ?? [];
+
+        // Un checkbox desmarcado no se envía: se fuerza el false explícito
+        foreach (['muelle', 'mezzanine', 'cocineta'] as $campo) {
+            $datos[$campo] = $request->boolean("ficha_tecnica.$campo");
+        }
+
+        // No crear fichas vacías
+        if (! $inmueble->fichaTecnica()->exists() && ! array_filter($datos)) {
+            return;
+        }
+
+        $inmueble->fichaTecnica()->updateOrCreate(['inmueble_id' => $inmueble->id], $datos);
     }
 
     /**

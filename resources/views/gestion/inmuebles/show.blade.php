@@ -69,7 +69,7 @@
                 </div>
 
                 {{-- FICHA TÉCNICA --}}
-                @if($inmueble->fichaTecnica)
+                @if($inmueble->es_bodega && $inmueble->fichaTecnica)
                     <div class="mt-5 border-t border-slate-200/60 pt-5 dark:border-darkmode-400">
                         <h4 class="text-sm font-semibold text-slate-700 mb-3">Ficha Técnica de Bodega</h4>
                         <div class="grid grid-cols-12 gap-4">

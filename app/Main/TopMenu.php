@@ -15,9 +15,6 @@ class TopMenu
                 'icon' => 'home',
                 'title' => 'Dashboard',
                 'route_name' => 'dashboard',
-                'params' => [
-                    'layout' => 'top-menu',
-                ],
             ],
 
             // ─── Gestión ─────────────────────────────────────────
@@ -34,13 +31,11 @@ class TopMenu
                             'inmuebles-listado' => [
                                 'icon'       => 'list',
                                 'route_name' => 'gestion.inmuebles.index',
-                                'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Listado',
                             ],
                             'inmuebles-crear' => [
                                 'icon'       => 'plus-circle',
                                 'route_name' => 'gestion.inmuebles.create',
-                                'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Crear Inmueble',
                             ],
                         ],
@@ -54,22 +49,17 @@ class TopMenu
                             'equipos-listado' => [
                                 'icon'       => 'list',
                                 'route_name' => 'gestion.equipos.index',
-                                'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Listado',
                             ],
                             'equipos-registrar' => [
                                 'icon'       => 'plus-circle',
                                 'route_name' => 'gestion.equipos.create',
-                                'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Registrar Equipo',
                             ],
                             [
                                 'icon' => 'arrow-up-down',
                                 'title' => 'Asignación de Equipos',
                                 'route_name' => 'gestion.asignaciones.index',
-                                'params' => [
-                                    'layout' => 'top-menu',
-                                ],
                             ],
                         ],
                     ],
@@ -82,20 +72,23 @@ class TopMenu
                             'mantenimientos-listado' => [
                                 'icon'       => 'list',
                                 'route_name' => 'gestion.mantenimientos.index',
-                                'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Listado',
                             ],
                             'mantenimientos-programar' => [
                                 'icon'       => 'clock',
                                 'route_name' => 'gestion.mantenimientos.create',
-                                'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Programar',
                             ],
                             'mantenimientos-calendario' => [
                                 'icon'       => 'calendar',
-                                'route_name' => 'gestion.mantenimientos.index',
-                                'params'     => ['layout' => 'top-menu'],
+                                'route_name' => 'gestion.mantenimientos.calendario',
                                 'title'      => 'Calendario',
+                            ],
+                            // En SideMenu.php y TopMenu.php, dentro del submenú de 'mantenimientos'
+                            'presupuesto' => [
+                                'icon' => 'bar-chart-2',
+                                'title' => 'Presupuesto',
+                                'route_name' => 'gestion.mantenimientos.presupuesto',
                             ],
                         ],
                     ],
@@ -108,13 +101,11 @@ class TopMenu
                             'garantias-listado' => [
                                 'icon'       => 'list',
                                 'route_name' => 'gestion.garantias.index',
-                                'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Listado',
                             ],
                             'garantias-registrar' => [
                                 'icon'       => 'plus-circle',
                                 'route_name' => 'gestion.garantias.create',
-                                'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Registrar',
                             ],
                         ],
@@ -128,13 +119,11 @@ class TopMenu
                             'usuarios-listado' => [
                                 'icon'       => 'list',
                                 'route_name' => 'gestion.usuarios.index',
-                                'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Listado',
                             ],
                             'usuarios-crear' => [
                                 'icon'       => 'plus-circle',
                                 'route_name' => 'gestion.usuarios.create',
-                                'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Crear Usuario',
                             ],
                         ],
@@ -155,25 +144,21 @@ class TopMenu
                             'bloques' => [
                                 'icon'       => 'layout-grid',
                                 'route_name' => 'parametrizacion.bloques.index',
-                                'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Bloques',
                             ],
                             'tipos-inmueble' => [
                                 'icon'       => 'home',
                                 'route_name' => 'parametrizacion.tipos_inmueble.index',
-                                'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Tipos de Inmueble',
                             ],
                             'periodicidades-mantenimiento' => [
                                 'icon'       => 'calendar-clock',
                                 'route_name' => 'parametrizacion.periodicidades_mantenimiento.index',
-                                'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Periodicidades de Mantenimiento',
                             ],
                             'niveles-deterioro' => [
                                 'icon'       => 'alert-triangle',
                                 'route_name' => 'parametrizacion.niveles_deterioro.index',
-                                'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Niveles de Deterioro',
                             ],
                         ],
@@ -185,31 +170,26 @@ class TopMenu
                             'tipos-equipo' => [
                                 'icon'       => 'package',
                                 'route_name' => 'parametrizacion.tipos_equipo.index',
-                                'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Tipos de Equipo',
                             ],
                             'estados-equipo' => [
                                 'icon'       => 'activity',
                                 'route_name' => 'parametrizacion.estados_equipo.index',
-                                'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Estados de Equipo',
                             ],
                             'categorias-equipo' => [
                                 'icon'       => 'layers',
                                 'route_name' => 'parametrizacion.categorias_equipo.index',
-                                'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Categorías de Equipo',
                             ],
                             'marcas' => [
                                 'icon'       => 'tag',
                                 'route_name' => 'parametrizacion.marcas.index',
-                                'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Marcas',
                             ],
                             'criticidades' => [
                                 'icon'       => 'target',
                                 'route_name' => 'parametrizacion.criticidades.index',
-                                'params'     => ['layout' => 'top-menu'],
                                 'title'      => 'Criticidades',
                             ],
                         ],

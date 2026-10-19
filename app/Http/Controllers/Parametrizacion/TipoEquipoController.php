@@ -16,9 +16,7 @@ class TipoEquipoController extends Controller
     {
         $tiposEquipo = TipoEquipo::activos()
             ->with('categoriaEquipo')
-            ->when($request->filled('buscar'), function ($query) use ($request) {
-                $query->where('nombre', 'like', '%' . $request->buscar . '%');
-            })
+            ->buscar(['nombre'], $request->buscar)
             ->when($request->filled('categoria_equipo_id'), function ($query) use ($request) {
                 $query->where('categoria_equipo_id', $request->categoria_equipo_id);
             })

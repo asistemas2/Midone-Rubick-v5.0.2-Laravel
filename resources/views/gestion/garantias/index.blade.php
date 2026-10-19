@@ -17,14 +17,14 @@
                 Mostrando {{ $garantias->firstItem() ?? 0 }} a {{ $garantias->lastItem() ?? 0 }} de {{ $garantias->total() }} registros
             </div>
             <div class="mt-3 w-full sm:mt-0 sm:ml-auto sm:w-auto md:ml-0">
-                <form action="{{ route('gestion.garantias.index') }}" method="GET" class="flex gap-2">
-                    <x-base.form-select class="!box w-32" name="estado">
+                <form action="{{ route('gestion.garantias.index') }}" method="GET" class="flex gap-2 flex-wrap">
+                    <x-base.form-select class="!box w-32" name="estado" onchange="this.form.submit()">
                         <option value="">Estado</option>
                         <option value="activa" {{ request('estado') == 'activa' ? 'selected' : '' }}>Activa</option>
                         <option value="vencida" {{ request('estado') == 'vencida' ? 'selected' : '' }}>Vencida</option>
                         <option value="en_tramite" {{ request('estado') == 'en_tramite' ? 'selected' : '' }}>En Trámite</option>
                     </x-base.form-select>
-                    <x-base.form-select class="!box w-32" name="vigencia">
+                    <x-base.form-select class="!box w-32" name="vigencia" onchange="this.form.submit()">
                         <option value="">Vigencia</option>
                         <option value="vigente" {{ request('vigencia') == 'vigente' ? 'selected' : '' }}>Vigente</option>
                         <option value="por_vencer" {{ request('vigencia') == 'por_vencer' ? 'selected' : '' }}>Por Vencer (30d)</option>
@@ -33,6 +33,7 @@
                         <x-base.form-input class="!box w-56 pr-10" name="buscar" type="text" value="{{ request('buscar') }}" placeholder="Buscar..." />
                         <x-base.lucide class="absolute inset-y-0 right-0 my-auto mr-3 h-4 w-4" icon="Search" />
                     </div>
+                    <x-filtros-limpiar route="gestion.garantias.index" />
                 </form>
             </div>
         </div>

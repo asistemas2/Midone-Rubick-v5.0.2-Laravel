@@ -41,7 +41,8 @@
                     <div class="mt-3">
                         <label>Estado</label>
                         <x-base.form-switch class="mt-2">
-                            <x-base.form-switch.input type="checkbox" name="activo" value="1" {{ old('activo', $tipoEquipo->activo) ? 'checked' : '' }} />
+                            <input type="hidden" name="activo" value="0" />
+                            <x-base.form-switch.input type="checkbox" name="activo" value="1" :checked="old('activo', $tipoEquipo->activo)" />
                             <x-base.form-switch.label>Activo</x-base.form-switch.label>
                         </x-base.form-switch>
                     </div>

@@ -17,11 +17,12 @@
                 Mostrando {{ $niveles->firstItem() ?? 0 }} a {{ $niveles->lastItem() ?? 0 }} de {{ $niveles->total() }} registros
             </div>
             <div class="mt-3 w-full sm:mt-0 sm:ml-auto sm:w-auto md:ml-0">
-                <form action="{{ route('parametrizacion.niveles_deterioro.index') }}" method="GET">
+                <form action="{{ route('parametrizacion.niveles_deterioro.index') }}" method="GET" class="flex gap-2 flex-wrap">
                     <div class="relative w-56 text-slate-500">
                         <x-base.form-input class="!box w-56 pr-10" name="buscar" type="text" value="{{ request('buscar') }}" placeholder="Buscar..." />
                         <x-base.lucide class="absolute inset-y-0 right-0 my-auto mr-3 h-4 w-4" icon="Search" />
                     </div>
+                    <x-filtros-limpiar route="parametrizacion.niveles_deterioro.index" />
                 </form>
             </div>
         </div>

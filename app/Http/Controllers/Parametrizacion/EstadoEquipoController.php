@@ -18,10 +18,7 @@ class EstadoEquipoController extends Controller
     public function index(Request $request): View
     {
         $estados = EstadoEquipo::activos()
-            ->when($request->filled('buscar'), function ($query) use ($request) {
-                $query->where('nombre', 'like', '%' . $request->buscar . '%')
-                      ->orWhere('codigo', 'like', '%' . $request->buscar . '%');
-            })
+            ->buscar(['nombre', 'codigo'], $request->buscar)
             ->orderBy('nombre')
             ->paginate(15)
             ->withQueryString();

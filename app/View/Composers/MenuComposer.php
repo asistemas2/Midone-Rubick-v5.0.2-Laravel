@@ -35,13 +35,12 @@ class MenuComposer
      */
     public function layout($view): string
     {
-        if (isset($view->layout)) {
-            return $view->layout;
-        } else if (request()->has('layout')) {
-            return request()->query('layout');
+        // Layouts sin menú (login, registro, error) se respetan
+        if (isset($view->layout) && $view->layout === 'base') {
+            return 'base';
         }
 
-        return 'side-menu';
+        return 'top-menu';
     }
 
     /**
