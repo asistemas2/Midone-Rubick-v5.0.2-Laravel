@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests\Gestion;
 
+use App\Http\Requests\Concerns\NormalizaActivo;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreGarantiaRequest extends FormRequest
 {
+    use NormalizaActivo;
+
     public function authorize(): bool
     {
         return true;
@@ -14,7 +17,6 @@ class StoreGarantiaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'codigo' => 'required|string|max:30|unique:garantias,codigo',
             'mantenimiento_id' => 'nullable|integer|exists:mantenimientos,id',
             'tipo_activo' => 'required|in:inmueble,equipo',
             'activo_id' => 'nullable|integer|min:1',
@@ -32,8 +34,6 @@ class StoreGarantiaRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'codigo.required' => 'El código es obligatorio.',
-            'codigo.unique' => 'Este código ya existe.',
             'tipo_activo.required' => 'El tipo de activo es obligatorio.',
             'estado.required' => 'El estado es obligatorio.',
             'fecha_fin.after_or_equal' => 'La fecha fin debe ser posterior a la fecha de inicio.',

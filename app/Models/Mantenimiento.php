@@ -3,6 +3,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TieneConsecutivo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,7 +13,10 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Mantenimiento extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, TieneConsecutivo;
+
+    /** Prefijo del código consecutivo (ver App\Support\Consecutivo). */
+    public const PREFIJO_CODIGO = 'MT';
 
     protected $table = 'mantenimientos';
 

@@ -26,14 +26,17 @@
 
     <div class="mt-5 grid grid-cols-12 gap-6">
         {{-- Info principal --}}
-        <div class="intro-y col-span-12 lg:col-span-8">
+        <div class="intro-y col-span-12">
             <div class="intro-y box p-5">
-                <div class="flex items-center border-b border-slate-200/60 pb-5 dark:border-darkmode-400">
-                    <div>
+                <div class="flex flex-wrap items-center gap-2 border-b border-slate-200/60 pb-5 dark:border-darkmode-400">
+                    <div class="mr-auto">
                         <div class="text-base font-medium">{{ $inmueble->nombre }}</div>
                         <div class="mt-1 text-slate-500">{{ $inmueble->codigo }}</div>
                     </div>
-                    <div class="ml-auto">{!! $inmueble->estado_badge !!}</div>
+                    {!! $inmueble->estado_badge !!}
+                    <span @class(['rounded-full px-2 py-1 text-xs', 'bg-success/20 text-success' => $inmueble->activo, 'bg-slate-200 text-slate-500' => !$inmueble->activo])>
+                        {{ $inmueble->activo ? 'Registro activo' : 'Registro inactivo' }}
+                    </span>
                 </div>
                 <div class="mt-5 grid grid-cols-12 gap-4">
                     <div class="col-span-6 sm:col-span-4">
@@ -50,11 +53,19 @@
                     </div>
                     <div class="col-span-6 sm:col-span-4">
                         <div class="text-xs text-slate-500">Área (m²)</div>
-                        <div class="mt-1 font-medium">{{ $inmueble->area_m2 ? number_format($inmueble->area_m2, 2) : '—' }}</div>
+                        <div class="mt-1 font-medium">{{ $inmueble->area_m2 ? number_format($inmueble->area_m2, 2, ',', '.') : '—' }}</div>
                     </div>
                     <div class="col-span-6 sm:col-span-4">
                         <div class="text-xs text-slate-500">Área Construida (m²)</div>
-                        <div class="mt-1 font-medium">{{ $inmueble->area_construida_m2 ? number_format($inmueble->area_construida_m2, 2) : '—' }}</div>
+                        <div class="mt-1 font-medium">{{ $inmueble->area_construida_m2 ? number_format($inmueble->area_construida_m2, 2, ',', '.') : '—' }}</div>
+                    </div>
+                    <div class="col-span-6 sm:col-span-4">
+                        <div class="text-xs text-slate-500">Fecha de Construcción</div>
+                        <div class="mt-1 font-medium">{{ $inmueble->fecha_construccion?->format('d/m/Y') ?? '—' }}</div>
+                    </div>
+                    <div class="col-span-6 sm:col-span-4">
+                        <div class="text-xs text-slate-500">Valor Catastral</div>
+                        <div class="mt-1 font-medium">{{ $inmueble->valor_catastral ? '$' . number_format($inmueble->valor_catastral, 2, ',', '.') : '—' }}</div>
                     </div>
                     <div class="col-span-12">
                         <div class="text-xs text-slate-500">Dirección</div>
@@ -223,6 +234,12 @@
                 </x-base.table>
             </div>
             @endif
+
+            {{-- Mantenimientos --}}
+            @include('gestion.partials._tabla-mantenimientos', ['mantenimientos' => $inmueble->mantenimientos])
+
+            {{-- Garantías --}}
+            @include('gestion.partials._tabla-garantias', ['garantias' => $inmueble->garantias])
         </div>
     </div>
 

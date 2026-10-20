@@ -47,17 +47,25 @@ Rutas (`routes/web.php`): `/parametrizacion/*` → `role:Administrador`; `/gesti
 
 - **Mantenimiento** se asocia a un inmueble o equipo por relación polimórfica `activoRelacionado()` (`activo_type` = clase completa, `activo_id`), además de `tipo_activo` (`inmueble|equipo`). `activo` es una columna **booleana** distinta (registro activo/inactivo); por eso el `morphTo` usa `__FUNCTION__` como nombre — no lo cambies a `'activo'`.
 - Estados: `programado → en_proceso → completado | cancelado`. Cambia el estado con `Mantenimiento::cambiarEstado()`, que registra en `mantenimiento_historial`.
+- **Completar** (`MantenimientoController@completar`, modal en `mantenimientos/show.blade.php`): en una sola transacción hace `cambiarEstado('completado')` con `costo_real`, guarda documentos (disco `public`, `mantenimientos/{id}`) y, opcionalmente, crea el siguiente mantenimiento (`programar_nuevo` + campos `nuevo_*`) y una garantía (`registrar_garantia` + campos `garantia_*`, asociada al mantenimiento y a su activo). Si agregas otra sección opcional, sigue ese mismo patrón: casilla + campos con prefijo + `required_if`.
+- El detalle de mantenimiento no tiene panel lateral: las acciones (Completar, Editar, Volver) van solo en el encabezado.
+- **Garantías** guardan `tipo_activo` + `activo_id` (sin `activo_type`): usa `Inmueble::garantias()` / `Equipo::garantias()` y `$garantia->activo_garantizado` para resolver el activo. Los detalles de Inmueble y Equipo reutilizan `gestion/partials/_tabla-mantenimientos` y `_tabla-garantias`.
+- **Perfil** (`ProfileController`, vistas `gestion/usuarios/profile*.blade.php` + `partials/_perfil-menu`): basado en las demos `update-profile` / `change-password`.
 - Campos de dinero: `presupuesto_aprobado` (al programar; antes se llamaba `costo_aproximado`/"estimado" — no reintroduzcas esos términos) y `costo_real` (al completar).
 - `criterio_mantenimiento` (enum: `riesgo_vida`, `riesgo_operacional`, `riesgo_sancionatorio`, `riesgo_activo`) + `criticidad_mantenimiento_id` (tabla `criticidades_mantenimiento`: Grave/Moderado/Leve). La mayoría de registros históricos no tienen criterio ni criticidad: es esperado.
 - **Ficha técnica** de inmueble (`fichas_tecnicas_inmuebles`) solo aplica a bodegas: usa `$inmueble->esBodega()` / `TipoInmueble::esBodega()`; nunca compares el texto `'Bodega'` a mano. Si deja de ser bodega, la ficha se conserva oculta.
 - Casi todos los modelos tienen `scopeActivos()` y `SoftDeletes`.
+- **Códigos consecutivos**: `Mantenimiento` (MT), `Inmueble` (INM), `Equipo` (EQ) y `Garantia` (GAR) usan el trait `TieneConsecutivo` + `const PREFIJO_CODIGO`; el código se asigna solo al crear (`App\Support\Consecutivo`, formato `PREFIJO-0000`, bloqueo de fila en la tabla `consecutivos`). No pidas ni valides `codigo` en formularios/FormRequests de esos recursos y no lo hagas editable. Se conservan los códigos antiguos (`MT-0932`, `INM-105`); la secuencia continúa desde el número más alto existente. Para un recurso nuevo con consecutivo: agrega el trait, la constante y una fila en `consecutivos` (se crea sola si falta). Los catálogos de Parametrización mantienen códigos descriptivos manuales.
 
 ## Convenciones obligatorias
 
+**Las pantallas se construyen con base en la plantilla.** Toda vista nueva o rediseñada parte de la página de demostración más parecida de Midone/Rubick (`resources/views/pages/*.blade.php`, servidas por `PageController` en las rutas `*-page`) y usa los componentes disponibles en `resources/views/components/base/` (`x-base.*`). Adapta textos y datos; no inventes estructura ni estilos propios si la plantilla ya trae un equivalente. Ejemplos: perfil → `update-profile` / `profile-overview-*`; contraseña → `change-password`; formularios → `crud-form` / `regular-form`; tablas → `regular-table`; calendario → `calendar`. **No borres** las páginas demo ni sus rutas: son la referencia.
+
 **Blade + componentes `x-base.*`**
 - Nunca pongas `{{ ... }}` suelto dentro de una etiqueta `<x-...>` (p. ej. `{{ $x ? 'checked' : '' }}`): Blade deja de compilar el componente y el navegador recibe la etiqueta literal. Usa props: `:checked="..."`, `:disabled="..."`. (`{{ }}` *dentro del valor* de un atributo, como `class="a {{ $b }}"`, sí funciona.)
+- Tampoco uses directivas como `@error ... @enderror` dentro de los atributos de un `<x-...>`: no se compilan y la clase llega literal (el campo se ve **siempre** en rojo). Para resaltar un campo con error: `class="w-full {{ $errors->has('campo') ? 'border-danger' : '' }}"`. El mensaje `@error('campo') <div ...>{{ $message }}</div> @enderror` va **fuera** del componente.
 - Tampoco uses `\"` dentro de atributos de componentes; para pulgadas usa `″`.
-- Checkbox/switch booleano: `<input type="hidden" name="campo" value="0" />` **antes** del checkbox, y en el controlador `$request->boolean('campo')`.
+- Checkbox/switch booleano: `<input type="hidden" name="campo" value="0" />` **antes** del checkbox, y en el servidor `$request->boolean('campo')`. Para el switch "Activo" de un formulario, agrega el trait `App\Http\Requests\Concerns\NormalizaActivo` a sus FormRequests (ausente = `false`). **No** lo uses si el formulario no tiene ese switch (p. ej. Equipos): desactivaría el registro en cada edición.
 - Íconos: `<x-base.lucide icon="Nombre" />`. Formato de moneda: `number_format($v, 2, ',', '.')`.
 
 **Listados con filtros**
@@ -72,6 +80,16 @@ No uses `->where(...)->orWhere(...)` sin agrupar ni `'like'` directo (en Postgre
 **Menú**: agrega ítems en `app/Main/TopMenu.php` (sin `params => ['layout' => ...]`).
 
 **Formularios**: validación en FormRequests con mensajes en español; reglas de negocio que dependan del dominio, en el modelo o el controlador, no solo en JavaScript.
+- No hay archivos de idioma `es` (`lang/`): sin mensaje personalizado, el usuario ve la clave cruda (`validation.required`). Define el mensaje de **cada** regla nueva.
+- Toda vista que reciba un `redirect()->with('success'|'error')` debe mostrar esos mensajes (patrón: `index.blade.php` de cada módulo o `mantenimientos/show.blade.php`).
+- Formularios dentro de un modal (`x-base.dialog`): muestra `$errors` dentro del modal, conserva valores con `old()` y reábrelo si hubo errores:
+  ```blade
+  @if ($errors->any())
+      <script type="module">
+          tailwind.Modal.getOrCreateInstance(document.getElementById('id-del-modal')).show();
+      </script>
+  @endif
+  ```
 
 ## Cómo verificar cambios
 
@@ -94,7 +112,6 @@ No hay suite de tests útil (solo los ejemplos de Laravel). Verifica así:
 
 ## Problemas conocidos (pendientes)
 
-- `ProfileController@show` y `@password` apuntan a vistas inexistentes (`gestion.usuarios.profile`, `gestion.usuarios.profile-password`).
-- Vistas de detalle incompletas: Equipos (no muestra inmueble, fechas, proveedor, garantía, etc.), Inmuebles (fecha de construcción, valor catastral, lista de mantenimientos) y Garantías (qué activo concreto).
-- Otros controladores con `activo` validado como `sometimes|boolean` dependen del hidden `activo=0` de la vista para poder desactivar.
-- `PageController` y sus rutas `*-page` son demos de la plantilla; no las uses como referencia de estilo del proyecto.
+- Login con Google: esos usuarios tienen una contraseña aleatoria que no conocen, así que no pueden usar "Cambiar contraseña" (pide la actual).
+- Equipos no tiene switch "Activo" en sus formularios: un equipo solo se puede desactivar/eliminar desde el listado.
+- `PageController` y sus rutas `*-page` son las demos de la plantilla: se conservan como referencia de diseño (ver la regla de pantallas), aunque estén accesibles para usuarios autenticados.

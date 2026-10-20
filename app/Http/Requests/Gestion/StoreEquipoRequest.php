@@ -14,7 +14,6 @@ class StoreEquipoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'codigo' => 'required|string|max:30|unique:equipos,codigo',
             'nombre' => 'required|string|max:300',
             'tipo_equipo_id' => 'nullable|integer|exists:tipos_equipo,id',
             'categoria_equipo_id' => 'nullable|integer|exists:categorias_equipo,id',
@@ -47,8 +46,6 @@ class StoreEquipoRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'codigo.required' => 'El código es obligatorio.',
-            'codigo.unique' => 'Este código ya existe.',
             'nombre.required' => 'El nombre es obligatorio.',
         ];
     }

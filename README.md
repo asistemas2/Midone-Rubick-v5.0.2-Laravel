@@ -95,8 +95,13 @@ Catálogos: Bloques, Tipos de inmueble, Periodicidades de mantenimiento, Niveles
   - **Criterio** (riesgo de vida, operacional, sancionatorio o sobre el activo) y **criticidad** (Grave, Moderado, Leve), con select dependiente.
   - **Presupuesto aprobado** al programar y **costo real** al completar.
   - Historial de cambios de estado, documentos adjuntos y garantías asociadas.
+  - **Completar mantenimiento** (botón en el encabezado del detalle): registra el costo real, un comentario y documentos (orden de compra, factura, evidencias, acta). De forma opcional, en el mismo paso:
+    - **Programar nuevo mantenimiento**, que hereda el activo, el criterio y la criticidad del actual.
+    - **Registrar garantía** del trabajo realizado (proveedor, vigencia, monto, estado y términos), asociada al mantenimiento y a su activo.
+
+    Todo se guarda en una sola transacción. Si falta un dato, el modal se reabre con los errores y conserva lo diligenciado.
   - **Calendario** (`/gestion/mantenimientos/calendario`) y reporte de **Presupuesto** (aprobado vs. ejecutado, por mes, tipo, responsable y activo).
-- **Garantías**
+- **Garantías** — se registran desde su módulo o al completar un mantenimiento.
 - **Usuarios** (solo Administrador)
 
 ### Dashboard
@@ -148,6 +153,8 @@ En la vista, los `select` de filtro llevan `onchange="this.form.submit()"` y el 
 ```
 
 Por la misma razón, evita `\"` dentro de atributos de componentes (para pulgadas usa `″`).
+
+**Códigos consecutivos.** Mantenimientos (`MT-`), Inmuebles (`INM-`), Equipos (`EQ-`) y Garantías (`GAR-`) reciben su código automáticamente al crearse, con 4 dígitos (`MT-0933`). Lo genera `App\Support\Consecutivo` mediante el trait `TieneConsecutivo`. El contador de la tabla `consecutivos` se bloquea al generar, así que dos usuarios nunca obtienen el mismo número, y la secuencia continúa desde el código más alto existente. El código no se puede escribir ni editar desde los formularios.
 
 **Caché.** En local las rutas pueden estar cacheadas (`bootstrap/cache/routes-v7.php`). Si agregas rutas y no aparecen:
 

@@ -20,12 +20,12 @@
                     @csrf
                     <div>
                         <x-base.form-label for="nombre">Nombre <span class="text-danger">*</span></x-base.form-label>
-                        <x-base.form-input class="w-full @error('nombre') border-danger @enderror" id="nombre" name="nombre" type="text" value="{{ old('nombre') }}" placeholder="Nombre de la marca" required />
+                        <x-base.form-input class="w-full {{ $errors->has('nombre') ? 'border-danger' : '' }}" id="nombre" name="nombre" type="text" value="{{ old('nombre') }}" placeholder="Nombre de la marca" required />
                         @error('nombre') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-3">
                         <x-base.form-label for="pais_origen">País de Origen</x-base.form-label>
-                        <x-base.form-input class="w-full @error('pais_origen') border-danger @enderror" id="pais_origen" name="pais_origen" type="text" value="{{ old('pais_origen') }}" placeholder="País de origen" />
+                        <x-base.form-input class="w-full {{ $errors->has('pais_origen') ? 'border-danger' : '' }}" id="pais_origen" name="pais_origen" type="text" value="{{ old('pais_origen') }}" placeholder="País de origen" />
                         @error('pais_origen') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-3">

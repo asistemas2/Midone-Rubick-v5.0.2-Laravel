@@ -20,12 +20,12 @@
                     @csrf
                     <div>
                         <x-base.form-label for="nombre">Nombre <span class="text-danger">*</span></x-base.form-label>
-                        <x-base.form-input class="w-full @error('nombre') border-danger @enderror" id="nombre" name="nombre" type="text" value="{{ old('nombre') }}" placeholder="Ej: Operativo, En Mantenimiento" required />
+                        <x-base.form-input class="w-full {{ $errors->has('nombre') ? 'border-danger' : '' }}" id="nombre" name="nombre" type="text" value="{{ old('nombre') }}" placeholder="Ej: Operativo, En Mantenimiento" required />
                         @error('nombre') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-3">
                         <x-base.form-label for="codigo">Código <span class="text-danger">*</span></x-base.form-label>
-                        <x-base.form-input class="w-full @error('codigo') border-danger @enderror" id="codigo" name="codigo" type="text" value="{{ old('codigo') }}" placeholder="Código único" required />
+                        <x-base.form-input class="w-full {{ $errors->has('codigo') ? 'border-danger' : '' }}" id="codigo" name="codigo" type="text" value="{{ old('codigo') }}" placeholder="Código único" required />
                         @error('codigo') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-3">

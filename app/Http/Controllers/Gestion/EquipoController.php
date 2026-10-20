@@ -87,7 +87,9 @@ class EquipoController extends Controller
     {
         $equipo->load([
             'tipoEquipo', 'categoriaEquipo', 'marca', 'estadoEquipo',
-            'criticidad', 'periodicidadMantenimiento', 'inmueble', 'mantenimientos'
+            'criticidad', 'periodicidadMantenimiento', 'inmueble.bloque',
+            'mantenimientos' => fn ($q) => $q->activos()->orderByDesc('fecha_programada'),
+            'garantias' => fn ($q) => $q->activos()->with('mantenimiento')->orderByDesc('fecha_fin'),
         ]);
 
         return view('gestion.equipos.show', compact('equipo'));

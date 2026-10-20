@@ -3,10 +3,13 @@
 
 namespace App\Http\Requests\Gestion;
 
+use App\Http\Requests\Concerns\NormalizaActivo;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreMantenimientoRequest extends FormRequest
 {
+    use NormalizaActivo;
+
     public function authorize(): bool
     {
         return true;
@@ -15,8 +18,7 @@ class StoreMantenimientoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // ── Identificación ────────────────────────────────
-            'codigo'                 => 'required|string|max:30|unique:mantenimientos,codigo',
+            // El código es consecutivo automático (Mantenimiento::PREFIJO_CODIGO)
 
             // ── Activo relacionado ────────────────────────────
             'tipo_activo'            => 'required|in:inmueble,equipo',
@@ -51,8 +53,6 @@ class StoreMantenimientoRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'codigo.required'                        => 'El código es obligatorio.',
-            'codigo.unique'                          => 'Este código ya existe.',
             'tipo_activo.required'                   => 'El tipo de activo es obligatorio.',
             'activo_id.required'                     => 'Debe seleccionar un activo.',
             'tipo_mantenimiento.required'            => 'El tipo de mantenimiento es obligatorio.',
@@ -65,16 +65,5 @@ class StoreMantenimientoRequest extends FormRequest
             'costo_real.min'                         => 'El costo real no puede ser negativo.',
             'estado.required'                        => 'El estado es obligatorio.',
         ];
-    }
-
-    /**
-     * Preparar los datos antes de validar.
-     * Si viene costo_real y el estado no es "completado", se ignora.
-     */
-    protected function prepareForValidation(): void
-    {
-        $this->merge([
-            'activo' => $this->boolean('activo', true),
-        ]);
     }
 }

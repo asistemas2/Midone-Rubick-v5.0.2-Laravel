@@ -71,7 +71,11 @@ class InmuebleController extends Controller
 
     public function show(Inmueble $inmueble): View
     {
-        $inmueble->load(['bloque', 'tipoInmueble', 'nivelDeterioro', 'equipos', 'mantenimientos', 'fichaTecnica']);
+        $inmueble->load([
+            'bloque', 'tipoInmueble', 'nivelDeterioro', 'equipos.tipoEquipo', 'fichaTecnica',
+            'mantenimientos' => fn ($q) => $q->activos()->orderByDesc('fecha_programada'),
+            'garantias' => fn ($q) => $q->activos()->with('mantenimiento')->orderByDesc('fecha_fin'),
+        ]);
         return view('gestion.inmuebles.show', compact('inmueble'));
     }
 

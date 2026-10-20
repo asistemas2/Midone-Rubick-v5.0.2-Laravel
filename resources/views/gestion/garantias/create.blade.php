@@ -21,9 +21,9 @@
                     @csrf
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-12 sm:col-span-4">
-                            <x-base.form-label for="codigo">Código <span class="text-danger">*</span></x-base.form-label>
-                            <x-base.form-input class="w-full @error('codigo') border-danger @enderror" id="codigo" name="codigo" type="text" value="{{ old('codigo') }}" placeholder="GAR-001" required />
-                            @error('codigo') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
+                            <x-base.form-label for="codigo">Código</x-base.form-label>
+                            <x-base.form-input class="w-full" id="codigo" type="text" value="Automático" disabled />
+                            <div class="mt-1 text-xs text-slate-500">Se asigna al guardar (GAR-0000).</div>
                         </div>
                         <div class="col-span-12 sm:col-span-4">
                             <x-base.form-label for="mantenimiento_id">Mantenimiento</x-base.form-label>

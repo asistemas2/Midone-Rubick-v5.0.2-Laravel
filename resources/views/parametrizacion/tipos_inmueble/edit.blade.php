@@ -22,12 +22,12 @@
                     @method('PUT')
                     <div>
                         <x-base.form-label for="nombre">Nombre <span class="text-danger">*</span></x-base.form-label>
-                        <x-base.form-input class="w-full @error('nombre') border-danger @enderror" id="nombre" name="nombre" type="text" value="{{ old('nombre', $tipoInmueble->nombre) }}" required />
+                        <x-base.form-input class="w-full {{ $errors->has('nombre') ? 'border-danger' : '' }}" id="nombre" name="nombre" type="text" value="{{ old('nombre', $tipoInmueble->nombre) }}" required />
                         @error('nombre') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-3">
                         <x-base.form-label for="descripcion">Descripción</x-base.form-label>
-                        <x-base.form-textarea class="w-full @error('descripcion') border-danger @enderror" id="descripcion" name="descripcion">{{ old('descripcion', $tipoInmueble->descripcion) }}</x-base.form-textarea>
+                        <x-base.form-textarea class="w-full {{ $errors->has('descripcion') ? 'border-danger' : '' }}" id="descripcion" name="descripcion">{{ old('descripcion', $tipoInmueble->descripcion) }}</x-base.form-textarea>
                         @error('descripcion') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-3">

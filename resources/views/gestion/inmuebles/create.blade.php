@@ -26,17 +26,14 @@
                     <div class="grid grid-cols-12 gap-4">
                         {{-- Código --}}
                         <div class="col-span-12 sm:col-span-4">
-                            <x-base.form-label for="codigo">Código <span class="text-danger">*</span></x-base.form-label>
-                            <x-base.form-input class="w-full @error('codigo') border-danger @enderror" id="codigo"
-                                name="codigo" type="text" value="{{ old('codigo') }}" placeholder="INM-001" required />
-                            @error('codigo')
-                                <div class="mt-1 text-xs text-danger">{{ $message }}</div>
-                            @enderror
+                            <x-base.form-label for="codigo">Código</x-base.form-label>
+                            <x-base.form-input class="w-full" id="codigo" type="text" value="Automático" disabled />
+                            <div class="mt-1 text-xs text-slate-500">Se asigna al guardar (INM-0000).</div>
                         </div>
                         {{-- Nombre --}}
                         <div class="col-span-12 sm:col-span-8">
                             <x-base.form-label for="nombre">Nombre <span class="text-danger">*</span></x-base.form-label>
-                            <x-base.form-input class="w-full @error('nombre') border-danger @enderror" id="nombre"
+                            <x-base.form-input class="w-full {{ $errors->has('nombre') ? 'border-danger' : '' }}" id="nombre"
                                 name="nombre" type="text" value="{{ old('nombre') }}" placeholder="Nombre del inmueble"
                                 required />
                             @error('nombre')

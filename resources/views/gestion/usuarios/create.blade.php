@@ -25,17 +25,17 @@
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-12 sm:col-span-6">
                             <x-base.form-label for="first_name">Nombre <span class="text-danger">*</span></x-base.form-label>
-                            <x-base.form-input class="w-full @error('first_name') border-danger @enderror" id="first_name" name="first_name" type="text" value="{{ old('first_name') }}" required />
+                            <x-base.form-input class="w-full {{ $errors->has('first_name') ? 'border-danger' : '' }}" id="first_name" name="first_name" type="text" value="{{ old('first_name') }}" required />
                             @error('first_name') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-span-12 sm:col-span-6">
                             <x-base.form-label for="last_name">Apellido <span class="text-danger">*</span></x-base.form-label>
-                            <x-base.form-input class="w-full @error('last_name') border-danger @enderror" id="last_name" name="last_name" type="text" value="{{ old('last_name') }}" required />
+                            <x-base.form-input class="w-full {{ $errors->has('last_name') ? 'border-danger' : '' }}" id="last_name" name="last_name" type="text" value="{{ old('last_name') }}" required />
                             @error('last_name') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-span-12 sm:col-span-6">
                             <x-base.form-label for="email">Email <span class="text-danger">*</span></x-base.form-label>
-                            <x-base.form-input class="w-full @error('email') border-danger @enderror" id="email" name="email" type="email" value="{{ old('email') }}" required />
+                            <x-base.form-input class="w-full {{ $errors->has('email') ? 'border-danger' : '' }}" id="email" name="email" type="email" value="{{ old('email') }}" required />
                             @error('email') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-span-12 sm:col-span-6">
@@ -44,7 +44,7 @@
                         </div>
                         <div class="col-span-12 sm:col-span-6">
                             <x-base.form-label for="password">Contraseña <span class="text-danger">*</span></x-base.form-label>
-                            <x-base.form-input class="w-full @error('password') border-danger @enderror" id="password" name="password" type="password" required />
+                            <x-base.form-input class="w-full {{ $errors->has('password') ? 'border-danger' : '' }}" id="password" name="password" type="password" required />
                             @error('password') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-span-12 sm:col-span-6">

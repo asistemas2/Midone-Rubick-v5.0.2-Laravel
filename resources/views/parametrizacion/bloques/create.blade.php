@@ -22,22 +22,22 @@
                     @csrf
                     <div>
                         <x-base.form-label for="nombre">Nombre <span class="text-danger">*</span></x-base.form-label>
-                        <x-base.form-input class="w-full @error('nombre') border-danger @enderror" id="nombre" name="nombre" type="text" value="{{ old('nombre') }}" placeholder="Nombre del bloque" required />
+                        <x-base.form-input class="w-full {{ $errors->has('nombre') ? 'border-danger' : '' }}" id="nombre" name="nombre" type="text" value="{{ old('nombre') }}" placeholder="Nombre del bloque" required />
                         @error('nombre') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-3">
                         <x-base.form-label for="codigo">Código <span class="text-danger">*</span></x-base.form-label>
-                        <x-base.form-input class="w-full @error('codigo') border-danger @enderror" id="codigo" name="codigo" type="text" value="{{ old('codigo') }}" placeholder="Código único" required />
+                        <x-base.form-input class="w-full {{ $errors->has('codigo') ? 'border-danger' : '' }}" id="codigo" name="codigo" type="text" value="{{ old('codigo') }}" placeholder="Código único" required />
                         @error('codigo') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-3">
                         <x-base.form-label for="area_m2">Área (m²)</x-base.form-label>
-                        <x-base.form-input class="w-full @error('area_m2') border-danger @enderror" id="area_m2" name="area_m2" type="number" step="0.01" min="0" value="{{ old('area_m2') }}" placeholder="0.00" />
+                        <x-base.form-input class="w-full {{ $errors->has('area_m2') ? 'border-danger' : '' }}" id="area_m2" name="area_m2" type="number" step="0.01" min="0" value="{{ old('area_m2') }}" placeholder="0.00" />
                         @error('area_m2') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-3">
                         <x-base.form-label for="descripcion">Descripción</x-base.form-label>
-                        <x-base.form-textarea class="w-full @error('descripcion') border-danger @enderror" id="descripcion" name="descripcion" placeholder="Descripción del bloque">{{ old('descripcion') }}</x-base.form-textarea>
+                        <x-base.form-textarea class="w-full {{ $errors->has('descripcion') ? 'border-danger' : '' }}" id="descripcion" name="descripcion" placeholder="Descripción del bloque">{{ old('descripcion') }}</x-base.form-textarea>
                         @error('descripcion') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-3">

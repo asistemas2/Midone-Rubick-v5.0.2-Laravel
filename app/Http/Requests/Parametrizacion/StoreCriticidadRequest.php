@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests\Parametrizacion;
 
+use App\Http\Requests\Concerns\NormalizaActivo;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCriticidadRequest extends FormRequest
 {
+    use NormalizaActivo;
+
     public function authorize(): bool
     {
         return true;

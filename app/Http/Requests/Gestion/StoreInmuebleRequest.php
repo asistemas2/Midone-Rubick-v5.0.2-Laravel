@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests\Gestion;
 
+use App\Http\Requests\Concerns\NormalizaActivo;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreInmuebleRequest extends FormRequest
 {
+    use NormalizaActivo;
+
     public function authorize(): bool
     {
         return true;
@@ -14,7 +17,6 @@ class StoreInmuebleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'codigo' => 'required|string|max:30|unique:inmuebles,codigo',
             'nombre' => 'required|string|max:200',
             'bloque_id' => 'nullable|integer|exists:bloques,id',
             'tipo_inmueble_id' => 'nullable|integer|exists:tipos_inmueble,id',
@@ -57,8 +59,6 @@ class StoreInmuebleRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'codigo.required' => 'El código es obligatorio.',
-            'codigo.unique' => 'Este código ya existe.',
             'nombre.required' => 'El nombre es obligatorio.',
             'estado.required' => 'El estado es obligatorio.',
             'estado.in' => 'El estado seleccionado no es válido.',

@@ -20,12 +20,12 @@
                     @csrf @method('PUT')
                     <div>
                         <x-base.form-label for="nombre">Nombre <span class="text-danger">*</span></x-base.form-label>
-                        <x-base.form-input class="w-full @error('nombre') border-danger @enderror" id="nombre" name="nombre" type="text" value="{{ old('nombre', $criticidad->nombre) }}" required />
+                        <x-base.form-input class="w-full {{ $errors->has('nombre') ? 'border-danger' : '' }}" id="nombre" name="nombre" type="text" value="{{ old('nombre', $criticidad->nombre) }}" required />
                         @error('nombre') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-3">
                         <x-base.form-label for="nivel">Nivel <span class="text-danger">*</span></x-base.form-label>
-                        <x-base.form-input class="w-full @error('nivel') border-danger @enderror" id="nivel" name="nivel" type="number" min="0" max="255" value="{{ old('nivel', $criticidad->nivel) }}" required />
+                        <x-base.form-input class="w-full {{ $errors->has('nivel') ? 'border-danger' : '' }}" id="nivel" name="nivel" type="number" min="0" max="255" value="{{ old('nivel', $criticidad->nivel) }}" required />
                         @error('nivel') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-3">
@@ -38,7 +38,7 @@
                     </div>
                     <div class="mt-3">
                         <x-base.form-label for="orden">Orden</x-base.form-label>
-                        <x-base.form-input class="w-full @error('orden') border-danger @enderror" id="orden" name="orden" type="number" min="0" max="255" value="{{ old('orden', $criticidad->orden) }}" />
+                        <x-base.form-input class="w-full {{ $errors->has('orden') ? 'border-danger' : '' }}" id="orden" name="orden" type="number" min="0" max="255" value="{{ old('orden', $criticidad->orden) }}" />
                         @error('orden') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-3">

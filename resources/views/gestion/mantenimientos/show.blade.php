@@ -31,8 +31,19 @@
         </a>
     </div>
 
+    @if (session('success'))
+        <div class="intro-y mt-5 rounded-md bg-success/20 px-5 py-3 text-success">
+            <x-base.lucide class="mr-2 inline h-4 w-4" icon="CheckCircle" /> {{ session('success') }}
+        </div>
+    @endif
+    @if (session('error'))
+        <div class="intro-y mt-5 rounded-md bg-danger/20 px-5 py-3 text-danger">
+            <x-base.lucide class="mr-2 inline h-4 w-4" icon="XCircle" /> {{ session('error') }}
+        </div>
+    @endif
+
     <div class="mt-5 grid grid-cols-12 gap-6">
-        <div class="intro-y col-span-12 lg:col-span-8">
+        <div class="intro-y col-span-12">
 
             {{-- BLOQUE 1: DETALLE DEL MANTENIMIENTO --}}
             <div class="intro-y box p-5">
@@ -247,32 +258,6 @@
             </div>
             @endif
         </div>
-
-        {{-- SIDEBAR LATERAL: Acciones rápidas --}}
-        <div class="intro-y col-span-12 lg:col-span-4">
-            <div class="intro-y box p-5">
-                <div class="border-b border-slate-200/60 pb-3 dark:border-darkmode-400">
-                    <span class="text-base font-medium">Acciones</span>
-                </div>
-                <div class="mt-4 space-y-2">
-                    @if($mantenimiento->estado !== 'completado' && $mantenimiento->estado !== 'cancelado')
-                        <x-base.button class="w-full" data-tw-toggle="modal" data-tw-target="#completar-mantenimiento-modal" variant="success">
-                            <x-base.lucide class="mr-2 h-4 w-4" icon="CheckCircle" /> Completar Mantenimiento
-                        </x-base.button>
-                    @endif
-                    <a href="{{ route('gestion.mantenimientos.edit', $mantenimiento) }}">
-                        <x-base.button class="w-full" variant="primary">
-                            <x-base.lucide class="mr-2 h-4 w-4" icon="Edit" /> Editar Mantenimiento
-                        </x-base.button>
-                    </a>
-                    <a href="{{ route('gestion.mantenimientos.index') }}">
-                        <x-base.button class="w-full" variant="outline-secondary">
-                            <x-base.lucide class="mr-2 h-4 w-4" icon="ArrowLeft" /> Volver al Listado
-                        </x-base.button>
-                    </a>
-                </div>
-            </div>
-        </div>
     </div>
 
     {{-- MODAL DE COMPLETAR MANTENIMIENTO --}}
@@ -292,6 +277,17 @@
                     </x-base.dialog.title>
 
                     <x-base.dialog.description class="space-y-4">
+                        @if ($errors->any())
+                            <div class="rounded-md bg-danger/20 px-4 py-3 text-sm text-danger">
+                                <div class="font-medium">Revise los datos:</div>
+                                <ul class="mt-1 list-inside list-disc">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
                         {{-- Costo real --}}
                         <div>
                             <x-base.form-label for="costo_real">
@@ -374,7 +370,7 @@
                                     name="programar_nuevo"
                                     value="1"
                                     class="form-check-input"
-                                    onchange="toggleNuevoMantenimiento(this.checked)"
+                                    onchange="toggleSeccion('wrapper-nuevo-mantenimiento', this.checked)"
                                     {{ old('programar_nuevo') ? 'checked' : '' }}
                                 />
                                 <span class="font-medium">Programar nuevo mantenimiento</span>
@@ -388,29 +384,89 @@
                                 <div class="col-span-12 sm:col-span-4">
                                     <x-base.form-label for="nuevo_tipo_mantenimiento" class="text-xs">Tipo</x-base.form-label>
                                     <x-base.form-select class="w-full" id="nuevo_tipo_mantenimiento" name="nuevo_tipo_mantenimiento">
-                                        <option value="preventivo">Preventivo</option>
-                                        <option value="correctivo">Correctivo</option>
-                                        <option value="predictivo">Predictivo</option>
+                                        @foreach (['preventivo' => 'Preventivo', 'correctivo' => 'Correctivo', 'predictivo' => 'Predictivo'] as $valor => $etiqueta)
+                                            <option value="{{ $valor }}" {{ old('nuevo_tipo_mantenimiento', $mantenimiento->tipo_mantenimiento) === $valor ? 'selected' : '' }}>{{ $etiqueta }}</option>
+                                        @endforeach
                                     </x-base.form-select>
                                 </div>
                                 <div class="col-span-12 sm:col-span-4">
-                                    <x-base.form-label for="nuevo_fecha_programada" class="text-xs">Fecha Programada</x-base.form-label>
-                                    <x-base.form-input class="w-full" id="nuevo_fecha_programada" name="nuevo_fecha_programada" type="date" />
+                                    <x-base.form-label for="nuevo_fecha_programada" class="text-xs">Fecha Programada <span class="text-danger">*</span></x-base.form-label>
+                                    <x-base.form-input class="w-full" id="nuevo_fecha_programada" name="nuevo_fecha_programada" type="date" value="{{ old('nuevo_fecha_programada') }}" />
                                 </div>
                                 <div class="col-span-12 sm:col-span-4">
                                     <x-base.form-label for="nuevo_periodicidad_id" class="text-xs">Periodicidad</x-base.form-label>
                                     <x-base.form-select class="w-full" id="nuevo_periodicidad_id" name="nuevo_periodicidad_id">
                                         <option value="">Seleccionar...</option>
+                                        @foreach ($periodicidades as $periodicidad)
+                                            <option value="{{ $periodicidad->id }}" {{ old('nuevo_periodicidad_id', $mantenimiento->periodicidad_mantenimiento_id) == $periodicidad->id ? 'selected' : '' }}>{{ $periodicidad->nombre }}</option>
+                                        @endforeach
                                     </x-base.form-select>
                                 </div>
                                 <div class="col-span-12">
                                     <x-base.form-label for="nuevo_descripcion" class="text-xs">Descripción</x-base.form-label>
-                                    <x-base.form-textarea class="w-full" id="nuevo_descripcion" name="nuevo_descripcion" rows="2" placeholder="Detalle del nuevo mantenimiento programado..."></x-base.form-textarea>
+                                    <x-base.form-textarea class="w-full" id="nuevo_descripcion" name="nuevo_descripcion" rows="2" placeholder="Detalle del nuevo mantenimiento programado...">{{ old('nuevo_descripcion') }}</x-base.form-textarea>
                                 </div>
                             </div>
                             <div class="text-xs text-slate-500">
                                 <x-base.lucide class="mr-1 inline h-3 w-3" icon="Info" />
                                 El nuevo mantenimiento heredará el activo, criterio y criticidad del actual.
+                            </div>
+                        </div>
+
+                        {{-- Registrar garantía (opcional) --}}
+                        <div class="border-t border-slate-200/60 pt-4 dark:border-darkmode-400">
+                            <label
+                                for="registrar_garantia"
+                                class="inline-flex cursor-pointer items-center gap-2 text-sm text-slate-700 dark:text-slate-300"
+                            >
+                                <input
+                                    type="checkbox"
+                                    id="registrar_garantia"
+                                    name="registrar_garantia"
+                                    value="1"
+                                    class="form-check-input"
+                                    onchange="toggleSeccion('wrapper-garantia', this.checked)"
+                                    {{ old('registrar_garantia') ? 'checked' : '' }}
+                                />
+                                <span class="font-medium">Registrar garantía</span>
+                                <span class="ml-1 text-xs text-slate-500">(opcional)</span>
+                            </label>
+                        </div>
+
+                        {{-- Bloque para registrar la garantía del trabajo realizado --}}
+                        <div id="wrapper-garantia" class="space-y-3 rounded-md border border-slate-200/60 p-3 dark:border-darkmode-400" style="display: {{ old('registrar_garantia') ? 'block' : 'none' }};">
+                            <div class="grid grid-cols-12 gap-3">
+                                <div class="col-span-12 sm:col-span-8">
+                                    <x-base.form-label for="garantia_proveedor" class="text-xs">Proveedor</x-base.form-label>
+                                    <x-base.form-input class="w-full" id="garantia_proveedor" name="garantia_proveedor" type="text" value="{{ old('garantia_proveedor', $mantenimiento->empresa_contratista) }}" placeholder="Empresa que otorga la garantía" />
+                                </div>
+                                <div class="col-span-12 sm:col-span-4">
+                                    <x-base.form-label for="garantia_estado" class="text-xs">Estado <span class="text-danger">*</span></x-base.form-label>
+                                    <x-base.form-select class="w-full" id="garantia_estado" name="garantia_estado">
+                                        <option value="activa" {{ old('garantia_estado', 'activa') === 'activa' ? 'selected' : '' }}>Activa</option>
+                                        <option value="en_tramite" {{ old('garantia_estado') === 'en_tramite' ? 'selected' : '' }}>En Trámite</option>
+                                    </x-base.form-select>
+                                </div>
+                                <div class="col-span-12 sm:col-span-4">
+                                    <x-base.form-label for="garantia_fecha_inicio" class="text-xs">Fecha Inicio <span class="text-danger">*</span></x-base.form-label>
+                                    <x-base.form-input class="w-full" id="garantia_fecha_inicio" name="garantia_fecha_inicio" type="date" value="{{ old('garantia_fecha_inicio', now()->toDateString()) }}" />
+                                </div>
+                                <div class="col-span-12 sm:col-span-4">
+                                    <x-base.form-label for="garantia_fecha_fin" class="text-xs">Fecha Fin <span class="text-danger">*</span></x-base.form-label>
+                                    <x-base.form-input class="w-full" id="garantia_fecha_fin" name="garantia_fecha_fin" type="date" value="{{ old('garantia_fecha_fin') }}" />
+                                </div>
+                                <div class="col-span-12 sm:col-span-4">
+                                    <x-base.form-label for="garantia_monto" class="text-xs">Monto</x-base.form-label>
+                                    <x-base.form-input class="w-full" id="garantia_monto" name="garantia_monto" type="number" step="0.01" min="0" value="{{ old('garantia_monto') }}" placeholder="0.00" />
+                                </div>
+                                <div class="col-span-12">
+                                    <x-base.form-label for="garantia_terminos" class="text-xs">Términos</x-base.form-label>
+                                    <x-base.form-textarea class="w-full" id="garantia_terminos" name="garantia_terminos" rows="2" placeholder="Cobertura, condiciones, exclusiones...">{{ old('garantia_terminos') }}</x-base.form-textarea>
+                                </div>
+                            </div>
+                            <div class="text-xs text-slate-500">
+                                <x-base.lucide class="mr-1 inline h-3 w-3" icon="Info" />
+                                La garantía quedará asociada a este mantenimiento y a su activo ({{ $mantenimiento->nombre_activo }}). Su código se asigna automáticamente.
                             </div>
                         </div>
                     </x-base.dialog.description>
@@ -430,10 +486,18 @@
 
     @push('scripts')
     <script>
-        function toggleNuevoMantenimiento(mostrar) {
-            const wrapper = document.getElementById('wrapper-nuevo-mantenimiento');
-            wrapper.style.display = mostrar ? 'block' : 'none';
+        function toggleSeccion(id, mostrar) {
+            document.getElementById(id).style.display = mostrar ? 'block' : 'none';
         }
     </script>
+    @if ($errors->any())
+        {{-- Si la validación falla, reabrir el modal con los datos que el usuario ya había diligenciado --}}
+        <script type="module">
+            const modal = document.getElementById('completar-mantenimiento-modal');
+            if (modal && window.tailwind?.Modal) {
+                tailwind.Modal.getOrCreateInstance(modal).show();
+            }
+        </script>
+    @endif
     @endpush
 @endsection

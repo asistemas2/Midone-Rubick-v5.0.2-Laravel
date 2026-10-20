@@ -26,13 +26,12 @@
                     </div>
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-12 sm:col-span-4">
-                            <x-base.form-label for="codigo">Código <span class="text-danger">*</span></x-base.form-label>
-                            <x-base.form-input class="w-full @error('codigo') border-danger @enderror" id="codigo" name="codigo" type="text" value="{{ old('codigo', $equipo->codigo) }}" required />
-                            @error('codigo') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
+                            <x-base.form-label for="codigo">Código</x-base.form-label>
+                            <x-base.form-input class="w-full" id="codigo" type="text" value="{{ $equipo->codigo }}" disabled />
                         </div>
                         <div class="col-span-12 sm:col-span-8">
                             <x-base.form-label for="nombre">Nombre <span class="text-danger">*</span></x-base.form-label>
-                            <x-base.form-input class="w-full @error('nombre') border-danger @enderror" id="nombre" name="nombre" type="text" value="{{ old('nombre', $equipo->nombre) }}" required />
+                            <x-base.form-input class="w-full {{ $errors->has('nombre') ? 'border-danger' : '' }}" id="nombre" name="nombre" type="text" value="{{ old('nombre', $equipo->nombre) }}" required />
                             @error('nombre') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                         </div>
                         {{-- CATEGORÍA PRIMERO --}}

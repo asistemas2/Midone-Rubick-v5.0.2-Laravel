@@ -3,11 +3,14 @@
 
 namespace App\Http\Requests\Gestion;
 
+use App\Http\Requests\Concerns\NormalizaActivo;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class UpdateMantenimientoRequest extends FormRequest
 {
+    use NormalizaActivo;
+
     public function authorize(): bool
     {
         return true;
@@ -16,11 +19,7 @@ class UpdateMantenimientoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // ── Identificación ────────────────────────────────
-            'codigo'                 => [
-                'required', 'string', 'max:30',
-                Rule::unique('mantenimientos', 'codigo')->ignore($this->route('mantenimiento')),
-            ],
+            // El código es consecutivo automático (Mantenimiento::PREFIJO_CODIGO) y no se edita
 
             // ── Activo relacionado ────────────────────────────
             'tipo_activo'            => 'required|in:inmueble,equipo',
@@ -54,8 +53,6 @@ class UpdateMantenimientoRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'codigo.required'                        => 'El código es obligatorio.',
-            'codigo.unique'                          => 'Este código ya existe.',
             'tipo_activo.required'                   => 'El tipo de activo es obligatorio.',
             'activo_id.required'                     => 'Debe seleccionar un activo.',
             'tipo_mantenimiento.required'            => 'El tipo de mantenimiento es obligatorio.',
@@ -66,12 +63,5 @@ class UpdateMantenimientoRequest extends FormRequest
             'presupuesto_aprobado.min'                   => 'El presupuesto aprobado no puede ser negativo.',
             'estado.required'                        => 'El estado es obligatorio.',
         ];
-    }
-
-    protected function prepareForValidation(): void
-    {
-        $this->merge([
-            'activo' => $this->boolean('activo', true),
-        ]);
     }
 }

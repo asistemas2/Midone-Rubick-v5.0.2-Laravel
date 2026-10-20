@@ -20,7 +20,7 @@
     </div>
 
     <div class="mt-5 grid grid-cols-12 gap-6">
-        <div class="intro-y col-span-12 lg:col-span-8">
+        <div class="intro-y col-span-12">
             <div class="intro-y box p-5">
                 <div class="flex items-center border-b border-slate-200/60 pb-5 dark:border-darkmode-400">
                     <div>
@@ -40,13 +40,25 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-span-6 sm:col-span-4">
-                        <div class="text-xs text-slate-500">Tipo Activo</div>
-                        <div class="mt-1 font-medium">{{ ucfirst($garantia->tipo_activo) }}</div>
+                    <div class="col-span-12 sm:col-span-8">
+                        <div class="text-xs text-slate-500">Activo garantizado ({{ ucfirst($garantia->tipo_activo) }})</div>
+                        <div class="mt-1 font-medium">
+                            @php($activoGarantizado = $garantia->activo_garantizado)
+                            @if($activoGarantizado)
+                                <a href="{{ route($garantia->tipo_activo === 'inmueble' ? 'gestion.inmuebles.show' : 'gestion.equipos.show', $activoGarantizado) }}" class="text-primary">
+                                    [{{ $activoGarantizado->codigo }}] {{ $activoGarantizado->nombre }}
+                                </a>
+                                @if($activoGarantizado->trashed())
+                                    <span class="ml-1 text-xs text-danger">(eliminado)</span>
+                                @endif
+                            @else
+                                —
+                            @endif
+                        </div>
                     </div>
                     <div class="col-span-6 sm:col-span-4">
                         <div class="text-xs text-slate-500">Monto</div>
-                        <div class="mt-1 font-medium">{{ $garantia->monto ? '$ ' . number_format($garantia->monto, 2) : '—' }}</div>
+                        <div class="mt-1 font-medium">{{ $garantia->monto ? '$' . number_format($garantia->monto, 2, ',', '.') : '—' }}</div>
                     </div>
                     <div class="col-span-6 sm:col-span-4">
                         <div class="text-xs text-slate-500">Fecha Inicio</div>

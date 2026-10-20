@@ -20,17 +20,17 @@
                     @csrf
                     <div>
                         <x-base.form-label for="nombre">Nombre <span class="text-danger">*</span></x-base.form-label>
-                        <x-base.form-input class="w-full @error('nombre') border-danger @enderror" id="nombre" name="nombre" type="text" value="{{ old('nombre') }}" placeholder="Ej: Semanal, Mensual" required />
+                        <x-base.form-input class="w-full {{ $errors->has('nombre') ? 'border-danger' : '' }}" id="nombre" name="nombre" type="text" value="{{ old('nombre') }}" placeholder="Ej: Semanal, Mensual" required />
                         @error('nombre') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-3">
                         <x-base.form-label for="dias_frecuencia">Días de Frecuencia <span class="text-danger">*</span></x-base.form-label>
-                        <x-base.form-input class="w-full @error('dias_frecuencia') border-danger @enderror" id="dias_frecuencia" name="dias_frecuencia" type="number" min="1" max="3650" value="{{ old('dias_frecuencia') }}" placeholder="Número de días" required />
+                        <x-base.form-input class="w-full {{ $errors->has('dias_frecuencia') ? 'border-danger' : '' }}" id="dias_frecuencia" name="dias_frecuencia" type="number" min="1" max="3650" value="{{ old('dias_frecuencia') }}" placeholder="Número de días" required />
                         @error('dias_frecuencia') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-3">
                         <x-base.form-label for="descripcion">Descripción</x-base.form-label>
-                        <x-base.form-textarea class="w-full @error('descripcion') border-danger @enderror" id="descripcion" name="descripcion" placeholder="Descripción">{{ old('descripcion') }}</x-base.form-textarea>
+                        <x-base.form-textarea class="w-full {{ $errors->has('descripcion') ? 'border-danger' : '' }}" id="descripcion" name="descripcion" placeholder="Descripción">{{ old('descripcion') }}</x-base.form-textarea>
                         @error('descripcion') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
                     </div>
                     <div class="mt-3">

@@ -43,7 +43,7 @@
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-12">
                             <x-base.form-label for="equipo_id">Equipo sin asignar <span class="text-danger">*</span></x-base.form-label>
-                            <x-base.form-select class="w-full @error('equipo_id') border-danger @enderror" id="equipo_id" name="equipo_id" onchange="mostrarDetalleEquipo(this.value)">
+                            <x-base.form-select class="w-full {{ $errors->has('equipo_id') ? 'border-danger' : '' }}" id="equipo_id" name="equipo_id" onchange="mostrarDetalleEquipo(this.value)">
                                 <option value="">Seleccionar equipo...</option>
                                 @foreach($equiposSinAsignar as $eq)
                                     <option value="{{ $eq->id }}"
@@ -96,7 +96,7 @@
                     <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-12">
                             <x-base.form-label for="inmueble_id">Inmueble <span class="text-danger">*</span></x-base.form-label>
-                            <x-base.form-select class="w-full @error('inmueble_id') border-danger @enderror" id="inmueble_id" name="inmueble_id">
+                            <x-base.form-select class="w-full {{ $errors->has('inmueble_id') ? 'border-danger' : '' }}" id="inmueble_id" name="inmueble_id">
                                 <option value="">Seleccionar inmueble...</option>
                                 @foreach($inmuebles as $inm)
                                     <option value="{{ $inm->id }}" {{ old('inmueble_id') == $inm->id ? 'selected' : '' }}>

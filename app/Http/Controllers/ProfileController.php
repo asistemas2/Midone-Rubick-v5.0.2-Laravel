@@ -12,14 +12,14 @@ class ProfileController extends Controller
 {
     public function show()
     {
-        $user = Auth::user();
+        $user = Auth::user()->load('roles');
         return view('gestion.usuarios.profile', compact('user'));
     }
 
     public function edit()
     {
         $user = Auth::user();
-        return view('gestion.usuarios.profile-overview-1', compact('user'));
+        return view('gestion.usuarios.profile-edit', compact('user'));
     }
 
     public function update(Request $request)
@@ -31,6 +31,14 @@ class ProfileController extends Controller
             'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
             'position' => 'nullable|string|max:150',
             'gender' => 'nullable|in:male,female,other',
+        ], [
+            'first_name.required' => 'El nombre es obligatorio.',
+            'last_name.required' => 'El apellido es obligatorio.',
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'El correo electrónico no es válido.',
+            'email.unique' => 'Este correo electrónico ya está registrado.',
+            'gender.in' => 'El género seleccionado no es válido.',
+            '*.max' => 'El campo supera la longitud permitida.',
         ]);
 
         $user->update($validated);
@@ -49,6 +57,11 @@ class ProfileController extends Controller
         $request->validate([
             'current_password' => 'required|string',
             'password' => 'required|string|min:8|confirmed',
+        ], [
+            'current_password.required' => 'Ingrese su contraseña actual.',
+            'password.required' => 'Ingrese la nueva contraseña.',
+            'password.min' => 'La nueva contraseña debe tener al menos 8 caracteres.',
+            'password.confirmed' => 'La confirmación no coincide con la nueva contraseña.',
         ]);
 
         $user = Auth::user();

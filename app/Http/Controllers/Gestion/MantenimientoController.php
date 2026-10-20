@@ -10,6 +10,7 @@ use App\Models\MantenimientoDocumento;
 use App\Models\Inmueble;
 use App\Models\Equipo;
 use App\Models\CriticidadMantenimiento;
+use App\Models\Garantia;
 use App\Models\PeriodicidadMantenimiento;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -127,9 +128,10 @@ class MantenimientoController extends Controller
             'garantias',
         ]);
 
-        $criticidades = CriticidadMantenimiento::activos()->ordenadas()->get();
+        $criticidades   = CriticidadMantenimiento::activos()->ordenadas()->get();
+        $periodicidades = PeriodicidadMantenimiento::activos()->ordenadas()->get();
 
-        return view('gestion.mantenimientos.show', compact('mantenimiento', 'criticidades'));
+        return view('gestion.mantenimientos.show', compact('mantenimiento', 'criticidades', 'periodicidades'));
     }
 
     // ══════════════════════════════════════════════════════════════
@@ -245,6 +247,7 @@ class MantenimientoController extends Controller
      * - Guarda costo_real, comentario.
      * - Adjunta documentos (orden de compra, etc.).
      * - Opcionalmente crea un nuevo mantenimiento programado.
+     * - Opcionalmente registra la garantía del trabajo, asociada a este mantenimiento y su activo.
      */
     public function completar(Request $request, Mantenimiento $mantenimiento): RedirectResponse
     {
@@ -264,6 +267,26 @@ class MantenimientoController extends Controller
             'nuevo_fecha_programada'  => 'required_if:programar_nuevo,1|nullable|date',
             'nuevo_descripcion'       => 'nullable|string',
             'nuevo_periodicidad_id'   => 'nullable|integer|exists:periodicidades_mantenimiento,id',
+
+            // Registrar garantía del trabajo realizado (opcional)
+            'registrar_garantia'      => 'sometimes|boolean',
+            'garantia_proveedor'      => 'nullable|string|max:200',
+            'garantia_fecha_inicio'   => 'required_if:registrar_garantia,1|nullable|date',
+            'garantia_fecha_fin'      => 'required_if:registrar_garantia,1|nullable|date|after_or_equal:garantia_fecha_inicio',
+            'garantia_monto'          => 'nullable|numeric|min:0',
+            'garantia_estado'         => 'required_if:registrar_garantia,1|nullable|in:activa,en_tramite',
+            'garantia_terminos'       => 'nullable|string',
+        ], [
+            'costo_real.required'               => 'El costo real es obligatorio.',
+            'costo_real.numeric'                => 'El costo real debe ser un valor numérico.',
+            'documentos.*.max'                  => 'Cada documento puede pesar máximo 10 MB.',
+            'nuevo_tipo_mantenimiento.required_if' => 'Seleccione el tipo del nuevo mantenimiento.',
+            'nuevo_fecha_programada.required_if'   => 'Indique la fecha del nuevo mantenimiento.',
+            'garantia_fecha_inicio.required_if' => 'Indique la fecha de inicio de la garantía.',
+            'garantia_fecha_fin.required_if'    => 'Indique la fecha de fin de la garantía.',
+            'garantia_fecha_fin.after_or_equal' => 'La fecha fin de la garantía debe ser igual o posterior a la de inicio.',
+            'garantia_estado.required_if'       => 'Seleccione el estado de la garantía.',
+            'garantia_monto.numeric'            => 'El monto de la garantía debe ser un valor numérico.',
         ]);
 
         try {
@@ -303,7 +326,6 @@ class MantenimientoController extends Controller
             $nuevoMantenimiento = null;
             if ($request->boolean('programar_nuevo')) {
                 $nuevoMantenimiento = Mantenimiento::create([
-                    'codigo'                => $this->generarCodigoMantenimiento(),
                     'tipo_activo'           => $mantenimiento->tipo_activo,
                     'activo_id'             => $mantenimiento->activo_id,
                     'activo_type'           => $mantenimiento->activo_type,
@@ -329,11 +351,31 @@ class MantenimientoController extends Controller
                 ]);
             }
 
+            // 4. Registrar garantía del trabajo realizado (opcional)
+            $garantia = null;
+            if ($request->boolean('registrar_garantia')) {
+                $garantia = Garantia::create([
+                    'mantenimiento_id' => $mantenimiento->id,
+                    'tipo_activo'      => $mantenimiento->tipo_activo,
+                    'activo_id'        => $mantenimiento->activo_id,
+                    'proveedor'        => $validated['garantia_proveedor'] ?? $mantenimiento->empresa_contratista,
+                    'fecha_inicio'     => $validated['garantia_fecha_inicio'],
+                    'fecha_fin'        => $validated['garantia_fecha_fin'],
+                    'monto'            => $validated['garantia_monto'] ?? null,
+                    'estado'           => $validated['garantia_estado'],
+                    'terminos'         => $validated['garantia_terminos'] ?? null,
+                    'activo'           => true,
+                ]);
+            }
+
             DB::commit();
 
             $msg = 'Mantenimiento completado exitosamente.';
             if ($nuevoMantenimiento) {
                 $msg .= " Se programó el nuevo mantenimiento {$nuevoMantenimiento->codigo}.";
+            }
+            if ($garantia) {
+                $msg .= " Se registró la garantía {$garantia->codigo}.";
             }
 
             return redirect()
@@ -477,27 +519,8 @@ class MantenimientoController extends Controller
     }
 
     // ══════════════════════════════════════════════════════════════
-    //  MÉTODOS PRIVADOS
+    //  PRESUPUESTO
     // ══════════════════════════════════════════════════════════════
-
-    /**
-     * Genera un nuevo código de mantenimiento en formato MT-XXX.
-     */
-    private function generarCodigoMantenimiento(): string
-    {
-        $ultimo = Mantenimiento::withTrashed()
-            ->orderByDesc('id')
-            ->value('codigo');
-
-        $numero = 1;
-        if ($ultimo && preg_match('/MT-(\d+)/', $ultimo, $m)) {
-            $numero = (int) $m[1] + 1;
-        }
-
-        return 'MT-' . str_pad($numero, 3, '0', STR_PAD_LEFT);
-    }
-
-    // app/Http/Controllers/Gestion/MantenimientoController.php
 
     public function presupuesto(Request $request): View
     {

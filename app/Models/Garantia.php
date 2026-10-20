@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\TieneConsecutivo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,7 +11,10 @@ use Carbon\Carbon;
 
 class Garantia extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, TieneConsecutivo;
+
+    /** Prefijo del código consecutivo (ver App\Support\Consecutivo). */
+    public const PREFIJO_CODIGO = 'GAR';
 
     protected $table = 'garantias';
 
@@ -77,6 +81,20 @@ class Garantia extends Model
     }
 
     // ── Accessors ───────────────────────────────────────────
+
+    /** Inmueble o equipo cubierto por la garantía (incluye eliminados para no perder la referencia). */
+    public function getActivoGarantizadoAttribute(): Inmueble|Equipo|null
+    {
+        if (!$this->activo_id) {
+            return null;
+        }
+
+        return match ($this->tipo_activo) {
+            'inmueble' => Inmueble::withTrashed()->find($this->activo_id),
+            'equipo'   => Equipo::withTrashed()->find($this->activo_id),
+            default    => null,
+        };
+    }
 
     public function getEstaVigenteAttribute(): bool
     {

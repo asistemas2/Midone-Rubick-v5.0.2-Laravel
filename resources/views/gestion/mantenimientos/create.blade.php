@@ -31,9 +31,9 @@
 
                         <div class="mt-5 grid grid-cols-12 gap-4">
                             <div class="col-span-12 sm:col-span-4">
-                                <x-base.form-label for="codigo">Código <span class="text-danger">*</span></x-base.form-label>
-                                <x-base.form-input class="w-full @error('codigo') border-danger @enderror" id="codigo" name="codigo" type="text" value="{{ old('codigo') }}" placeholder="MT-001" required />
-                                @error('codigo') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
+                                <x-base.form-label for="codigo">Código</x-base.form-label>
+                                <x-base.form-input class="w-full" id="codigo" type="text" value="Automático" disabled />
+                                <div class="mt-1 text-xs text-slate-500">Se asigna al guardar (MT-0000).</div>
                             </div>
                             <div class="col-span-12 sm:col-span-4">
                                 <x-base.form-label for="tipo_activo">Tipo de Activo <span class="text-danger">*</span></x-base.form-label>
@@ -126,7 +126,7 @@
                                         </div>
                                     </div>
                                 </x-base.form-label>
-                                <x-base.form-select class="mt-2 w-full @error('criticidad_mantenimiento_id') border-danger @enderror" id="criticidad_mantenimiento_id" name="criticidad_mantenimiento_id">
+                                <x-base.form-select class="mt-2 w-full {{ $errors->has('criticidad_mantenimiento_id') ? 'border-danger' : '' }}" id="criticidad_mantenimiento_id" name="criticidad_mantenimiento_id">
                                     <option value="">Seleccionar criticidad...</option>
                                 </x-base.form-select>
                                 @error('criticidad_mantenimiento_id') <div class="mt-1 text-xs text-danger">{{ $message }}</div> @enderror
