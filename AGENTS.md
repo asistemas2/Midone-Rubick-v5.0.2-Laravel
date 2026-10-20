@@ -14,8 +14,9 @@ Sistema de gestión de activos y mantenimiento de **Zona Franca Palmaseca**: inm
 
 - **La base de datos de `.env` es compartida** (servidor PostgreSQL en red, base `infraestructura`). No ejecutes `migrate:fresh`, `migrate:refresh`, `db:wipe`, `db:seed` completo ni tests con `RefreshDatabase`: `phpunit.xml` **no** usa SQLite, apunta a esa misma base. Para probar escrituras, envuelve todo en `DB::beginTransaction()` … `DB::rollBack()`.
 - `php artisan migrate` (solo migraciones nuevas y reversibles) sí está permitido; avisa al usuario que otros ambientes deben correrlo también.
-- No edites `.env` sin pedir permiso. `.env.example` sí se versiona: sin IPs, usuarios ni secretos reales.
+- No edites `.env` ni `.env.docker` sin pedir permiso (tienen secretos y no se versionan). `.env.example` y `.env.docker.example` sí se versionan: sin contraseñas ni secretos reales.
 - No hagas commit ni push salvo que el usuario lo pida. Rama principal: `main`.
+- **Servidor de despliegue compartido** (`10.0.10.5`, Portainer CE): convive con otros stacks (`postgres-stack`, `fastapi-backend`, `dashlite-react-d1`, pgAdmin en 8080). No uses sus puertos (5173, 5432, 8000, 8080, 9443), no levantes otro PostgreSQL allí y no modifiques sus redes ni contenedores. Ver `DESPLIEGUE.md`.
 
 ## Comandos
 
@@ -26,6 +27,13 @@ php artisan view:cache           # compila todas las vistas: sirve para detectar
 php -l ruta/Archivo.php          # lint rápido
 npm run build                    # solo si agregas entradas nuevas a vite.config.js o clases Tailwind nuevas
 ```
+
+**Docker** (convive con Laragon; guía: `DESPLIEGUE.md`):
+- `docker-compose.yml` = despliegue (imagen `prod` + Nginx `web`, puerto `${APP_PORT:-8081}`, storage en `${DATA_DIR:-./data}/storage`); `docker-compose.server.yml` = une `app` a la red externa `postgres-stack_zfp-net` (`DB_HOST=postgres`); `docker-compose.dev.yml` = código montado en vivo.
+- En los compose **no** uses `${VARIABLES}` de Laravel: Compose las interpolaría desde el `.env` de Laragon. Y en `.env.docker` no uses `${OTRA_CLAVE}`: Docker no lo resuelve, escribe valores completos.
+- En modo dev las cachés de Laravel van a `/tmp` del contenedor (`APP_*_CACHE`, `VIEW_COMPILED_PATH`) para no mezclarse con las de Laragon (rutas de Windows).
+- Nginx sirve `/storage/...` con `alias` a `storage/app/public` (el enlace `public/storage` de Laragon apunta a una ruta de Windows).
+- Si agregas una extensión PHP o un paquete del sistema, actualízalo en la etapa `base` del `Dockerfile`.
 
 ## Arquitectura
 

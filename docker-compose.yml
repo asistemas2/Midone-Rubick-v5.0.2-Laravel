@@ -1,0 +1,61 @@
+# Gestión ZFP — despliegue (imagen con el código y los assets compilados).
+#
+#   En el servidor (Portainer, junto al stack postgres-stack):
+#     docker compose -f docker-compose.yml -f docker-compose.server.yml up -d --build
+#   En un equipo local, con su propio PostgreSQL:
+#     docker compose --profile db-local up -d --build
+#   Desarrollo: ver docker-compose.dev.yml.      Guía completa: DESPLIEGUE.md
+#
+# Configuración de la app: .env.docker (copiar de .env.docker.example).
+# Variables opcionales al ejecutar compose:  APP_PORT (por defecto 8081)  y  DATA_DIR (por defecto ./data)
+# Nota: no uses ${VARIABLES} de Laravel aquí; Compose las tomaría del .env de Laragon.
+
+name: gestion-zfp
+
+services:
+  app:
+    build:
+      context: .
+      target: prod
+    image: gestion-zfp-app:latest
+    container_name: gestion-zfp-app
+    env_file: .env.docker
+    volumes:
+      # Documentos de mantenimientos, logs y sesiones: persisten en la carpeta del proyecto
+      - ${DATA_DIR:-./data}/storage:/var/www/html/storage
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      target: web
+    image: gestion-zfp-web:latest
+    container_name: gestion-zfp-web
+    ports:
+      - "${APP_PORT:-8081}:80"
+    volumes:
+      - ${DATA_DIR:-./data}/storage:/var/www/html/storage:ro
+    depends_on:
+      - app
+    restart: unless-stopped
+
+  # Base de datos propia, solo para uso local: docker compose --profile db-local ...
+  # La primera vez carga los .sql de docker/db/init (p. ej. el backup _plano.sql).
+  # En el servidor NO se usa: ya existe el contenedor postgres del stack postgres-stack.
+  db:
+    image: postgres:16-alpine
+    profiles: ["db-local"]
+    env_file: .env.docker
+    ports:
+      - "5433:5432"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+      - ./docker/db/init:/docker-entrypoint-initdb.d:ro
+    restart: unless-stopped
+
+networks:
+  default:
+    name: gestion-zfp_default
+
+volumes:
+  dbdata:

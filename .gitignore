@@ -17,3 +17,10 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+# Docker: configuración con secretos, datos persistidos y base local
+.env.docker
+/data
+/docker/db/init/*
+!/docker/db/init/.gitkeep
+!/docker/db/init/LEEME.md

@@ -1,0 +1,38 @@
+# Todo lo que NO debe entrar en la imagen
+
+# Control de versiones y editores
+.git
+.github
+.vscode
+.idea
+
+# Configuración local (Laragon) y secretos: la imagen recibe la suya desde .env.docker
+.env
+.env.*
+!.env.docker.example
+
+# Dependencias instaladas en Windows: se instalan dentro de la imagen para Linux
+vendor
+node_modules
+
+# Generados en local
+public/build
+public/hot
+public/storage
+bootstrap/cache/*.php
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/app/public/*
+
+# Backups y datos de la base local de Docker
+docker/db
+*.dump
+*.sql
+
+# Docker no necesita copiarse a sí mismo
+Dockerfile
+docker-compose*.yml
+.dockerignore
+/data

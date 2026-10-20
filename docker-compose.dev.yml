@@ -1,0 +1,45 @@
+# Gestión ZFP — desarrollo (el código se monta desde esta carpeta; los cambios se ven al instante).
+#
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml --profile assets run --rm node   → recompilar assets
+#
+# Requiere Docker Compose 2.24 o superior (usa !reset).
+
+services:
+  app:
+    build:
+      context: .
+      target: dev
+    image: gestion-zfp-app:dev
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      # Cachés de Laravel fuera del proyecto: no se mezclan con las de Laragon (rutas de Windows)
+      APP_CONFIG_CACHE: /tmp/laravel-cache/config.php
+      APP_ROUTES_CACHE: /tmp/laravel-cache/routes-v7.php
+      APP_SERVICES_CACHE: /tmp/laravel-cache/services.php
+      APP_PACKAGES_CACHE: /tmp/laravel-cache/packages.php
+      APP_EVENTS_CACHE: /tmp/laravel-cache/events.php
+      VIEW_COMPILED_PATH: /tmp/laravel-views
+    volumes:
+      - ./:/var/www/html
+      # Reemplaza el ${DATA_DIR}/storage de despliegue: en desarrollo se usa el storage del proyecto
+      - ./storage:/var/www/html/storage
+
+  web:
+    build: !reset null
+    image: nginx:1.27-alpine
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./public:/var/www/html/public:ro
+      - ./storage:/var/www/html/storage:ro
+
+  # Compila los assets de Vite con Node 18 (sin usar el node_modules de Windows)
+  node:
+    image: node:18-alpine
+    profiles: ["assets"]
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    command: sh -c "npm ci && npm run build"

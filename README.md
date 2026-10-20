@@ -69,6 +69,21 @@ Además se crean 9 usuarios de prueba y los catálogos/datos de ejemplo a partir
 
 ---
 
+## Docker
+
+La aplicación también corre en contenedores (PHP 8.1-FPM + Nginx), sin afectar a Laragon: Docker usa
+su propia configuración, `.env.docker` (plantilla: `.env.docker.example`), y Laragon sigue usando `.env`.
+
+| Modo | Comando |
+|---|---|
+| Servidor con Portainer (`10.0.10.5:8081`) | `docker compose -f docker-compose.yml -f docker-compose.server.yml up -d --build` |
+| Desarrollo (código montado en vivo) | `docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build` |
+| Local con PostgreSQL propio | `docker compose --profile db-local up -d --build` |
+
+Paso a paso del despliegue en el servidor: **[DESPLIEGUE.md](DESPLIEGUE.md)**.
+
+---
+
 ## Roles
 
 | Rol | Acceso |

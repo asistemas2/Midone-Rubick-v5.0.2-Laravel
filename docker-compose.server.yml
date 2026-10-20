@@ -1,0 +1,17 @@
+# Gestión ZFP — ajustes para el servidor con Portainer (10.0.10.5).
+#
+#   docker compose -f docker-compose.yml -f docker-compose.server.yml up -d --build
+#
+# Une la app a la red del stack "postgres-stack" para conectarse al contenedor "postgres"
+# por nombre (en .env.docker: DB_HOST=postgres, DB_PORT=5432). No modifica ese stack.
+
+services:
+  app:
+    networks:
+      - default
+      - postgres
+
+networks:
+  postgres:
+    external: true
+    name: postgres-stack_zfp-net
