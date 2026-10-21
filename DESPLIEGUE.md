@@ -16,8 +16,18 @@ Los comandos `docker compose` de esta guía se ejecutan **dentro de la carpeta d
 siempre con los dos archivos. Para no repetirlos, defina un alias en la sesión:
 
 ```bash
-alias dc='docker compose -f docker-compose.yml -f docker-compose.server.yml'
+alias zfp='docker compose -f docker-compose.yml -f docker-compose.server.yml'
 ```
+
+Para que el alias quede permanente (sobrevive a cerrar la sesión):
+
+```bash
+echo "alias zfp='docker compose -f docker-compose.yml -f docker-compose.server.yml'" >> ~/.bashrc
+source ~/.bashrc
+```
+
+> No use `dc` como alias: es el nombre de una calculadora de GNU (`apt install dc`) y se confunde.
+> Los comandos `zfp` funcionan solo dentro de `/home_datos/proyectos/gestion-zfp`.
 
 ---
 
@@ -31,7 +41,15 @@ docker compose version        # debe ser v2.x
 git --version                 # si no está: sudo apt install git  (o el gestor del sistema)
 docker network ls | grep postgres-stack_zfp-net    # la red del PostgreSQL debe existir
 ss -ltn | grep ':8081 '        # no debe mostrar nada (puerto libre)
+df -h /var                     # al menos 4 GB libres (ver nota)
 ```
+
+> **Espacio en `/var`:** este Docker usa el almacén de imágenes de containerd, que guarda imágenes y
+> caché de construcción en `/var/lib/containerd` (aunque los volúmenes estén en `/home_datos/docker`).
+> La construcción necesita 1,5–2 GB temporales. Si `/var` no tiene al menos 4 GB libres, primero
+> libere la caché (`docker builder prune -a -f`) o amplíe la partición
+> (`sudo lvextend -r -L +10G /dev/vg00/lvvar`, en caliente, coordinándolo con el administrador).
+> No use `docker system prune -a` ni `docker volume prune`: afectan a los otros proyectos.
 
 Acceso al repositorio de GitHub: si el repositorio es privado, necesita un
 **token personal** (GitHub → Settings → Developer settings → Personal access tokens, permiso de
@@ -43,7 +61,7 @@ lectura del repositorio) o una **deploy key** SSH. Al clonar por HTTPS, use el t
 cd /home_datos/proyectos
 git clone -b feature/docker https://github.com/asistemas2/Midone-Rubick-v5.0.2-Laravel.git gestion-zfp
 cd gestion-zfp
-alias dc='docker compose -f docker-compose.yml -f docker-compose.server.yml'
+alias zfp='docker compose -f docker-compose.yml -f docker-compose.server.yml'
 ```
 
 > Cuando la rama se integre a `main`, clone con `-b main`.
@@ -73,27 +91,27 @@ Complete como mínimo:
 ## 4. Construir y levantar
 
 ```bash
-dc up -d --build
+zfp up -d --build
 ```
 
 La primera vez tarda varios minutos (descarga imágenes, instala dependencias y compila los assets).
 Al terminar:
 
 ```bash
-dc ps                        # gestion-zfp-app y gestion-zfp-web en estado "running"
-dc logs --tail=50 app        # no debe haber errores
+zfp ps                        # gestion-zfp-app y gestion-zfp-web en estado "running"
+zfp logs --tail=50 app        # no debe haber errores
 ```
 
 ## 5. Solo si `APP_KEY` quedó vacía
 
 ```bash
-dc run --rm app php artisan key:generate --show
+zfp run --rm app php artisan key:generate --show
 ```
 
 Copie el valor (`base64:...`) en `APP_KEY` de `.env.docker` y recree el contenedor:
 
 ```bash
-dc up -d
+zfp up -d
 ```
 
 > Con una `APP_KEY` nueva, las sesiones abiertas se cierran; los datos no se ven afectados.
@@ -101,8 +119,8 @@ dc up -d
 ## 6. Verificar la base de datos
 
 ```bash
-dc exec app php artisan migrate:status        # todas las migraciones en "Ran"
-dc exec app php artisan tinker --execute="echo DB::table('users')->count();"   # debe mostrar 11
+zfp exec app php artisan migrate:status        # todas las migraciones en "Ran"
+zfp exec app php artisan tinker --execute="echo DB::table('users')->count();"   # debe mostrar 11
 ```
 
 **No ejecute** `migrate:fresh`, `migrate:refresh`, `db:wipe` ni `db:seed`: borrarían o duplicarían los
@@ -120,10 +138,18 @@ tiene archivos en `storage/app/public/mantenimientos/`, cópielos (por ejemplo c
 y ajuste el dueño:
 
 ```bash
-dc exec app chown -R www-data:www-data storage/app/public
+zfp exec app chown -R www-data:www-data storage/app/public
 ```
 
 ## 8. Probar
+
+Desde la consola del servidor:
+
+```bash
+curl -sI http://10.0.10.5:8081 | head -1      # HTTP/1.1 200 o 302
+```
+
+> Use la IP `10.0.10.5`, no `localhost`: en este servidor Docker publica los puertos solo en esa IP.
 
 Abra **http://10.0.10.5:8081** y verifique: inicio de sesión, listados con filtros, detalle de un
 mantenimiento, calendario y perfil de usuario.
@@ -141,8 +167,8 @@ reiniciar y consultar logs, pero se actualiza por consola).
 ```bash
 cd /home_datos/proyectos/gestion-zfp
 git pull
-dc up -d --build
-dc exec app php artisan migrate --force      # solo si la versión trae migraciones nuevas
+zfp up -d --build
+zfp exec app php artisan migrate --force      # solo si la versión trae migraciones nuevas
 ```
 
 Haga un backup de la base antes de aplicar migraciones (ver `LEEME_restauracion.txt`).
@@ -151,23 +177,23 @@ Haga un backup de la base antes de aplicar migraciones (ver `LEEME_restauracion.
 
 | Acción | Comando |
 |---|---|
-| Ver estado | `dc ps` |
-| Ver logs | `dc logs -f app` / `dc logs -f web` / `tail -f data/storage/logs/laravel.log` |
-| Reiniciar | `dc restart` |
-| Detener | `dc down` (los datos de `data/` y la base no se borran) |
-| Consola de Laravel | `dc exec app php artisan ...` |
+| Ver estado | `zfp ps` |
+| Ver logs | `zfp logs -f app` / `zfp logs -f web` / `tail -f data/storage/logs/laravel.log` |
+| Reiniciar | `zfp restart` |
+| Detener | `zfp down` (los datos de `data/` y la base no se borran) |
+| Consola de Laravel | `zfp exec app php artisan ...` |
 
 ## Problemas frecuentes
 
 | Síntoma | Causa / solución |
 |---|---|
 | `network postgres-stack_zfp-net not found` | El stack `postgres-stack` no está corriendo o la red cambió de nombre. Verifique con `docker network ls` y ajuste `docker-compose.server.yml` |
-| `Bind for 0.0.0.0:8081 failed: port is already allocated` | El puerto está ocupado. Use otro: `APP_PORT=8090 dc up -d` y actualice `APP_URL` y `GOOGLE_REDIRECT_URI` |
-| `SQLSTATE[08006] ... could not translate host name "postgres"` | La app no está en la red del PostgreSQL: levántela con los dos archivos (`dc`, no `docker compose` solo) |
-| `password authentication failed for user "zfpadmin"` | Contraseña incorrecta en `.env.docker`; corríjala y ejecute `dc up -d` |
-| Error 500 sin detalle | `dc logs app` y `data/storage/logs/laravel.log`. Tras cambiar `.env.docker`, siempre `dc up -d` (las cachés se regeneran al arrancar) |
-| `Permission denied` en `storage` | `dc exec app chown -R www-data:www-data storage` |
-| Los cambios de `.env.docker` no se aplican | `dc restart` no relee el archivo: use `dc up -d` |
+| `Bind for 0.0.0.0:8081 failed: port is already allocated` | El puerto está ocupado. Use otro: `APP_PORT=8090 zfp up -d` y actualice `APP_URL` y `GOOGLE_REDIRECT_URI` |
+| `SQLSTATE[08006] ... could not translate host name "postgres"` | La app no está en la red del PostgreSQL: levántela con los dos archivos (`zfp`, no `docker compose` solo) |
+| `password authentication failed for user "zfpadmin"` | Contraseña incorrecta en `.env.docker`; corríjala y ejecute `zfp up -d` |
+| Error 500 sin detalle | `zfp logs app` y `data/storage/logs/laravel.log`. Tras cambiar `.env.docker`, siempre `zfp up -d` (las cachés se regeneran al arrancar) |
+| `Permission denied` en `storage` | `zfp exec app chown -R www-data:www-data storage` |
+| Los cambios de `.env.docker` no se aplican | `zfp restart` no relee el archivo: use `zfp up -d` |
 
 ---
 
